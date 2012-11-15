@@ -38,11 +38,21 @@ protected:
   bool m_bRightMouseButtonDown;
   unsigned int m_lastTick;
   bool m_bPaused;
+  float m_cursorSize;
+
+private:
+   // Private constructor to create a singleton
+   Viewer( );
 
 // constructors/destructor
 public:
-	Viewer();
-	virtual ~Viewer();
+    static Viewer& getInstance()
+    {
+        static Viewer    instance; // Guaranteed to be destroyed.
+                              // Instantiated on first use.
+        return instance;
+    }
+    virtual ~Viewer( );
 
 // member functions
 public:

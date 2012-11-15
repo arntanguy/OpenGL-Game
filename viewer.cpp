@@ -13,12 +13,6 @@
 #include "tga.h"
 #include <string.h>
 
-//----------------------------------------------------------------------------//
-// The one and only Viewer instance                                           //
-//----------------------------------------------------------------------------//
-
-Viewer theViewer;
-
 Viewer::Viewer()
 {
   m_width = 640;
@@ -33,6 +27,7 @@ Viewer::Viewer()
   m_bRightMouseButtonDown = false;
   m_lastTick = 0;
   m_bPaused = false;
+  m_cursorSize = 3;
 }
 
 Viewer::~Viewer()
@@ -122,7 +117,6 @@ void Viewer::onIdle()
   m_lastTick = tick;
 
   // update the screen
-  glutPostRedisplay();
 }
 
 bool Viewer::onInit() {
@@ -146,12 +140,9 @@ void Viewer::onKey(unsigned char key, int x, int y)
   }
 }
 
-//----------------------------------------------------------------------------//
-// Handle a mouse button down event                                           //
-//----------------------------------------------------------------------------//
-
 void Viewer::onMouseButtonDown(int button, int x, int y)
 {
+    std::cout << "Mouse button down" << std::endl;
   // update mouse button states
   if(button == GLUT_LEFT_BUTTON)
   {
@@ -167,10 +158,6 @@ void Viewer::onMouseButtonDown(int button, int x, int y)
   m_mouseX = x;
   m_mouseY = y;
 }
-
-//----------------------------------------------------------------------------//
-// Handle a mouse button up event                                             //
-//----------------------------------------------------------------------------//
 
 void Viewer::onMouseButtonUp(int button, int x, int y)
 {
@@ -189,10 +176,6 @@ void Viewer::onMouseButtonUp(int button, int x, int y)
   m_mouseX = x;
   m_mouseY = y;
 }
-
-//----------------------------------------------------------------------------//
-// Handle a mouse move event                                                  //
-//----------------------------------------------------------------------------//
 
 void Viewer::onMouseMove(int x, int y)
 {
@@ -216,10 +199,6 @@ void Viewer::onMouseMove(int x, int y)
   m_mouseX = x;
   m_mouseY = y;
 }
-
-//----------------------------------------------------------------------------//
-// Render the current scene                                                   //
-//----------------------------------------------------------------------------//
 
 void Viewer::onRender()
 {
@@ -261,9 +240,6 @@ void Viewer::onRender()
 
   // render the cursor
   renderCursor();
-
-  // swap the front- and back-buffer
-  glutSwapBuffers();
 }
 
 void Viewer::onShutdown()
@@ -287,13 +263,50 @@ void Viewer::renderCursor()
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+  //glBegin(GL_TRIANGLES);
+  //  glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+  //  glVertex2i(m_mouseX, m_mouseY);
+  //  glColor4f(1.0f, 1.0f, 1.0f, 0.2f);
+  //  glVertex2i(m_mouseX + 16, m_mouseY - 32);
+  //  glColor4f(1.0f, 1.0f, 1.0f, 0.2f);
+  //  glVertex2i(m_mouseX + 32, m_mouseY - 16);
+  //glEnd();
+  float offset = m_cursorSize/4;
+  float y, x;
   glBegin(GL_TRIANGLES);
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-    glVertex2i(m_mouseX, m_mouseY);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.2f);
-    glVertex2i(m_mouseX + 16, m_mouseY - 32);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.2f);
-    glVertex2i(m_mouseX + 32, m_mouseY - 16);
+    // Bottom
+    y = m_mouseY - offset;
+    glColor4f(0,0,0,0.8);
+    glVertex2i(m_mouseX-m_cursorSize, y);
+    glVertex2i(m_mouseX+m_cursorSize, y);
+    glColor4f(1,1,1,0.8);
+    glVertex2i(m_mouseX, y - m_cursorSize*2);
+
+    // Top
+    y = m_mouseY + m_cursorSize*2 + 2*offset;
+    glColor4f(0,0,0,0.8);
+    glVertex2i(m_mouseX-m_cursorSize, y);
+    glVertex2i(m_mouseX+m_cursorSize, y);
+    glColor4f(1,1,1,0.8);
+    glVertex2i(m_mouseX, y + m_cursorSize*2);
+
+    // Left
+    glColor4f(0,0,0,0.8);
+    x = m_mouseX - offset - m_cursorSize;
+    y = m_mouseY + m_cursorSize + offset;
+    glVertex2i(x, y-m_cursorSize);
+    glVertex2i(x, y+m_cursorSize);
+    glColor4f(1,1,1,0.8);
+    glVertex2i(x-m_cursorSize*2, y);
+
+    // Right
+    glColor4f(0,0,0,0.8);
+    x = m_mouseX + offset + m_cursorSize;
+    y = m_mouseY + m_cursorSize + offset;
+    glVertex2i(x, y-m_cursorSize);
+    glVertex2i(x, y+m_cursorSize);
+    glColor4f(1,1,1,0.8);
+    glVertex2i(x+m_cursorSize*2, y);
   glEnd();
 
   glDisable(GL_BLEND);

@@ -15,6 +15,7 @@ cmake_minimum_required(VERSION 2.6)
 find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(CAL3D REQUIRED)
+find_package(SFML COMPONENTS system window network audio graphics REQUIRED)
 
 ### DEFINE NEEDED SOURCES
 SET(SOURCES
@@ -31,4 +32,4 @@ add_executable (
    ${BIN_DIR}/${PROJECT_NAME} ${SOURCES}
 )
 
-target_link_libraries(${BIN_DIR}/${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} ${CAL3D_LIBRARY})
+target_link_libraries(${BIN_DIR}/${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} ${CAL3D_LIBRARY} ${SFML_LIBRARIES})

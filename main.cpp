@@ -5,10 +5,9 @@
 
 #include "global.h"
 #include "viewer.h"
+#include <SFML/Window.hpp>
 
-//----------------------------------------------------------------------------//
-// GLUT callback functions                                                    //
-//----------------------------------------------------------------------------//
+Viewer theViewer = Viewer::getInstance();
 
 void displayFunc()
 {
@@ -40,69 +39,75 @@ void motionFunc(int x, int y)
   theViewer.onMouseMove(x, theViewer.getHeight() - y - 1);
 }
 
-void mouseFunc(int button, int state, int x, int y)
-{
-  // redirect the message to the viewer instance
-  if(state == GLUT_DOWN)
-  {
-    theViewer.onMouseButtonDown(button, x, theViewer.getHeight() - y - 1);
-  }
-  else if(state == GLUT_UP)
-  {
-    theViewer.onMouseButtonUp(button, x, theViewer.getHeight() - y - 1);
-  }
-}
-
 void reshapeFunc(int width, int height)
 {
   // set the new width/height values
   theViewer.setDimension(width, height);
 }
 
-//----------------------------------------------------------------------------//
-// Main entry point of the application                                        //
-//----------------------------------------------------------------------------//
-
 int main(int argc, char *argv[])
 {
-  // initialize the GLUT system
-  glutInit(&argc, argv);
+    // create our view instance
+    if(!theViewer.onCreate(argc, argv))
+    {
+        std::cerr << "Creation of the viewer failed." << std::endl;
+        return -1;
+    }
 
-  // create our view instance
-  if(!theViewer.onCreate(argc, argv))
-  {
-    std::cerr << "Creation of the viewer failed." << std::endl;
-    return -1;
-  }
+    // register our own exit callback
+    atexit(exitFunc);
 
-  // register our own exit callback
-  atexit(exitFunc);
+    sf::Window window(sf::VideoMode(theViewer.getWidth(), theViewer.getHeight()), theViewer.getCaption());
+    window.setMouseCursorVisible(false);
+    window.setVerticalSyncEnabled(true);
 
-  // set all GLUT modes
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-  glutInitWindowSize(theViewer.getWidth(), theViewer.getHeight());
-  glutCreateWindow(theViewer.getCaption().c_str());
-  if(theViewer.getFullscreen()) glutFullScreen();
-  glutSetCursor(GLUT_CURSOR_NONE);
+    // set all GLUT modes
+    //if(theViewer.getFullscreen()) glutFullScreen();
 
-  // register all GLUT callback functions
-  glutIdleFunc(idleFunc);
-  glutMouseFunc(mouseFunc);
-  glutMotionFunc(motionFunc);
-  glutPassiveMotionFunc(motionFunc);
-  glutReshapeFunc(reshapeFunc);
-  glutDisplayFunc(displayFunc);
-  glutKeyboardFunc(keyboardFunc);
+    // initialize our viewer instance
+    if(!theViewer.onInit())
+    {
+        std::cerr << "Initialization of the viewer failed." << std::endl;
+        return -1;
+    }
 
-  // initialize our viewer instance
-  if(!theViewer.onInit())
-  {
-    std::cerr << "Initialization of the viewer failed." << std::endl;
-    return -1;
-  }
 
-  // run the GLUT message loop
-  glutMainLoop();
+    // load resources, initialize the OpenGL states, ...
 
-  return 0;
+    // run the main loop
+    bool running = true;
+    while (running)
+    {
+        // handle events
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+            {
+                // end the program
+                running = false;
+            }
+            else if (event.type == sf::Event::Resized)
+            {
+                // adjust the viewport when the window is resized
+                glViewport(0, 0, event.size.width, event.size.height);
+            } else if (event.type == sf::Event::MouseMoved) {
+                theViewer.onMouseMove(event.mouseMove.x, theViewer.getHeight() - event.mouseMove.y - 1);
+            } else if(event.type == sf::Event::MouseButtonPressed) {
+                theViewer.onMouseButtonDown(event.mouseButton.button, event.mouseButton.x, theViewer.getHeight() - event.mouseButton.y - 1);
+            } else if (event.type == sf::Event::MouseButtonReleased) {
+                sf::Vector2i position = sf::Mouse::getPosition();
+                theViewer.onMouseButtonUp(event.mouseButton.button, event.mouseButton.x, theViewer.getHeight() - event.mouseButton.y - 1);
+            }
+        }
+
+        // Draw and clear buffers
+        displayFunc();
+
+        // end the current frame (internally swaps the front and back buffers)
+        window.display();
+    }
+
+    // release resources...
+    return 0;
 }
