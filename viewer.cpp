@@ -12,6 +12,7 @@
 #include "tick.h"
 #include "tga.h"
 #include <string.h>
+#include "TerrainPage.h"
 
 Viewer::Viewer()
 {
@@ -28,6 +29,7 @@ Viewer::Viewer()
   m_lastTick = 0;
   m_bPaused = false;
   m_cursorSize = 3;
+  m_scale = 1;
 }
 
 Viewer::~Viewer()
@@ -120,24 +122,25 @@ void Viewer::onIdle()
 }
 
 bool Viewer::onInit() {
+    mTerrainPage = new TerrainPage("./assets/terrain/heightmap.tga", 100, 100);
     return true;
 }
 
 void Viewer::onKey(unsigned char key, int x, int y)
 {
-  switch(key)
-  {
-    // test for quit event
-    case 27:
-    case 'q':
-    case 'Q':
-      exit(0);
-      break;
-    // test for pause event
-    case ' ':
-      m_bPaused = !m_bPaused;
-      break;
-  }
+  //switch(key)
+  //{
+  //  // test for quit event
+  //  case 27:
+  //  case 'q':
+  //  case 'Q':
+  //    exit(0);
+  //    break;
+  //  // test for pause event
+  //  case ' ':
+  //    m_bPaused = !m_bPaused;
+  //    break;
+  //}
 }
 
 void Viewer::onMouseButtonDown(int button, int x, int y)
@@ -203,7 +206,7 @@ void Viewer::onMouseMove(int x, int y)
 void Viewer::onRender()
 {
   // clear all the buffers
-  glClearColor(0.0f, 0.0f, 0.3f, 0.0f);
+  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // set the projection transformation
@@ -214,6 +217,8 @@ void Viewer::onRender()
   // set the model transformation
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
+  //gluLookAt(0,100,-100,0,0,0,0,1,0);
+  gluLookAt(50,100,90,50,0,100,0,1,0);
 
   // light attributes
   const GLfloat light_ambient[]  = { 0.3f, 0.3f, 0.3f, 1.0f };
@@ -229,14 +234,17 @@ void Viewer::onRender()
   GLfloat lightPosition[] = { 0.0f, -1.0f, 1.0f, 1.0f };
   glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 
-  // set camera position
-  glTranslatef(0.0f, 0.0f, -m_distance * m_scale);
-  glRotatef(m_tiltAngle, 1.0f, 0.0f, 0.0f);
-  glRotatef(m_twistAngle, 0.0f, 0.0f, 1.0f);
-  glTranslatef(0.0f, 0.0f, -90.0f * m_scale);
+
+  //// set camera position
+  //glTranslatef(0.0f, 0.0f, -m_distance * m_scale);
+  //glRotatef(m_tiltAngle, 1.0f, 0.0f, 0.0f);
+  //glRotatef(m_twistAngle, 0.0f, 0.0f, 1.0f);
+  //glTranslatef(0.0f, 0.0f, -90.0f * m_scale);
 
   // render the model
   //renderModel();
+  //glutSolidSphere(10, 10, 20);
+  mTerrainPage->render();
 
   // render the cursor
   renderCursor();

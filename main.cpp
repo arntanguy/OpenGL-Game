@@ -47,6 +47,7 @@ void reshapeFunc(int width, int height)
 
 int main(int argc, char *argv[])
 {
+    glutInit(&argc, argv);
     // create our view instance
     if(!theViewer.onCreate(argc, argv))
     {

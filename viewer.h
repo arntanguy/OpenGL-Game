@@ -17,6 +17,7 @@
 
 #include "global.h"
 
+class TerrainPage;
 //----------------------------------------------------------------------------//
 // Class declaration                                                          //
 //----------------------------------------------------------------------------//
@@ -39,6 +40,8 @@ protected:
   unsigned int m_lastTick;
   bool m_bPaused;
   float m_cursorSize;
+
+  TerrainPage *mTerrainPage;
 
 private:
    // Private constructor to create a singleton
