@@ -75,37 +75,13 @@ void TerrainPage::generateDisplayList()
 
     // compile the display list, store a triangle in it
     glNewList(mDisplayListIndex, GL_COMPILE);
-        glutSolidSphere(10, 10, 20);
         std::vector<Vertex>::iterator it;
-        bool strip=true;
+
         Vertex v;
-           // v = mVertices[0];
-           // std::cout<<v.position[0]<<"\t" << v.position[1] << "\t" << v.position[2] << std::endl;
-           // glVertex3f(v.position[0], v.position[1], v.position[2]);
-           // v = mVertices[1];
-           // std::cout<<v.position[0]<<"\t" << v.position[1] << "\t" << v.position[2] << std::endl;
-           // glVertex3f(v.position[0], v.position[1], v.position[2]);
-           // v = mVertices[2];
-           // std::cout<<v.position[0]<<"\t" << v.position[1] << "\t" << v.position[2] << std::endl;
-           // glVertex3f(v.position[0], v.position[1], v.position[2]);
-           // v = mVertices[3];
-           // std::cout<<v.position[0]<<"\t" << v.position[1] << "\t" << v.position[2] << std::endl;
-           // glVertex3f(v.position[0], v.position[1], v.position[2]);
-           // v = mVertices[4];
-           // std::cout<<v.position[0]<<"\t" << v.position[1] << "\t" << v.position[2] << std::endl;
-           // glVertex3f(v.position[0], v.position[1], v.position[2]);
-           // v = mVertices[5];
-           // std::cout<<v.position[0]<<"\t" << v.position[1] << "\t" << v.position[2] << std::endl;
-           // glVertex3f(v.position[0], v.position[1], v.position[2]);
-           // v = mVertices[6];
-           // std::cout<<v.position[0]<<"\t" << v.position[1] << "\t" << v.position[2] << std::endl;
-           // glVertex3f(v.position[0], v.position[1], v.position[2]);
-
-
-
-        glBegin(GL_TRIANGLE_STRIP);
         int j=0;
+        glBegin(GL_TRIANGLE_STRIP);
         for(int i = 0; i<mVertices.size(); i++) {
+            if(i%(2*mWidth) == 0) glEnd(); glBegin(GL_TRIANGLE_STRIP);
             glColor3f(1, 1, 1);
             v = mVertices[i];
             glVertex3f(v.position[0], v.position[1], v.position[2]);
