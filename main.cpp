@@ -27,16 +27,8 @@ void idleFunc()
   theViewer.onIdle();
 }
 
-void keyboardFunc(unsigned char key, int x, int y)
-{
-  // redirect the message to the viewer instance
-  theViewer.onKey(key, x, theViewer.getHeight() - y - 1);
-}
-
 void motionFunc(int x, int y)
 {
-  // redirect the message to the viewer instance
-  theViewer.onMouseMove(x, theViewer.getHeight() - y - 1);
 }
 
 void reshapeFunc(int width, int height)
@@ -58,7 +50,13 @@ int main(int argc, char *argv[])
     // register our own exit callback
     atexit(exitFunc);
 
-    sf::Window window(sf::VideoMode(theViewer.getWidth(), theViewer.getHeight()), theViewer.getCaption());
+    sf::Window window;
+     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    if(theViewer.getFullscreen()) {
+        window.create(sf::VideoMode(desktop.width, desktop.height, desktop.bitsPerPixel), theViewer.getCaption(), sf::Style::Fullscreen);
+    } else {
+        window.create(sf::VideoMode(theViewer.getWidth(), theViewer.getHeight(), desktop.bitsPerPixel), theViewer.getCaption());
+    }
     window.setMouseCursorVisible(false);
     window.setVerticalSyncEnabled(true);
 
@@ -83,22 +81,30 @@ int main(int argc, char *argv[])
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
-            {
-                // end the program
-                running = false;
-            }
-            else if (event.type == sf::Event::Resized)
-            {
-                // adjust the viewport when the window is resized
-                glViewport(0, 0, event.size.width, event.size.height);
-            } else if (event.type == sf::Event::MouseMoved) {
-                theViewer.onMouseMove(event.mouseMove.x, theViewer.getHeight() - event.mouseMove.y - 1);
-            } else if(event.type == sf::Event::MouseButtonPressed) {
-                theViewer.onMouseButtonDown(event.mouseButton.button, event.mouseButton.x, theViewer.getHeight() - event.mouseButton.y - 1);
-            } else if (event.type == sf::Event::MouseButtonReleased) {
-                sf::Vector2i position = sf::Mouse::getPosition();
-                theViewer.onMouseButtonUp(event.mouseButton.button, event.mouseButton.x, theViewer.getHeight() - event.mouseButton.y - 1);
+            switch(event.type) {
+                case sf::Event::Closed:
+                    // end the program
+                    running = false;
+                    break;
+                case sf::Event::Resized:
+                    // adjust the viewport when the window is resized
+                    glViewport(0, 0, event.size.width, event.size.height);
+                    break;
+                case sf::Event::MouseMoved:
+                    theViewer.onMouseMove(event.mouseMove);
+                    break;
+                case sf::Event::MouseButtonPressed:
+                    theViewer.onMouseButtonDown(event.mouseButton);
+                    break;
+                case sf::Event::MouseButtonReleased:
+                    theViewer.onMouseButtonUp(event.mouseButton);
+                    break;
+
+                case sf::Event::KeyPressed:
+                    theViewer.onKey(event.key);
+                    break;
+                default:
+                    break;
             }
         }
 

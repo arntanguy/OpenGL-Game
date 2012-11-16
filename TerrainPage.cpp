@@ -140,7 +140,6 @@ bool TerrainPage::render()
         std::cerr << "Error: The terrain hasn't been compiled! You need to call the generate() function first!" << std::endl;
         return false;
     } else {
-        //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
         // draw the display list
         glCallList(mDisplayListIndex);
         return true;

@@ -11,16 +11,13 @@
 #ifndef VIEWER_H
 #define VIEWER_H
 
-//----------------------------------------------------------------------------//
-// Includes                                                                   //
-//----------------------------------------------------------------------------//
 
-#include "global.h"
+#include <SFML/OpenGL.hpp>
+#include <SFML/Window/Event.hpp>
+#include <string>
+
 
 class TerrainPage;
-//----------------------------------------------------------------------------//
-// Class declaration                                                          //
-//----------------------------------------------------------------------------//
 
 class Viewer
 {
@@ -40,6 +37,8 @@ protected:
   unsigned int m_lastTick;
   bool m_bPaused;
   float m_cursorSize;
+
+  bool m_wireFrame;
 
   TerrainPage *mTerrainPage;
 
@@ -66,10 +65,10 @@ public:
   bool onCreate(int argc, char *argv[]);
   void onIdle();
   bool onInit();
-  void onKey(unsigned char key, int x, int y);
-  void onMouseButtonDown(int button, int x, int y);
-  void onMouseButtonUp(int button, int x, int y);
-  void onMouseMove(int x, int y);
+  void onKey(const sf::Event::KeyEvent& key);
+  void onMouseButtonDown(const sf::Event::MouseButtonEvent&);
+  void onMouseButtonUp(const sf::Event::MouseButtonEvent&);
+  void onMouseMove(const sf::Event::MouseMoveEvent&);
   void onRender();
   void onShutdown();
   void setDimension(int width, int height);
