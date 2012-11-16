@@ -5,6 +5,10 @@
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/OpenGL.hpp>
 
+#include "RessourcesManager.h"
+
+#define TERRAIN_NOT_COMPILED -1
+
 struct Vertex;
 
 /**
@@ -32,6 +36,11 @@ class TerrainPage
          */
         void generate();
         void generateDisplayList();
+
+        sf::Vector2u getTextureCoordinates(float x, float z);
+
+        GLuint mTextures[1];
+        void loadTexture(const std::string& texturePath);
 
     public:
         TerrainPage(const std::string& heightmap, int width, int depth);

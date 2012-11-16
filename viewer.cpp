@@ -212,13 +212,13 @@ void Viewer::onRender()
   // set the projection transformation
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluPerspective(45.0f, (GLdouble)m_width / (GLdouble)m_height, m_scale * 50.0, m_scale * 1000.0);
+  gluPerspective(45.0f, (GLdouble)m_width / (GLdouble)m_height, m_scale * 5.0, m_scale * 1000.0);
 
   // set the model transformation
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   //gluLookAt(0,100,-100,0,0,0,0,1,0);
-  gluLookAt(50,100,90,50,0,100,0,1,0);
+  gluLookAt(50, 30, 200, 0, 0, -1000,0,1,0);
 
   // light attributes
   const GLfloat light_ambient[]  = { 0.3f, 0.3f, 0.3f, 1.0f };
@@ -244,7 +244,13 @@ void Viewer::onRender()
   // render the model
   //renderModel();
   //glutSolidSphere(10, 10, 20);
-  mTerrainPage->render();
+  glPushMatrix();
+      mTerrainPage->render();
+  glPopMatrix();
+  //glPushMatrix();
+  //      glTranslatef(0, 0, 99);
+  //    mTerrainPage->render();
+  //glPopMatrix();
 
   // render the cursor
   renderCursor();
