@@ -6,6 +6,7 @@
 #include <SFML/OpenGL.hpp>
 
 #include "RessourcesManager.h"
+#include "Textures.h"
 
 #define TERRAIN_NOT_COMPILED -1
 
@@ -40,6 +41,7 @@ class TerrainPage
         sf::Vector2u getTextureCoordinates(float x, float z);
 
         GLuint mTextures[1];
+        Textures mTexture;
         void loadTexture(const std::string& texturePath);
 
     public:

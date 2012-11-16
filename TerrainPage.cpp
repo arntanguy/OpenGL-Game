@@ -1,5 +1,4 @@
 #include "TerrainPage.h"
-#include <GL/glut.h>
 
 TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth)
 {
@@ -27,6 +26,7 @@ void TerrainPage::loadTexture(const std::string& texturePath)
     }
 
     sf::Image *img = RessourcesManager::getInstance().getImage(texturePath);
+    mTexture.addTexture(texturePath);
 
 	glGenTextures(1, mTextures);
 	glBindTexture(GL_TEXTURE_2D, mTextures[0]);
