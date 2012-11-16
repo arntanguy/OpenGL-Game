@@ -1,6 +1,19 @@
 #include "RessourcesManager.h"
 
 /**
+ * @brief Free all allocated ressources
+ */
+RessourcesManager::~RessourcesManager()
+{
+    std::cout << "Deleting all ressources" << std::endl;
+    std::map<std::string, sf::Image*>::const_iterator it;
+    for(it = mImages.begin(); it != mImages.end(); it++) {
+        std::cout << "Deleting image " << it->first << std::endl;
+        delete it->second;
+    }
+}
+
+/**
  * @brief Loads an image if it isn't already loaded
  *
  * @param path
@@ -43,7 +56,6 @@ sf::Image* RessourcesManager::getImage(const std::string& path) const {
     if(it != mImages.end()) {
         return it->second;
     } else {
-        std::cout << "NULL";
         return NULL;
     }
 }

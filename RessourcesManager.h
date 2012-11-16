@@ -14,7 +14,7 @@ class RessourcesManager
 {
     private:
         inline explicit RessourcesManager() {}
-        inline ~RessourcesManager() {}
+        ~RessourcesManager();
         inline explicit RessourcesManager(RessourcesManager const&) {}
         inline RessourcesManager& operator=(RessourcesManager const&) { return *this; }
 
