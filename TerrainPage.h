@@ -27,6 +27,7 @@ class TerrainPage
          * Used to convert from terrain coordinates to heightmap coordinates
          */
         int mRatioW, mRatioD;
+        float mMaxHeight;
 
         std::vector<Vertex> mVertices;
         std::vector<GLuint> mIndices;
@@ -39,13 +40,15 @@ class TerrainPage
         void generateDisplayList();
 
         sf::Vector2u getTextureCoordinates(float x, float z);
+        float getHeight(int x, int z);
 
         GLuint mTextures[1];
         Textures mTexture;
         void loadTexture(const std::string& texturePath);
 
+
     public:
-        TerrainPage(const std::string& heightmap, int width, int depth);
+        TerrainPage(const std::string& heightmap, int width, int depth, float mMaxHeight);
         virtual ~TerrainPage();
 
         bool render();

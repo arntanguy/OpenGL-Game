@@ -10,9 +10,9 @@
 
 #include "viewer.h"
 #include "tick.h"
-#include "tga.h"
 #include <string.h>
 #include "TerrainPage.h"
+
 
 Viewer::Viewer()
 {
@@ -123,7 +123,7 @@ void Viewer::onIdle()
 }
 
 bool Viewer::onInit() {
-    mTerrainPage = new TerrainPage("./assets/terrain/heightmap.tga", 100, 100);
+    mTerrainPage = new TerrainPage("./assets/terrain/heightmap.bmp", 100, 100, 10);
     return true;
 }
 
@@ -238,7 +238,6 @@ void Viewer::onRender()
     GLfloat lightPosition[] = { 0.0f, -1.0f, 1.0f, 1.0f };
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 
-
     //// set camera position
     //glTranslatef(0.0f, 0.0f, -m_distance * m_scale);
     //glRotatef(m_tiltAngle, 1.0f, 0.0f, 0.0f);
@@ -264,7 +263,6 @@ void Viewer::onShutdown()
 {
     // destroy model instance
     // destroy core model instance
-
 }
 
 void Viewer::renderCursor()
@@ -339,3 +337,4 @@ void Viewer::setDimension(int width, int height)
     // set new viewport dimension
     glViewport(0, 0, m_width, m_height);
 }
+

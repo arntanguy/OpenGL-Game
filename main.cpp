@@ -3,9 +3,11 @@
  * Author: Arnaud TANGUY
  */
 
-#include "global.h"
 #include "viewer.h"
 #include <SFML/Window.hpp>
+#include <GL/glew.h>
+#include <GL/glut.h>
+#include <iostream>
 
 Viewer theViewer = Viewer::getInstance();
 
@@ -39,7 +41,6 @@ void reshapeFunc(int width, int height)
 
 int main(int argc, char *argv[])
 {
-    glutInit(&argc, argv);
     // create our view instance
     if(!theViewer.onCreate(argc, argv))
     {
@@ -51,7 +52,17 @@ int main(int argc, char *argv[])
     atexit(exitFunc);
 
     sf::Window window;
-     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    /**
+     * Init Glew. Used for shaders mostly
+     */
+    glutInit(&argc, argv);
+    GLenum err = glewInit();
+    if (GLEW_OK != err)
+    {
+        std::cerr << "Error: " << glewGetErrorString(err) << std::endl;
+    }
+
+    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     if(theViewer.getFullscreen()) {
         window.create(sf::VideoMode(desktop.width, desktop.height, desktop.bitsPerPixel), theViewer.getCaption(), sf::Style::Fullscreen);
     } else {

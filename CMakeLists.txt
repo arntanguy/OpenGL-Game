@@ -21,11 +21,11 @@ find_package(SFML COMPONENTS system window network audio graphics REQUIRED)
 SET(SOURCES
 ${SRC_DIR}/main.cpp
 ${SRC_DIR}/viewer.cpp
-${SRC_DIR}/tga.cpp
 ${SRC_DIR}/tick.cpp
 ${SRC_DIR}/TerrainPage.cpp
 ${SRC_DIR}/RessourcesManager.cpp
 ${SRC_DIR}/Textures.cpp
+${SRC_DIR}/Shader.cpp
 )
 
 include_directories (${SRC_DIR} ${OPENGL_INCLUDE_DIR} ${CAL3D_INCLUDE_DIR} ${INCLUDE_DIR})

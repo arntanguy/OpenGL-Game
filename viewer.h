@@ -12,7 +12,6 @@
 #define VIEWER_H
 
 
-#include <SFML/OpenGL.hpp>
 #include <SFML/Window/Event.hpp>
 #include <string>
 
