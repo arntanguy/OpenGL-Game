@@ -23,11 +23,13 @@ Shader::Shader(const std::string &vertexShaderPath, const std::string &fragmentS
 
 void Shader::init()
 {
-    if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader)
+    if (hasShaderSupport())
     {
         //std::cout << "GL Shaders supported" << std::endl;
         //Create a mProgramHandle handle.
         mProgramHandle = glCreateProgramObjectARB();
+        mVertexHandle = 0;
+        mFragmentHandle = 0;
     } else {
         throw std::runtime_error("Error: GL Shaders not supported!");
     }
@@ -35,6 +37,36 @@ void Shader::init()
 
 Shader::~Shader()
 {
+	glDeleteObjectARB(mVertexHandle);
+	glDeleteObjectARB(mFragmentHandle);
+	glDeleteObjectARB(mProgramHandle);
+
+ // To free a shader we need to detach the vertex and fragment
+    // shader pointers from the program object, then free each one.
+    // Once that is done we can finally delete the program object.
+
+    // If our vertex shader pointer is valid, free it
+    if(mVertexHandle)
+    {
+        glDetachObjectARB(mProgramHandle, mVertexHandle);
+        glDeleteObjectARB(mVertexHandle);
+        mVertexHandle = 0;
+    }
+
+    // If our fragment shader pointer is valid, free it
+    if(mFragmentHandle)
+    {
+        glDetachObjectARB(mProgramHandle, mFragmentHandle);
+        glDeleteObjectARB(mFragmentHandle);
+        mFragmentHandle = 0;
+    }
+
+    // If our program object pointer is valid, free it
+    if(mProgramHandle)
+    {
+        glDeleteObjectARB(mProgramHandle);
+        mProgramHandle = 0;
+    }
 }
 
 std::string Shader::loadFile(const std::string &str)
@@ -187,4 +219,35 @@ void Shader::enable()
 void Shader::disable()
 {
     glUseProgramObjectARB(0);
+}
+
+bool Shader::hasShaderSupport()
+{
+    return GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader;
+}
+
+void Shader::bindTexture(Texture& texture, const std::string &uniformLocation, int i)
+{
+    glActiveTexture(GL_TEXTURE0 + i);
+    texture.bind();
+    int my_sampler_uniform_location = getVariableId(uniformLocation);
+    glUniform1i(my_sampler_uniform_location, i);
+}
+
+GLhandleARB Shader::getProgramHandle() const
+{
+    return mProgramHandle;
+}
+
+
+
+int Shader::getVariableId(std::string strVariable)
+{
+    // If we don't have an active program object, let's return -1
+    if(!mProgramHandle)
+        return -1;
+
+    // This returns the variable ID for a variable that is used to find
+    // the address of that variable in memory.
+    return glGetUniformLocationARB(mProgramHandle, strVariable.c_str());
 }

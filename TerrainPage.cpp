@@ -5,11 +5,15 @@ TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, flo
     mWidth = width;
     mDepth = depth;
     mHeightmap.loadFromFile(heightmap);
+    mMixmap.create(mHeightmap.getSize().x, mHeightmap.getSize().y);
     mRatioW = mHeightmap.getSize().x/width;
     mRatioD = mHeightmap.getSize().y/depth;
     mMaxHeight = maxHeight;
     mDisplayListIndex = TERRAIN_NOT_COMPILED;
-    loadTexture("assets/terrain/grass.bmp");
+    mTexture.loadTexture("assets/l3d.jpg");
+    mTexture2.loadTexture("assets/l3d.jpg");
+    texShader.loadVertexShader("vertex_single_texture.glsl");
+    texShader.loadFragmentShader("fragment_single_texture.glsl");
     generate();
 }
 
@@ -19,21 +23,7 @@ TerrainPage::~TerrainPage()
 
 void TerrainPage::loadTexture(const std::string& texturePath)
 {
-    try {
-        RessourcesManager::getInstance().loadImage(texturePath);
-    } catch(std::runtime_error &e) {
-        std::cerr << "Error: " << e.what() << std::endl;
-        return;
-    }
-
-    sf::Image *img = RessourcesManager::getInstance().getImage(texturePath);
-    mTexture.addTexture(texturePath);
-
-	glGenTextures(1, mTextures);
-	glBindTexture(GL_TEXTURE_2D, mTextures[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img->getSize().x, img->getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, img->getPixelsPtr());
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+//    mTexture.loadTexture(texturePath);
 }
 
 sf::Vector2u TerrainPage::getTextureCoordinates(float x, float z) {
@@ -45,6 +35,8 @@ float TerrainPage::getHeight(int x, int z)
 {
         // Get the color of the pixel at the (by ratio times grid position) location
     sf::Color c = mHeightmap.getPixel(x*mRatioW, z*mRatioD);
+    float height = mMaxHeight*float(c.r + c.g + c.b)/(3.0f*255.f);
+    mMixmap.setPixel(x*mRatioW, z*mRatioW, sf::Color(100, 100, 100, height/mMaxHeight*255));
     return mMaxHeight*float(c.r + c.g + c.b)/(3.0f*255.f);
 }
 
@@ -116,26 +108,32 @@ void TerrainPage::generateDisplayList()
 
     // compile the display list, store a triangle in it
     glNewList(mDisplayListIndex, GL_COMPILE);
-        glFrontFace( GL_CW  ); //   Vertex are added clockwise. Used to calculate normals
-        std::vector<Vertex>::iterator it;
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA,GL_ONE);       // Blending Function For Translucency Based On Source Alpha Value ( NEW )
-        Vertex v;
-        int j=0;
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, mTextures[0]);
-        glBegin(GL_TRIANGLE_STRIP);
-        for(int i = 0; i<mVertices.size(); i++) {
-            if(i%(2*mWidth) == 0) glEnd(); glBegin(GL_TRIANGLE_STRIP);
-            v = mVertices[i];
-            glColor4f(1.0f,1.0f,1.0f,v.position[1]/mMaxHeight);         // Brightness according to height
-            glTexCoord2f(v.texcoords[0], v.texcoords[1]);
-            glVertex3f(v.position[0], v.position[1], v.position[2]);
-        }
-        glEnd();
-        glDisable(GL_TEXTURE_2D);
+    glFrontFace( GL_CW  ); //   Vertex are added clockwise. Used to calculate normals
+    std::vector<Vertex>::iterator it;
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE);       // Blending Function For Translucency Based On Source Alpha Value ( NEW )
+    texShader.enable();
+    texShader.bindTexture(mTexture, "tex", 0);
+    texShader.bindTexture(mTexture2, "l3d", 1);
+    Vertex v;
+    int j=0;
+    glEnable(GL_TEXTURE_2D);
+    //mTexture.bind();
+    glBegin(GL_TRIANGLE_STRIP);
+    for(int i = 0; i<mVertices.size(); i++) {
+        if(i%(2*mWidth) == 0) glEnd(); glBegin(GL_TRIANGLE_STRIP);
+        v = mVertices[i];
+
+        //glColor4f(1.0f,1.0f,1.0f,v.position[1]/mMaxHeight);         // Brightness according to height
+        glTexCoord2f(v.texcoords[0], v.texcoords[1]);
+        glVertex3f(v.position[0], v.position[1], v.position[2]);
+    }
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+    texShader.disable();
     glEndList();
 }
+
 
 bool TerrainPage::render()
 {

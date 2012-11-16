@@ -61,7 +61,6 @@ int main(int argc, char *argv[])
     {
         std::cerr << "Error: " << glewGetErrorString(err) << std::endl;
     }
-
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     if(theViewer.getFullscreen()) {
         window.create(sf::VideoMode(desktop.width, desktop.height, desktop.bitsPerPixel), theViewer.getCaption(), sf::Style::Fullscreen);

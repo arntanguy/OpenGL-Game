@@ -12,6 +12,7 @@
 #include "tick.h"
 #include <string.h>
 #include "TerrainPage.h"
+#include <GL/glut.h>
 
 
 Viewer::Viewer()
@@ -244,9 +245,6 @@ void Viewer::onRender()
     //glRotatef(m_twistAngle, 0.0f, 0.0f, 1.0f);
     //glTranslatef(0.0f, 0.0f, -90.0f * m_scale);
 
-    // render the model
-    //renderModel();
-    //glutSolidSphere(10, 10, 20);
     glPushMatrix();
     mTerrainPage->render();
     glPopMatrix();

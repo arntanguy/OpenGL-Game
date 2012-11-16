@@ -1,12 +1,13 @@
 #ifndef __TerrainPage__
 #define __TerrainPage__
 
+#include "Shader.h"
 #include <iostream>
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/OpenGL.hpp>
 
 #include "RessourcesManager.h"
-#include "Textures.h"
+#include "Texture.h"
 
 #define TERRAIN_NOT_COMPILED -1
 
@@ -20,6 +21,7 @@ class TerrainPage
 {
     private:
         sf::Image mHeightmap;
+        sf::Image mMixmap;
         // Width and depth of the landscape
         int mWidth, mDepth;
         /*
@@ -40,10 +42,11 @@ class TerrainPage
         void generateDisplayList();
 
         sf::Vector2u getTextureCoordinates(float x, float z);
-        float getHeight(int x, int z);
 
-        GLuint mTextures[1];
-        Textures mTexture;
+        Texture mTexture;
+        Texture mTexture2;
+        Shader texShader;
+
         void loadTexture(const std::string& texturePath);
 
 
@@ -52,6 +55,7 @@ class TerrainPage
         virtual ~TerrainPage();
 
         bool render();
+        float getHeight(int x, int z);
 };
 
 

@@ -8,9 +8,11 @@
 #include <sstream>
 #include <vector>
 #include <iostream>
+#include "Texture.h"
 
 /**
  * @brief Provides an easy way to load, enable and disable shaders
+ * Uses the glew library, don't forget to initialize it!
  */
 class Shader
 {
@@ -26,6 +28,8 @@ class Shader
 
         void init();
 
+        int getVariableId(std::string strVariable);
+
     public:
         Shader();
         Shader(const std::string &vertexShaderPath, const std::string &fragmentShaderPath);
@@ -35,6 +39,12 @@ class Shader
         void loadFragmentShader(const std::string &fragmentPath);
         void enable();
         void disable();
+
+        void bindTexture(Texture& texture, const std::string &uniformLocation, int i);
+
+        bool hasShaderSupport();
+
+        GLhandleARB getProgramHandle() const;
 };
 
 

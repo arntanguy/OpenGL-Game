@@ -12,6 +12,7 @@
 #define VIEWER_H
 
 
+#include "Shader.h"
 #include <SFML/Window/Event.hpp>
 #include <string>
 
@@ -74,7 +75,6 @@ public:
 
 protected:
   void renderCursor();
-
 };
 
 extern Viewer theViewer;

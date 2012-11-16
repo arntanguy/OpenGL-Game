@@ -25,6 +25,7 @@ ${SRC_DIR}/tick.cpp
 ${SRC_DIR}/TerrainPage.cpp
 ${SRC_DIR}/RessourcesManager.cpp
 ${SRC_DIR}/Textures.cpp
+${SRC_DIR}/Texture.cpp
 ${SRC_DIR}/Shader.cpp
 )
 
