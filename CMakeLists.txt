@@ -48,7 +48,8 @@ target_link_libraries(${BIN_DIR}/${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBR
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile ${BIN_DIR}/Doxyfile @ONLY)
-     add_custom_target(doc ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+     add_custom_target(doc ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/${BIN_DIR}/Doxyfile
      WORKING_DIRECTORY ${DOC_DIR}
      COMMENT "Generating API documentation with Doxygen" VERBATIM)
 endif(DOXYGEN_FOUND)
+
