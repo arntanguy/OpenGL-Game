@@ -14,6 +14,7 @@
 #include "TerrainPage.h"
 #include <GL/glut.h>
 
+#define WALK_SPEED 10
 
 Viewer::Viewer()
 {
@@ -32,10 +33,13 @@ Viewer::Viewer()
     m_cursorSize = 3;
     m_scale = 1;
     m_wireFrame = false;
+
+    mCamera = new Camera("Camera", sf::Vector3<float>(50, 30, 200), sf::Vector3<float>(0, 0, -1000), sf::Vector3<int>(0, 1, 0));
 }
 
 Viewer::~Viewer()
 {
+    delete mCamera;
 }
 
 std::string Viewer::getCaption()
@@ -134,6 +138,24 @@ void Viewer::onKey(const sf::Event::KeyEvent& key)
         case sf::Keyboard::Escape:
             exit(0);
             break;
+        case sf::Keyboard::Z:
+            mCamera->moveCamera(WALK_SPEED);
+            break;
+        case sf::Keyboard::S:
+            mCamera->moveCamera(-WALK_SPEED);
+            break;
+        case sf::Keyboard::Q:
+            mCamera->strafeCamera(-WALK_SPEED);
+            break;
+        case sf::Keyboard::D:
+            mCamera->strafeCamera(WALK_SPEED);
+            break;
+        case sf::Keyboard::J:
+            mCamera->moveCameraUp(-WALK_SPEED);
+            break;
+        case sf::Keyboard::K:
+            mCamera->moveCameraUp(WALK_SPEED);
+            break;
         case sf::Keyboard::W:
             if(m_wireFrame) {
                 // Normal
@@ -206,7 +228,9 @@ void Viewer::onMouseMove(const sf::Event::MouseMoveEvent& mouseEvent)
     // update internal mouse position
     m_mouseX = x;
     m_mouseY = y;
+    mCamera->mouseMove(sf::Vector2f(x, y), sf::Vector2f(m_width, m_height));
 }
+
 
 void Viewer::onRender()
 {
@@ -224,6 +248,10 @@ void Viewer::onRender()
     glLoadIdentity();
     //gluLookAt(0,100,-100,0,0,0,0,1,0);
     gluLookAt(50, 30, 200, 0, 0, -1000,0,1,0);
+    sf::Vector3f pos = mCamera->getPosition();
+    sf::Vector3f view = mCamera->getView();
+    sf::Vector3<int> up = mCamera->getUp();
+    gluLookAt(pos.x, pos.y, pos.z, view.x, view.y, view.z, up.x, up.y, up.z);
 
     // light attributes
     const GLfloat light_ambient[]  = { 0.3f, 0.3f, 0.3f, 1.0f };
@@ -254,7 +282,9 @@ void Viewer::onRender()
     //glPopMatrix();
 
     // render the cursor
-    renderCursor();
+    glPushMatrix();
+        renderCursor();
+    glPopMatrix();
 }
 
 void Viewer::onShutdown()
@@ -277,37 +307,31 @@ void Viewer::renderCursor()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    //glBegin(GL_TRIANGLES);
-    //  glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-    //  glVertex2i(m_mouseX, m_mouseY);
-    //  glColor4f(1.0f, 1.0f, 1.0f, 0.2f);
-    //  glVertex2i(m_mouseX + 16, m_mouseY - 32);
-    //  glColor4f(1.0f, 1.0f, 1.0f, 0.2f);
-    //  glVertex2i(m_mouseX + 32, m_mouseY - 16);
-    //glEnd();
     float offset = m_cursorSize/4;
     float y, x;
+    float xCenter = m_mouseX;//m_width/2;
+    float yCenter = m_mouseY;//m_height/2;
     glBegin(GL_TRIANGLES);
     // Bottom
-    y = m_mouseY - offset;
+    y = yCenter - offset;
     glColor4f(0,0,0,0.8);
-    glVertex2i(m_mouseX-m_cursorSize, y);
-    glVertex2i(m_mouseX+m_cursorSize, y);
+    glVertex2i(xCenter-m_cursorSize, y);
+    glVertex2i(xCenter+m_cursorSize, y);
     glColor4f(1,1,1,0.8);
-    glVertex2i(m_mouseX, y - m_cursorSize*2);
+    glVertex2i(xCenter, y - m_cursorSize*2);
 
     // Top
-    y = m_mouseY + m_cursorSize*2 + 2*offset;
+    y = yCenter + m_cursorSize*2 + 2*offset;
     glColor4f(0,0,0,0.8);
-    glVertex2i(m_mouseX-m_cursorSize, y);
-    glVertex2i(m_mouseX+m_cursorSize, y);
+    glVertex2i(xCenter-m_cursorSize, y);
+    glVertex2i(xCenter+m_cursorSize, y);
     glColor4f(1,1,1,0.8);
-    glVertex2i(m_mouseX, y + m_cursorSize*2);
+    glVertex2i(xCenter, y + m_cursorSize*2);
 
     // Left
     glColor4f(0,0,0,0.8);
-    x = m_mouseX - offset - m_cursorSize;
-    y = m_mouseY + m_cursorSize + offset;
+    x = xCenter - offset - m_cursorSize;
+    y = yCenter + m_cursorSize + offset;
     glVertex2i(x, y-m_cursorSize);
     glVertex2i(x, y+m_cursorSize);
     glColor4f(1,1,1,0.8);
@@ -315,8 +339,8 @@ void Viewer::renderCursor()
 
     // Right
     glColor4f(0,0,0,0.8);
-    x = m_mouseX + offset + m_cursorSize;
-    y = m_mouseY + m_cursorSize + offset;
+    x = xCenter + offset + m_cursorSize;
+    y = yCenter + m_cursorSize + offset;
     glVertex2i(x, y-m_cursorSize);
     glVertex2i(x, y+m_cursorSize);
     glColor4f(1,1,1,0.8);

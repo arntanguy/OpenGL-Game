@@ -13,6 +13,7 @@
 
 
 #include "Shader.h"
+#include "Camera.h"
 #include <SFML/Window/Event.hpp>
 #include <string>
 
@@ -41,6 +42,7 @@ protected:
   bool m_wireFrame;
 
   TerrainPage *mTerrainPage;
+  Camera *mCamera;
 
 private:
    // Private constructor to create a singleton
