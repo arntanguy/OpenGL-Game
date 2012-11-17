@@ -10,10 +10,10 @@ TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, flo
     mRatioD = mHeightmap.getSize().y/depth;
     mMaxHeight = maxHeight;
     mDisplayListIndex = TERRAIN_NOT_COMPILED;
-    mTexture.loadTexture("assets/l3d.jpg");
+    mTexture.loadTexture("assets/crate.jpg");
     mTexture2.loadTexture("assets/l3d.jpg");
     texShader.loadVertexShader("assets/shaders/vertex/default_vertex_renderer.glsl");
-    texShader.loadFragmentShader("assets/shaders/fragment/render_one_texture.glsl");
+    texShader.loadFragmentShader("assets/shaders/fragment/add_two_textures.glsl");
     generate();
 }
 
@@ -113,8 +113,8 @@ void TerrainPage::generateDisplayList()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE);       // Blending Function For Translucency Based On Source Alpha Value ( NEW )
     texShader.enable();
-    texShader.bindTexture(mTexture, "tex", 0);
-    texShader.bindTexture(mTexture2, "l3d", 1);
+    texShader.bindTexture(mTexture, "Texture0", 0);
+    texShader.bindTexture(mTexture2, "Texture1", 1);
     Vertex v;
     int j=0;
     glEnable(GL_TEXTURE_2D);
