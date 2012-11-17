@@ -12,8 +12,8 @@ TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, flo
     mDisplayListIndex = TERRAIN_NOT_COMPILED;
     mTexture.loadTexture("assets/l3d.jpg");
     mTexture2.loadTexture("assets/l3d.jpg");
-    texShader.loadVertexShader("vertex_single_texture.glsl");
-    texShader.loadFragmentShader("fragment_single_texture.glsl");
+    texShader.loadVertexShader("assets/shaders/vertex/default_vertex_renderer.glsl");
+    texShader.loadFragmentShader("assets/shaders/fragment/render_one_texture.glsl");
     generate();
 }
 

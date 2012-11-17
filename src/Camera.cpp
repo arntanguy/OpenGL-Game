@@ -81,7 +81,11 @@ void Camera::strafeCamera(float speed)
 
 void Camera::rotateView(float speed)
 {
+    std::cout << "mView " << mView.x << " " << mView.y << " " << mView.z << std::endl;
     sf::Vector3f vVector = mView-mPos;
+    //float norm = sqrt(vVector.x*vVector.x + vVector.y*vVector.y + vVector.z*vVector.z);
+    //vVector = (mView - mPos)/norm;	// Get the view vector
+    std::cout << "vVector " << vVector.x << " " << vVector.y << " " << vVector.z << std::endl;
 
 	mView.z = (float)(mPos.z + sin(speed)*vVector.x + cos(speed)*vVector.z);
 	mView.x = (float)(mPos.x + cos(speed)*vVector.x - sin(speed)*vVector.z);
@@ -90,25 +94,25 @@ void Camera::rotateView(float speed)
 
 void Camera::mouseMove(const sf::Vector2f& mousePos, const sf::Vector2f& windowSize)
 {
-	int mid_x = windowSize.x / 2;
-	int mid_y = windowSize.y / 2;
-	float angle_y  = 0.0f;
-	float angle_z  = 0.0f;
-
-	if( (mousePos.x == mid_x) && (mousePos.y == mid_y) ) return;
-
-	//SetCursorPos(mid_x, mid_y);	// Set the mouse cursor in the center of the window
-
-	// Get the direction from the mouse cursor, set a resonable maneuvering speed
-	angle_y = (float)( (mid_x - mousePos.x) ) / 1000;
-	angle_z = (float)( (mid_y - mousePos.y) ) / 1000;
-
-	// The higher the value is the faster the camera looks around.
-	mView.y += angle_z * 2;
-
-	// limit the rotation around the x-axis
-	if((mView.y - mPos.y) > 4)  mView.y = mPos.y + 4;
-	if((mView.y - mPos.y) <-4)  mView.y = mPos.y - 4;
-
-	rotateView(-angle_y); // Rotate
+//	int mid_x = windowSize.x / 2;
+//	int mid_y = windowSize.y / 2;
+//	float angle_y  = 0.0f;
+//	float angle_z  = 0.0f;
+//
+//	if( (mousePos.x == mid_x) && (mousePos.y == mid_y) ) return;
+//
+//	//SetCursorPos(mid_x, mid_y);	// Set the mouse cursor in the center of the window
+//
+//	// Get the direction from the mouse cursor, set a resonable maneuvering speed
+//	angle_y = (float)( (mid_x - mousePos.x) ) / 1000;
+//	angle_z = (float)( (mid_y - mousePos.y) ) / 1000;
+//
+//	// The higher the value is the faster the camera looks around.
+//	mView.y += angle_z * 0.5;
+//
+//	// limit the rotation around the x-axis
+//	if((mView.y - mPos.y) > 4)  mView.y = mPos.y + 4;
+//	if((mView.y - mPos.y) <-4)  mView.y = mPos.y - 4;
+//
+//	rotateView(-angle_y); // Rotate
 }

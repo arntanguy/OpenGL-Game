@@ -1,6 +1,7 @@
 SET(PROJECT_NAME Game)
-SET(BIN_DIR .)
-SET(SRC_DIR .)
+SET(BIN_DIR bin)
+SET(DOC_DIR "${BIN_DIR}/doc")
+SET(SRC_DIR src)
 SET(INCLUDE_DIR .)
 SET(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules)
@@ -39,3 +40,15 @@ add_executable (
 )
 
 target_link_libraries(${BIN_DIR}/${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} ${CAL3D_LIBRARY} ${SFML_LIBRARIES})
+
+
+
+
+# add a target to generate API documentation with Doxygen
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile ${BIN_DIR}/Doxyfile @ONLY)
+     add_custom_target(doc ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+     WORKING_DIRECTORY ${DOC_DIR}
+     COMMENT "Generating API documentation with Doxygen" VERBATIM)
+endif(DOXYGEN_FOUND)

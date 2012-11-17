@@ -3,6 +3,7 @@
 
 #include "Node.h"
 #include <math.h>
+#include <iostream>
 
 class Camera : public Node
 {
