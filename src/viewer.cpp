@@ -291,21 +291,19 @@ void Viewer::onRender()
     GLfloat lightPosition[] = { 0.0f, -1.0f, 1.0f, 1.0f };
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 
-    //// set camera position
-    //glTranslatef(0.0f, 0.0f, -m_distance * m_scale);
-    //glRotatef(m_tiltAngle, 1.0f, 0.0f, 0.0f);
-    //glRotatef(m_twistAngle, 0.0f, 0.0f, 1.0f);
-    //glTranslatef(0.0f, 0.0f, -90.0f * m_scale);
-    glPushMatrix();
+
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
+    glPushMatrix();
     mTerrainPage->render();
-    glDisable(GL_LIGHTING);
     glPopMatrix();
     //glPushMatrix();
     //      glTranslatef(0, 0, 499);
     //    mTerrainPage->render();
     //glPopMatrix();
 
+    glDisable(GL_LIGHTING);
+    glDisable(GL_DEPTH_TEST);
     // render the cursor
     glPushMatrix();
         renderCursor();

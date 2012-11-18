@@ -47,7 +47,11 @@ class TerrainPage
         Texture mTexture2;
         Texture mTexture3;
         Texture mMixmapTexture;
-        Shader texShader;
+
+        /**
+         * Shader blending the textures according to the mixmap
+         */
+        Shader mTexShader;
 
         void loadTexture(const std::string& texturePath);
 

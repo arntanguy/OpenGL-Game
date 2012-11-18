@@ -24,8 +24,8 @@ TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, flo
     // Load temporary texture
     mMixmapTexture.loadTexture(mMixmap, "Mixmap");
 
-    texShader.loadVertexShader("assets/shaders/vertex/blend_mixmap_vertex.glsl");
-    texShader.loadFragmentShader("assets/shaders/fragment/blend_textures_from_mixmap.glsl");
+    mTexShader.loadVertexShader("assets/shaders/vertex/blend_mixmap_vertex.glsl");
+    mTexShader.loadFragmentShader("assets/shaders/fragment/blend_textures_from_mixmap.glsl");
 }
 
 TerrainPage::~TerrainPage()
@@ -62,6 +62,9 @@ float TerrainPage::getHeightFromHeighmapCoordinates(int x, int y)
  **/
 void TerrainPage::generateVertices()
 {
+    /**
+     * Variables used for the generate grid algorithm
+     */
     bool add = true;
     int i = 0;
     int loop = 0;
@@ -69,6 +72,9 @@ void TerrainPage::generateVertices()
     int substractVal = mWidth-1;
     int j=0;
     int row=0;
+
+    // Texture coordinates
+    sf::Vector2u texCoords;
 
     /**
      * Loop to generateVertices all the vertices of the grid,
@@ -81,6 +87,9 @@ void TerrainPage::generateVertices()
         v.position[0] = x;
         v.position[1] = getHeight(x,z);
         v.position[2] = z;
+        texCoords = getTextureCoordinates(x, z);
+        v.texcoords[0] = texCoords.x;
+        v.texcoords[1] = texCoords.y;
         mVertices[j] = v;
 
         // Little glue to change row:
@@ -116,20 +125,18 @@ void TerrainPage::generateVerticesDisplayList()
     // compile the display list, store a triangle in it
     glNewList(mDisplayListIndex, GL_COMPILE);
     glFrontFace( GL_CW  ); //   Vertex are added clockwise. Used to calculate normals
-    std::vector<Vertex>::iterator it;
-   // glEnable(GL_BLEND);
-   // glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-    texShader.enable();
-    texShader.bindTexture(mTexture0, "Texture0", 0);
-    texShader.bindTexture(mTexture1, "Texture1", 1);
-    texShader.bindTexture(mTexture2, "Texture2", 2);
-    texShader.bindTexture(mTexture3, "Texture3", 3);
-    texShader.bindTexture(mMixmapTexture, "Mixmap", 4);
-    texShader.setFloat("mixmapWidth", mMixmap->getSize().x);
-    texShader.setFloat("mixmapHeight", mMixmap->getSize().y);
+
+    mTexShader.enable();
+    mTexShader.bindTexture(mTexture0, "Texture0", 0);
+    mTexShader.bindTexture(mTexture1, "Texture1", 1);
+    mTexShader.bindTexture(mTexture2, "Texture2", 2);
+    mTexShader.bindTexture(mTexture3, "Texture3", 3);
+    mTexShader.bindTexture(mMixmapTexture, "Mixmap", 4);
+    mTexShader.setFloat("mixmapWidth", mMixmap->getSize().x);
+    mTexShader.setFloat("mixmapHeight", mMixmap->getSize().y);
     Vertex v;
     int j=0;
-    glEnable(GL_TEXTURE_2D);
+
     glBegin(GL_TRIANGLE_STRIP);
     for(int i = 0; i<(2*mWidth)*(mDepth-1); i++) {
         v = mVertices[i];
@@ -137,8 +144,8 @@ void TerrainPage::generateVerticesDisplayList()
         glVertex3f(v.position[0], v.position[1], v.position[2]);
     }
     glEnd();
-    glDisable(GL_TEXTURE_2D);
-    texShader.disable();
+
+    mTexShader.disable();
     glEndList();
 }
 
