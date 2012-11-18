@@ -226,6 +226,15 @@ bool Shader::hasShaderSupport()
     return GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader;
 }
 
+/**
+ * @brief Sets an uniform GLSL float value
+ * WARNING: This has to be called after the shader has been enabled (by calling the enable() function)!
+ *
+ * @param uniformVarName
+ *      The uniform variable name in the GLSL shader
+ * @param value
+ *      The value to set
+ */
 void Shader::setFloat(const std::string &uniformVarName, float value)
 {
     int my_sampler_uniform_location = getVariableId(uniformVarName);

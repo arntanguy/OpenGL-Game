@@ -14,16 +14,15 @@ TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, flo
     mMixmap = new sf::Image();
     mMixmap->create(width, depth, sf::Color(0,0,0));
 
-    mTexture0.loadTexture("assets/crate.jpg");
-    mTexture1.loadTexture("assets/l3d.jpg");
-    mTexture2.loadTexture("assets/terrain/blue.jpg");
+    mTexture0.loadTexture("assets/crate.jpg");//terrain/water.jpg");
+    mTexture1.loadTexture("assets/l3d.jpg");//terrain/sand.jpg");
+    mTexture2.loadTexture("assets/terrain/grass.bmp");
     mTexture3.loadTexture("assets/terrain/rock.png");
     // Load temporary texture
     mMixmapTexture.loadTexture(mMixmap, "Mixmap");
 
     texShader.loadVertexShader("assets/shaders/vertex/blend_mixmap_vertex.glsl");
     texShader.loadFragmentShader("assets/shaders/fragment/blend_textures_from_mixmap.glsl");
-    texShader.setFloat("texscale", 100);
 }
 
 TerrainPage::~TerrainPage()
@@ -131,6 +130,8 @@ void TerrainPage::generateDisplayList()
     texShader.bindTexture(mTexture2, "Texture2", 2);
     texShader.bindTexture(mTexture3, "Texture3", 3);
     texShader.bindTexture(mMixmapTexture, "Mixmap", 4);
+    texShader.setFloat("mixmapWidth", mMixmap->getSize().x);
+    texShader.setFloat("mixmapHeight", mMixmap->getSize().y);
     Vertex v;
     int j=0;
     glEnable(GL_TEXTURE_2D);
@@ -139,7 +140,7 @@ void TerrainPage::generateDisplayList()
     for(int i = 0; i<mVertices.size(); i++) {
         if(i%(2*mWidth) == 0) glEnd(); glBegin(GL_TRIANGLE_STRIP);
         v = mVertices[i];
-        glTexCoord2f(v.texcoords[0], v.texcoords[1]);
+        glMultiTexCoord2fARB(GL_TEXTURE0_ARB, v.texcoords[0], v.texcoords[1]);
         glVertex3f(v.position[0], v.position[1], v.position[2]);
     }
     glEnd();
