@@ -31,11 +31,11 @@ class TerrainPage
         int mRatioW, mRatioD;
         float mMaxHeight;
 
-        std::vector<Vertex> mVertices;
-        std::vector<GLuint> mIndices;
+        //std::vector<Vertex> mVertices;
+        Vertex *mVertices;
 
         GLuint mDisplayListIndex;
-        void generateDisplayList();
+        void generateVerticesDisplayList();
 
         sf::Vector2u getTextureCoordinates(float x, float z);
 
@@ -59,7 +59,7 @@ class TerrainPage
         /**
          * Computes the terrain
          */
-        void generate();
+        void generateVertices();
 
         bool render();
         float getHeight(int x, int z);

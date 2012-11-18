@@ -10,6 +10,9 @@ TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, flo
     mMaxHeight = maxHeight;
     mDisplayListIndex = TERRAIN_NOT_COMPILED;
 
+    // *width-1 to account for the diagonals
+    mVertices = new Vertex[(mWidth*mDepth)+(mWidth-1)*(mDepth-1)];
+    std::cout << "Terrain: Number of vertices: " <<(mWidth)*(mDepth)+(mWidth-1)*(mDepth-1)<< std::endl;
 
     mMixmap = new sf::Image();
     mMixmap->create(width, depth, sf::Color(0,0,0));
@@ -57,63 +60,55 @@ float TerrainPage::getHeightFromHeighmapCoordinates(int x, int y)
  * Calculates all the vertices positions
  * Maps texture coordinates
  **/
-void TerrainPage::generate()
+void TerrainPage::generateVertices()
 {
-    int vertI = 0;
-    int indI = 0;
-    sf::Vector2u texcoord;
-    for(int z = mDepth; z > 1; z--) {
-        for(int x = 0; x < mWidth-1; x++) {
-            Vertex v1, v2, v3;
+    bool add = true;
+    int i = 0;
+    int loop = 0;
+    int stepByRow = 2*mWidth;
+    int substractVal = mWidth-1;
+    int j=0;
+    int row=0;
 
-            // These are the grounds vertex-positions. Note that the y-component is the only one affected by the image
-            if(((x)%mWidth) == 0) {
-                v1.position[0] = float(x);
-                v1.position[1] = getHeight(x, z);
-                v1.position[2] = float(z);
-                texcoord = getTextureCoordinates(x, z);
-                v1.texcoords[0] = texcoord.x;
-                v1.texcoords[1] = texcoord.y;
-                mVertices.push_back(v1);
-            }
-
-            // These are the grounds vertex-positions. Note that the y-component is the only one affected by the image
-            v2.position[0] = float(x);
-            v2.position[1] = getHeight(x, z-1);
-            v2.position[2] = float(z-1);
-            texcoord = getTextureCoordinates(x, z-1);
-            v2.texcoords[0] = texcoord.x;
-            v2.texcoords[1] = texcoord.y;
-            mVertices.push_back(v2);
-
-            // These are the grounds vertex-positions. Note that the y-component is the only one affected by the image
-            v3.position[0] = float(x+1);
-            v3.position[1] = getHeight(x+1, z);
-            v3.position[2] = float(z);
-            texcoord = getTextureCoordinates(x+1, z);
-            v3.texcoords[0] = texcoord.x;
-            v3.texcoords[1] = texcoord.y;
-            mVertices.push_back(v3);
-        }
-        // Get the color of the pixel at the (by ratio times grid position) location
+    /**
+     * Loop to generateVertices all the vertices of the grid,
+     * with a minimum of vertex!
+     **/
+    while(j < (stepByRow)*(mDepth-1)) {
+        int x = i%mWidth;
+        int z = mDepth-i/mWidth;
         Vertex v;
-        // These are the grounds vertex-positions. Note that the y-component is the only one affected by the image
-        v.position[0] = float(mWidth-1);
-        v.position[1] = getHeight(mWidth-1, z-1);
-        v.position[2] = float(z-1);
-        texcoord = getTextureCoordinates(mWidth-1, z-1);
-        v.texcoords[0] = texcoord.x;
-        v.texcoords[1] = texcoord.y;
-        mVertices.push_back(v);
+        v.position[0] = x;
+        v.position[1] = getHeight(x,z);
+        v.position[2] = z;
+        mVertices[j] = v;
 
+        // Little glue to change row:
+        // Loop current indice
+        // Update substract value to get the right indices on next row
+        if(loop == stepByRow-1) {
+            mVertices[++j] = v;
+            loop = 0;
+            if(substractVal == mWidth-1) substractVal = mWidth+1;
+            else substractVal = mWidth-1;
+            add = !add;
+            row++;
+        }
+
+        if(add) i += mWidth;
+        else i -= substractVal;
+        add = !add;
+        loop++;
+        j++;
     }
-    generateDisplayList();
+
+    generateVerticesDisplayList();
 }
 
 /**
  * Compile the openGL commands needed to render the scene
  */
-void TerrainPage::generateDisplayList()
+void TerrainPage::generateVerticesDisplayList()
 {
     // create one display list
     mDisplayListIndex = glGenLists(1);
@@ -135,10 +130,8 @@ void TerrainPage::generateDisplayList()
     Vertex v;
     int j=0;
     glEnable(GL_TEXTURE_2D);
-    //mTexture.bind();
     glBegin(GL_TRIANGLE_STRIP);
-    for(int i = 0; i<mVertices.size(); i++) {
-        if(i%(2*mWidth) == 0) glEnd(); glBegin(GL_TRIANGLE_STRIP);
+    for(int i = 0; i<(2*mWidth)*(mDepth-1); i++) {
         v = mVertices[i];
         glMultiTexCoord2fARB(GL_TEXTURE0_ARB, v.texcoords[0], v.texcoords[1]);
         glVertex3f(v.position[0], v.position[1], v.position[2]);
@@ -153,7 +146,7 @@ void TerrainPage::generateDisplayList()
 bool TerrainPage::render()
 {
     if(mDisplayListIndex == TERRAIN_NOT_COMPILED) {
-        std::cerr << "Error: The terrain hasn't been compiled! You need to call the generate() function first!" << std::endl;
+        std::cerr << "Error: The terrain hasn't been compiled! You need to call the generateVertices() function first!" << std::endl;
         return false;
     } else {
         // draw the display list

@@ -153,7 +153,7 @@ void Viewer::loadTerrain()
         }
     }
     mTerrainPage->setMixmap();
-    mTerrainPage->generate();
+    mTerrainPage->generateVertices();
 }
 
 void Viewer::onKey(const sf::Event::KeyEvent& key)

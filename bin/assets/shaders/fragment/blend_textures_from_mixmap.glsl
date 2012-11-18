@@ -40,8 +40,6 @@ void main()
    texel1 = mix(texel0,  texel1, mixmapTexel.g);
    texel2 = mix(texel1, texel2, mixmapTexel.b);
    vec4 tx  = mix(texel2, texel3, mixmapTexel.a);
-   //tx = tx;
 
-   //vec4 tx = mixmapTexel; //vec4(1, 1, 1, 1.);
    gl_FragColor = tx;
 }
