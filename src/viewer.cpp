@@ -136,31 +136,22 @@ void Viewer::loadTerrain()
 {
     mTerrainPage = new TerrainPage("./assets/terrain/heightmap.bmp", 500, 500, 60);
     sf::Image *mixmap = mTerrainPage->getMixmap();
-    mixmap->saveToFile("MixmapBefore.jpg");
     for(int x = 0; x < mixmap->getSize().x; x++) {
         for(int y = 0; y < mixmap->getSize().y; y++) {
-            float height = mTerrainPage->getHeightFromHeighmapCoordinates(x, y);
-//            if(height < 5)
-//                mixmap->setPixel(x, y, sf::Color(255, 0, 0, 0));
-//            else if (height >= 5 && height < 10)
-//                mixmap->setPixel(x, y, sf::Color(150, 150, 0, 0));
-//            else if (height >= 10 && height < 20)
-//                mixmap->setPixel(x, y, sf::Color(0, 150, 150, 0));
-//            else if (height >= 20 && height < 30)
-//                mixmap->setPixel(x, y, sf::Color(0, 0, 150, 50));
-//            else
-//                mixmap->setPixel(x, y, sf::Color(0, 0, 0, 255));
-//
-
-
-
-            if(x<mixmap->getSize().x/2)
-                mixmap->setPixel(x, y, sf::Color(255, 0, 0));
+            float height = mTerrainPage->getHeight(x, y);
+            if(height < 5)
+                mixmap->setPixel(x, y, sf::Color(255, 0, 0, 0));
+            else if (height >= 5 && height < 10)
+                mixmap->setPixel(x, y, sf::Color(150, 150, 0, 0));
+            else if (height >= 10 && height < 20)
+                mixmap->setPixel(x, y, sf::Color(0, 150, 150, 0));
+            else if (height >= 20 && height < 30)
+                mixmap->setPixel(x, y, sf::Color(0, 0, 150, 50));
             else
-                mixmap->setPixel(x, y, sf::Color(0, 255, 0));
+                mixmap->setPixel(x, y, sf::Color(0, 0, 0, 255));
+
         }
     }
-    mixmap->saveToFile("MixmapAfter.jpg");
     mTerrainPage->setMixmap();
     mTerrainPage->generate();
 }
@@ -306,7 +297,9 @@ void Viewer::onRender()
     //glRotatef(m_twistAngle, 0.0f, 0.0f, 1.0f);
     //glTranslatef(0.0f, 0.0f, -90.0f * m_scale);
     glPushMatrix();
+    glEnable(GL_LIGHTING);
     mTerrainPage->render();
+    glDisable(GL_LIGHTING);
     glPopMatrix();
     //glPushMatrix();
     //      glTranslatef(0, 0, 499);

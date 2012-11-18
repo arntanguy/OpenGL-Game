@@ -14,8 +14,8 @@ TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, flo
     mMixmap = new sf::Image();
     mMixmap->create(width, depth, sf::Color(0,0,0));
 
-    mTexture0.loadTexture("assets/crate.jpg");//terrain/water.jpg");
-    mTexture1.loadTexture("assets/l3d.jpg");//terrain/sand.jpg");
+    mTexture0.loadTexture("assets/terrain/water.jpg");
+    mTexture1.loadTexture("assets/terrain/sand.jpg");
     mTexture2.loadTexture("assets/terrain/grass.bmp");
     mTexture3.loadTexture("assets/terrain/rock.png");
     // Load temporary texture
@@ -50,7 +50,7 @@ float TerrainPage::getHeightFromHeighmapCoordinates(int x, int y)
 {
     // Get the color of the pixel at the (by ratio times grid position) location
     sf::Color c = mHeightmap.getPixel(x, y);
-    return mMaxHeight*float(c.r + c.g + c.b)/(3.0f*255.f);
+    return (float)(mMaxHeight*float(c.r + c.g + c.b)/(3.0f*255.f));
 }
 
 /**
@@ -122,8 +122,8 @@ void TerrainPage::generateDisplayList()
     glNewList(mDisplayListIndex, GL_COMPILE);
     glFrontFace( GL_CW  ); //   Vertex are added clockwise. Used to calculate normals
     std::vector<Vertex>::iterator it;
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+   // glEnable(GL_BLEND);
+   // glBlendFunc(GL_SRC_ALPHA,GL_ONE);
     texShader.enable();
     texShader.bindTexture(mTexture0, "Texture0", 0);
     texShader.bindTexture(mTexture1, "Texture1", 1);
