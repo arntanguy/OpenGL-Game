@@ -34,12 +34,11 @@ Viewer::Viewer()
     m_scale = 1;
     m_wireFrame = false;
 
-    mCamera = new Camera("Camera", sf::Vector3<float>(50, 30, 200), sf::Vector3<float>(0, 0, -1000), sf::Vector3<int>(0, 1, 0));
+    mCamera = new Camera("Camera", sf::Vector3f(50, 30, 200), sf::Vector3f(0, 0, -1000), sf::Vector3i(0, 1, 0));
 }
 
 Viewer::~Viewer()
 {
-    delete mCamera;
 }
 
 std::string Viewer::getCaption()
@@ -134,7 +133,7 @@ bool Viewer::onInit() {
 
 void Viewer::loadTerrain()
 {
-    mTerrainPage = new TerrainPage("./assets/terrain/heightmap.bmp", 500, 500, 60);
+    mTerrainPage = new TerrainPage("./assets/terrain/heightmap.bmp", 500, 500, 60, 2);
     sf::Image *mixmap = mTerrainPage->getMixmap();
     for(int x = 0; x < mixmap->getSize().x; x++) {
         for(int y = 0; y < mixmap->getSize().y; y++) {
@@ -270,8 +269,7 @@ void Viewer::onRender()
     // set the model transformation
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    //gluLookAt(0,100,-100,0,0,0,0,1,0);
-    gluLookAt(50, 30, 200, 0, 0, -1000,0,1,0);
+
     sf::Vector3f pos = mCamera->getPosition();
     sf::Vector3f view = mCamera->getView();
     sf::Vector3<int> up = mCamera->getUp();

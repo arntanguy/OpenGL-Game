@@ -16,7 +16,7 @@ class Camera : public Node
         Camera(const std::string& name, float x, float y, float z);
         Camera(const std::string& name, sf::Vector3f pos);
         Camera(const std::string& name, sf::Vector3f pos, sf::Vector3f view, sf::Vector3i up);
-        virtual ~Camera();
+        ~Camera();
 
         void moveCamera(float speed);
         void strafeCamera(float speed);

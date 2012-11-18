@@ -4,17 +4,18 @@
 #include <SFML/System/Vector3.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <string>
+#include <iostream>
 
 class Node
 {
     protected:
-        sf::Vector3<float> mPos;
+        sf::Vector3f mPos;
         std::string mName;
 
     public:
         Node(std::string name);
         Node(std::string name, float x, float y, float z);
-        Node(std::string name, sf::Vector3<float> pos);
+        Node(std::string name, sf::Vector3f pos);
         virtual ~Node();
 };
 

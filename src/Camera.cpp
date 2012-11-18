@@ -15,6 +15,7 @@ Camera::Camera(const std::string& name, sf::Vector3f pos, sf::Vector3f view,  sf
 
 Camera::~Camera()
 {
+    std::cerr << "Camera destructor"<<std::endl;
 }
 
 

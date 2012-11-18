@@ -24,6 +24,7 @@ class TerrainPage
         sf::Image *mMixmap;
         // Width and depth of the landscape
         int mWidth, mDepth;
+        float mScaleFactor;
         /*
          * Width and depth ratio.
          * Used to convert from terrain coordinates to heightmap coordinates
@@ -57,7 +58,7 @@ class TerrainPage
 
 
     public:
-        TerrainPage(const std::string& heightmap, int width, int depth, float mMaxHeight);
+        TerrainPage(const std::string& heightmap, int width, int depth, float mMaxHeight, float scaleFactor);
         virtual ~TerrainPage();
 
         /**

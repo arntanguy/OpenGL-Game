@@ -1,9 +1,10 @@
 #include "TerrainPage.h"
 
-TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, float maxHeight)
+TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, float maxHeight, float scaleFactor)
 {
     mWidth = width;
     mDepth = depth;
+    mScaleFactor = scaleFactor;
     mHeightmap.loadFromFile(heightmap);
     mRatioW = mHeightmap.getSize().x/width;
     mRatioD = mHeightmap.getSize().y/depth;
@@ -30,6 +31,7 @@ TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, flo
 
 TerrainPage::~TerrainPage()
 {
+    delete mVertices;
 }
 
 void TerrainPage::loadTexture(const std::string& texturePath)
@@ -84,9 +86,9 @@ void TerrainPage::generateVertices()
         int x = i%mWidth;
         int z = mDepth-i/mWidth;
         Vertex v;
-        v.position[0] = x;
+        v.position[0] = x*mScaleFactor;
         v.position[1] = getHeight(x,z);
-        v.position[2] = z;
+        v.position[2] = z*mScaleFactor;
         texCoords = getTextureCoordinates(x, z);
         v.texcoords[0] = texCoords.x;
         v.texcoords[1] = texCoords.y;
@@ -132,8 +134,8 @@ void TerrainPage::generateVerticesDisplayList()
     mTexShader.bindTexture(mTexture2, "Texture2", 2);
     mTexShader.bindTexture(mTexture3, "Texture3", 3);
     mTexShader.bindTexture(mMixmapTexture, "Mixmap", 4);
-    mTexShader.setFloat("mixmapWidth", mMixmap->getSize().x);
-    mTexShader.setFloat("mixmapHeight", mMixmap->getSize().y);
+    mTexShader.setFloat("mixmapWidth", mMixmap->getSize().x*mScaleFactor);
+    mTexShader.setFloat("mixmapHeight", mMixmap->getSize().y*mScaleFactor);
     Vertex v;
     int j=0;
 
