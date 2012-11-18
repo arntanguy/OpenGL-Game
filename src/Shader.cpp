@@ -226,6 +226,12 @@ bool Shader::hasShaderSupport()
     return GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader;
 }
 
+void Shader::setFloat(const std::string &uniformVarName, float value)
+{
+    int my_sampler_uniform_location = getVariableId(uniformVarName);
+    glUniform1f(my_sampler_uniform_location, value);
+}
+
 void Shader::bindTexture(Texture& texture, const std::string &uniformLocation, int i)
 {
     glActiveTexture(GL_TEXTURE0 + i);

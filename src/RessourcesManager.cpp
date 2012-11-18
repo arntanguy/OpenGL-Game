@@ -40,6 +40,10 @@ bool RessourcesManager::loadImage(const std::string& path)
             mImages[path] = img;
     }
 }
+void RessourcesManager::addImage(sf::Image *img, const std::string& id)
+{
+    mImages[id] = img;
+}
 
 /**
  * @brief Returns an image

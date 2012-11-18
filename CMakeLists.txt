@@ -24,6 +24,7 @@ ${SRC_DIR}/main.cpp
 ${SRC_DIR}/viewer.cpp
 ${SRC_DIR}/tick.cpp
 ${SRC_DIR}/TerrainPage.cpp
+${SRC_DIR}/Terrain.cpp
 ${SRC_DIR}/RessourcesManager.cpp
 ${SRC_DIR}/Textures.cpp
 ${SRC_DIR}/Texture.cpp

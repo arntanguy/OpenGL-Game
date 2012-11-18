@@ -28,6 +28,7 @@ class RessourcesManager
         }
 
         bool loadImage(const std::string& path);
+        void addImage(sf::Image *, const std::string& id);
         sf::Image* getImage(const std::string& path) const;
 };
 

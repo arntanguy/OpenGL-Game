@@ -20,6 +20,7 @@ class Texture
         virtual ~Texture();
 
         bool loadTexture(const std::string& path);
+        bool loadTexture(sf::Image *img, const std::string& name);
         void bind();
         GLuint getTextureId() const;
 };

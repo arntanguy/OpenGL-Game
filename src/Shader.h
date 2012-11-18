@@ -42,6 +42,8 @@ class Shader
 
         void bindTexture(Texture& texture, const std::string &uniformLocation, int i);
 
+        void setFloat(const std::string &uniformVarName, float value);
+
         bool hasShaderSupport();
 
         GLhandleARB getProgramHandle() const;

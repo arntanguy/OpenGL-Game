@@ -75,6 +75,8 @@ public:
   void onShutdown();
   void setDimension(int width, int height);
 
+  void loadTerrain();
+
 protected:
   void renderCursor();
 };

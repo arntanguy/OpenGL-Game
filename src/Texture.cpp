@@ -23,16 +23,22 @@ bool Texture::loadTexture(const std::string &path)
         return false;
     }
 
-    mImage = RessourcesManager::getInstance().getImage(path);
+    sf::Image* img = RessourcesManager::getInstance().getImage(path);
+    loadTexture(img, path);
+}
 
-    if(mImage->getSize().x%2 != 0 || mImage->getSize().y % 2 != 0) {
-        std::cerr << "Warning: image size is not a multiple of 2, texture " << path << " will not be loaded!";
+bool Texture::loadTexture(sf::Image* img, const std::string& name)
+{
+
+    if(img->getSize().x%2 != 0 || img->getSize().y % 2 != 0) {
+        std::cerr << "Warning: image size is not a multiple of 2, texture " << name << " will not be loaded!";
         return false;
     }
 
 	glGenTextures(1, &mTextureId); //we need to create an unique ID for the texture
     // Store texture in VRAM or RAM (opengl handles it behind the scene).
     // There is no need to keep track of the image after that, opengl handles the data itself.
+    mImage = img;
 }
 
 /**

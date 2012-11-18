@@ -128,8 +128,26 @@ void Viewer::onIdle()
 }
 
 bool Viewer::onInit() {
-    mTerrainPage = new TerrainPage("./assets/terrain/heightmap.bmp", 100, 100, 10);
+    loadTerrain();
     return true;
+}
+
+void Viewer::loadTerrain()
+{
+    mTerrainPage = new TerrainPage("./assets/terrain/heightmap.bmp", 500, 500, 60);
+    sf::Image *mixmap = mTerrainPage->getMixmap();
+    mixmap->saveToFile("MixmapBefore.jpg");
+    for(int x = 0; x < mixmap->getSize().x; x++) {
+        for(int y = 0; y < mixmap->getSize().y; y++) {
+            if(x<mixmap->getSize().x/2)
+                mixmap->setPixel(x, y, sf::Color(255, 0, 0));
+            else
+                mixmap->setPixel(x, y, sf::Color(0, 255, 0));
+        }
+    }
+    mixmap->saveToFile("MixmapAfter.jpg");
+    mTerrainPage->setMixmap();
+    mTerrainPage->generate();
 }
 
 void Viewer::onKey(const sf::Event::KeyEvent& key)

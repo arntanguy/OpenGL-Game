@@ -21,7 +21,7 @@ class TerrainPage
 {
     private:
         sf::Image mHeightmap;
-        sf::Image mMixmap;
+        sf::Image *mMixmap;
         // Width and depth of the landscape
         int mWidth, mDepth;
         /*
@@ -35,16 +35,18 @@ class TerrainPage
         std::vector<GLuint> mIndices;
 
         GLuint mDisplayListIndex;
-        /**
-         * Computes the terrain
-         */
-        void generate();
         void generateDisplayList();
 
         sf::Vector2u getTextureCoordinates(float x, float z);
 
-        Texture mTexture;
+        /**
+         * 4 textures to be merged according to mixmap
+         */
+        Texture mTexture0;
+        Texture mTexture1;
         Texture mTexture2;
+        Texture mTexture3;
+        Texture mMixmapTexture;
         Shader texShader;
 
         void loadTexture(const std::string& texturePath);
@@ -54,8 +56,24 @@ class TerrainPage
         TerrainPage(const std::string& heightmap, int width, int depth, float mMaxHeight);
         virtual ~TerrainPage();
 
+        /**
+         * Computes the terrain
+         */
+        void generate();
+
         bool render();
         float getHeight(int x, int z);
+        float getHeightFromHeighmapCoordinates(int x, int y);
+
+        sf::Image * getMixmap() const
+        {
+            return mMixmap;
+        }
+        void setMixmap()
+        {
+            mMixmap->saveToFile("MixmapInTerrain.jpg");
+            mMixmapTexture.loadTexture(mMixmap, "Mixm");
+        }
 };
 
 
