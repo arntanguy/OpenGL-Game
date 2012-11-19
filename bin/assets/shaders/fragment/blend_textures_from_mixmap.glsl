@@ -24,11 +24,13 @@ uniform sampler2D Mixmap;
 uniform float mixmapWidth;
 uniform float mixmapHeight;
 
+
+uniform float fogFactor;
+
 varying vec4 VertexPosition;
 
-void main()
+vec4 mixmapTexturing()
 {
-
    vec4 texel0 = texture2D(Texture0, gl_TexCoord[0].st).rgba;
    vec4 texel1 = texture2D(Texture1, gl_TexCoord[0].st).rgba;
    vec4 texel2 = texture2D(Texture2, gl_TexCoord[0].st).rgba;
@@ -39,7 +41,23 @@ void main()
    texel0 *= mixmapTexel.r;
    texel1 = mix(texel0,  texel1, mixmapTexel.g);
    texel2 = mix(texel1, texel2, mixmapTexel.b);
-   vec4 tx  = mix(texel2, texel3, mixmapTexel.a);
+   return mix(texel2, texel3, mixmapTexel.a);
+}
+
+vec4 applyLights(vec4 tx)
+{
+
+    vec4 color = gl_Color*2.0;
+    color *= tx;
+	return clamp(color,0.0,1.0);
+}
+
+void main()
+{
+   vec4 texturedTexel = mixmapTexturing();
+   vec4 tx = applyLights(texturedTexel);
 
    gl_FragColor = tx;
 }
+
+

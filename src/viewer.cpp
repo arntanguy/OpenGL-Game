@@ -174,10 +174,10 @@ void Viewer::onKey(const sf::Event::KeyEvent& key)
             mCamera->strafeCamera(WALK_SPEED);
             break;
         case sf::Keyboard::J:
-            mCamera->moveCameraUp(-WALK_SPEED);
+            mCamera->moveCameraUp(-WALK_SPEED/2);
             break;
         case sf::Keyboard::K:
-            mCamera->moveCameraUp(WALK_SPEED);
+            mCamera->moveCameraUp(WALK_SPEED/2);
             break;
         case sf::Keyboard::W:
             if(m_wireFrame) {
@@ -229,9 +229,7 @@ void Viewer::onMouseButtonUp(const sf::Event::MouseButtonEvent& mouseEvent)
 }
 
 void Viewer::onMouseMove(const sf::Event::MouseMoveEvent& mouseEvent)
-{
-    float x = mouseEvent.x;
-    float y = getHeight() - mouseEvent.y - 1;
+{ float x = mouseEvent.x; float y = getHeight() - mouseEvent.y - 1;
     // update twist/tilt angles
     if(m_bLeftMouseButtonDown)
     {
@@ -276,19 +274,30 @@ void Viewer::onRender()
     gluLookAt(pos.x, pos.y, pos.z, view.x, view.y, view.z, up.x, up.y, up.z);
 
     // light attributes
-    const GLfloat light_ambient[]  = { 0.3f, 0.3f, 0.3f, 1.0f };
-    const GLfloat light_diffuse[]  = { 0.52f, 0.5f, 0.5f, 1.0f };
-    const GLfloat light_specular[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+    const GLfloat light_ambient[]  = { 0.9f, mCamera->getPosition().z/m_height, 0.9f, 1.0f };
+    const GLfloat light_diffuse[]  = { 0.9f, 0.1f, 0.f, 1.0f };
+    const GLfloat light_specular[] = { 0.9f, mCamera->getPosition().x/m_width, 0.1f, 1.0f };
+
+    GLfloat emerald_ambient[] =
+    {0.215, 0.215, 0.215}, emerald_diffuse[] =
+    {0.7568, 0.7568, 0.7568}, emerald_specular[] =
+    {0.727811, 0.727811, 0.727811}, emerald_shininess = 76.8;
 
     // setup the light attributes
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+    glEnable(GL_LIGHT0);
 
     // set the light position
-    GLfloat lightPosition[] = { 0.0f, -1.0f, 1.0f, 1.0f };
+    GLfloat lightPosition[] = { -1.0f, -1.0f, -1.0f, 0.0f };
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 
+
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, emerald_ambient);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, emerald_diffuse);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, emerald_specular);
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, emerald_shininess);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
@@ -330,8 +339,9 @@ void Viewer::renderCursor()
 
     float offset = m_cursorSize/4;
     float y, x;
-    float xCenter = m_mouseX;//m_width/2;
-    float yCenter = m_mouseY;//m_height/2;
+    float xCenter = m_mouseX;
+    float yCenter = m_mouseY;
+
     glBegin(GL_TRIANGLES);
     // Bottom
     y = yCenter - offset;

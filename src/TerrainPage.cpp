@@ -136,6 +136,7 @@ void TerrainPage::generateVerticesDisplayList()
     mTexShader.bindTexture(mMixmapTexture, "Mixmap", 4);
     mTexShader.setFloat("mixmapWidth", mMixmap->getSize().x*mScaleFactor);
     mTexShader.setFloat("mixmapHeight", mMixmap->getSize().y*mScaleFactor);
+    mTexShader.setFloat("fogFactor", 0.);
     Vertex v;
     int j=0;
 
@@ -143,6 +144,7 @@ void TerrainPage::generateVerticesDisplayList()
     for(int i = 0; i<(2*mWidth)*(mDepth-1); i++) {
         v = mVertices[i];
         glMultiTexCoord2fARB(GL_TEXTURE0_ARB, v.texcoords[0], v.texcoords[1]);
+        glMultiTexCoord3fARB(GL_TEXTURE1_ARB, 1, 0, 0);
         glVertex3f(v.position[0], v.position[1], v.position[2]);
     }
     glEnd();
