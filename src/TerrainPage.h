@@ -5,9 +5,12 @@
 #include <iostream>
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/OpenGL.hpp>
+#include <list>
 
 #include "RessourcesManager.h"
 #include "Texture.h"
+#include "Debug.h"
+
 
 #define TERRAIN_NOT_COMPILED -1
 
@@ -54,6 +57,9 @@ class TerrainPage
          */
         Shader mTexShader;
 
+        std::list<Entity *> mEntities;
+
+
         void loadTexture(const std::string& texturePath);
 
 
@@ -76,6 +82,7 @@ class TerrainPage
         }
         void setMixmap()
         {
+            // XXX: debug only
             mMixmap->saveToFile("MixmapInTerrain.jpg");
             mMixmapTexture.loadTexture(mMixmap, "Mixm");
         }

@@ -18,6 +18,10 @@ find_package(OpenGL REQUIRED)
 find_package(CAL3D REQUIRED)
 find_package(SFML COMPONENTS system window network audio graphics REQUIRED)
 
+
+# Set all debug and info messages on
+add_definitions(-DDEBUG=1 -DINFO=1)
+
 ### DEFINE NEEDED SOURCES
 SET(SOURCES
 ${SRC_DIR}/main.cpp

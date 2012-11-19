@@ -9,6 +9,14 @@
 #include "RessourcesManager.h"
 
 
+/**
+ * @brief Manages texture loading and passing textures to opengl
+ *
+ * @description This class uses SFML to load images.
+ * Then it creates the corresponding opengl textures.
+ * It can the be bound by calling bind, which will effectively bind the texture to the
+ * GL_TEXTURE_2D unit
+ */
 class Texture
 {
     private:

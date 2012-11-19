@@ -8,6 +8,7 @@ GrassEntity::GrassEntity(const Texture& texture)
 
 GrassEntity::~GrassEntity()
 {
+    dinf << "GrassEntiy::~GrassEntity()" << std::endl;
 }
 
 bool GrassEntity::generate()

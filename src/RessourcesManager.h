@@ -5,6 +5,9 @@
 #include <map>
 #include <stdexcept>
 #include <iostream>
+#include "Entity.h"
+
+#define R() RessourcesManager::getInstance()
 
 /**
  * @brief Manages the ressources.
@@ -20,6 +23,7 @@ class RessourcesManager
 
     protected:
         std::map<std::string, sf::Image*> mImages;
+        std::map<std::string, Entity*> mEntities;
 
     public:
         inline static RessourcesManager& getInstance() {
@@ -30,6 +34,9 @@ class RessourcesManager
         bool loadImage(const std::string& path);
         void addImage(sf::Image *, const std::string& id);
         sf::Image* getImage(const std::string& path) const;
+
+        void addEntity(Entity *entity, const std::string &name);
+        Entity* getEntity(const std::string& name) const;
 };
 
 

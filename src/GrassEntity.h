@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "Texture.h"
 #include <GL/glu.h>
+#include "Debug.h"
 
 class GrassEntity {
     private:

@@ -194,7 +194,6 @@ void Viewer::onKey(const sf::Event::KeyEvent& key)
 
 void Viewer::onMouseButtonDown(const sf::Event::MouseButtonEvent& mouseEvent)
 {
-    std::cout << "Mouse button down" << std::endl;
     float x = mouseEvent.x;
     float y = getHeight() - mouseEvent.y - 1;
     if(mouseEvent.button == sf::Mouse::Left) {

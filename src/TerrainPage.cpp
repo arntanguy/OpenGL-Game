@@ -13,7 +13,7 @@ TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, flo
 
     // *width-1 to account for the diagonals
     mVertices = new Vertex[(mWidth*mDepth)+(mWidth-1)*(mDepth-1)];
-    std::cout << "Terrain: Number of vertices: " <<(mWidth)*(mDepth)+(mWidth-1)*(mDepth-1)<< std::endl;
+    dinf << "TerrainPage: Number of vertices: " <<(mWidth)*(mDepth)+(mWidth-1)*(mDepth-1)<< std::endl;
 
     mMixmap = new sf::Image();
     mMixmap->create(width, depth, sf::Color(0,0,0));
@@ -39,7 +39,8 @@ void TerrainPage::loadTexture(const std::string& texturePath)
 //    mTexture.loadTexture(texturePath);
 }
 
-sf::Vector2u TerrainPage::getTextureCoordinates(float x, float z) {
+sf::Vector2u TerrainPage::getTextureCoordinates(float x, float z)
+{
     return sf::Vector2u(int(x)%2, int(z)%2);
 }
 

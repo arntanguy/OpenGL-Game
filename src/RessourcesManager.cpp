@@ -1,14 +1,22 @@
 #include "RessourcesManager.h"
+#include "Debug.h"
 
 /**
  * @brief Free all allocated ressources
  */
 RessourcesManager::~RessourcesManager()
 {
-    std::cout << "Deleting all ressources" << std::endl;
+    dinf << "Deleting all entities" << std::endl;
+    std::map<std::string, Entity*>::const_iterator entIt;
+    for(entIt = mEntities.begin(); entIt != mEntities.end(); entIt++) {
+        dinf << "Deleting image " << entIt->first << std::endl;
+        delete entIt->second;
+    }
+
+    dinf << "Deleting all ressources" << std::endl;
     std::map<std::string, sf::Image*>::const_iterator it;
     for(it = mImages.begin(); it != mImages.end(); it++) {
-        std::cout << "Deleting image " << it->first << std::endl;
+        dinf << "Deleting image " << it->first << std::endl;
         delete it->second;
     }
 }
@@ -42,6 +50,7 @@ bool RessourcesManager::loadImage(const std::string& path)
 }
 void RessourcesManager::addImage(sf::Image *img, const std::string& id)
 {
+    dinf << "RessourcesManager: Image " << id << " added." << std::endl;
     mImages[id] = img;
 }
 
@@ -55,11 +64,26 @@ void RessourcesManager::addImage(sf::Image *img, const std::string& id)
  *        A pointer to the image, or NULL if the image isn't loaded
  */
 sf::Image* RessourcesManager::getImage(const std::string& path) const {
-    std::cout << mImages.size();
     std::map<std::string, sf::Image*>::const_iterator it =  mImages.find(path);
     if(it != mImages.end()) {
         return it->second;
     } else {
-        return NULL;
+        return 0;
+    }
+}
+
+void RessourcesManager::addEntity(Entity *entity, const std::string& entityName)
+{
+    dinf << "RessourcesManager: Entity " << entityName << " added." << std::endl;
+    mEntities[entityName] = entity;
+}
+
+Entity* RessourcesManager::getEntity(const std::string& name) const
+{
+    std::map<std::string, Entity*>::const_iterator it =  mEntities.find(name);
+    if(it != mEntities.end()) {
+        return it->second;
+    } else {
+        return 0;
     }
 }
