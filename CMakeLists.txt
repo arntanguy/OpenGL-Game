@@ -31,6 +31,7 @@ ${SRC_DIR}/Texture.cpp
 ${SRC_DIR}/Shader.cpp
 ${SRC_DIR}/Node.cpp
 ${SRC_DIR}/Camera.cpp
+${SRC_DIR}/GrassEntity.cpp
 )
 
 include_directories (${SRC_DIR} ${OPENGL_INCLUDE_DIR} ${CAL3D_INCLUDE_DIR} ${INCLUDE_DIR})
