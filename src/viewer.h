@@ -16,6 +16,9 @@
 #include "Camera.h"
 #include <SFML/Window/Event.hpp>
 #include <string>
+#include "AxisEntity.h"
+#include "Node.h"
+#include "Terrain.h"
 
 
 class TerrainPage;
@@ -41,8 +44,12 @@ protected:
 
   bool m_wireFrame;
 
+  Terrain *mTerrain;
   TerrainPage *mTerrainPage;
   Camera *mCamera;
+
+  AxisEntity *axisEntity;
+  Node *axisNode;
 
 private:
    // Private constructor to create a singleton

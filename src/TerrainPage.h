@@ -9,6 +9,8 @@
 
 #include "RessourcesManager.h"
 #include "Texture.h"
+#include "Node.h"
+#include "GrassEntity.h"
 #include "Debug.h"
 
 
@@ -57,8 +59,8 @@ class TerrainPage
          */
         Shader mTexShader;
 
-        std::list<Entity *> mEntities;
-
+        Node mNode;
+        Entity *grass;
 
         void loadTexture(const std::string& texturePath);
 

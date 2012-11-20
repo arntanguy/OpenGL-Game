@@ -9,6 +9,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 set(CMAKE_CSS_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
+set(CMAKE_CXX_FLAGS -std=c++11)
+
 project(${PROJECT_NAME})
 cmake_minimum_required(VERSION 2.6)
 #set(CMAKE_CXX_FLAGS "-Wall -W -Werror -ansi -pedantic -g")
@@ -36,6 +38,7 @@ ${SRC_DIR}/Shader.cpp
 ${SRC_DIR}/Node.cpp
 ${SRC_DIR}/Camera.cpp
 ${SRC_DIR}/GrassEntity.cpp
+${SRC_DIR}/AxisEntity.cpp
 )
 
 include_directories (${SRC_DIR} ${OPENGL_INCLUDE_DIR} ${CAL3D_INCLUDE_DIR} ${INCLUDE_DIR})

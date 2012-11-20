@@ -1,6 +1,6 @@
 #include "GrassEntity.h"
 
-GrassEntity::GrassEntity(const Texture& texture)
+GrassEntity::GrassEntity(const Texture& texture) : Entity()
 {
     mDisplayListIndex = OBJECT_NOT_COMPILED;
     mTexture = texture;
@@ -79,7 +79,7 @@ bool GrassEntity::generate()
 bool GrassEntity::render()
 {
     if(mDisplayListIndex == OBJECT_NOT_COMPILED) {
-        std::cout << "Error: You must first call the generate function to compile the opengl command list" << std::endl;
+        derr << "Error: You must first call the generate function to compile the opengl command list" << std::endl;
         return false;
     } else {
         // draw the display list

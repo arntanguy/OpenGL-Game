@@ -28,7 +28,7 @@ class Camera : public Node
         void setPosition(sf::Vector3f pos);
         void setView(sf::Vector3f view);
         inline sf::Vector3f getPosition() const
-        { return mPos; }
+        { return mTranslate; }
         inline sf::Vector3f getView() const
         { return mView; }
         inline sf::Vector3i getUp() const

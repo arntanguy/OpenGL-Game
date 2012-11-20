@@ -12,9 +12,7 @@
  */
 class Entity {
     public:
-        Entity();
-        virtual ~Entity();
-        virtual void generate() = 0;
+        virtual bool generate() = 0;
         virtual bool render() = 0;
 };
 

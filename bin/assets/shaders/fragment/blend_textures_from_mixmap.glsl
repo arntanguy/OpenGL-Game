@@ -36,7 +36,8 @@ vec4 mixmapTexturing()
    vec4 texel2 = texture2D(Texture2, gl_TexCoord[0].st).rgba;
    vec4 texel3 = texture2D(Texture3, gl_TexCoord[0].st).rgba;
    // Get texel on mixmap at the right UV coordinates
-   vec4 mixmapTexel = texture2D(Mixmap, vec2(VertexPosition.x/mixmapWidth, VertexPosition.z/mixmapHeight)).rgba;
+   // Shift half width in x and z axis because the terrain is built with the z axis in the middle
+   vec4 mixmapTexel = texture2D(Mixmap, vec2((VertexPosition.x-mixmapWidth/2.)/mixmapWidth, (VertexPosition.z-mixmapHeight/2.)/mixmapHeight)).rgba;
 
    texel0 *= mixmapTexel.r;
    texel1 = mix(texel0,  texel1, mixmapTexel.g);

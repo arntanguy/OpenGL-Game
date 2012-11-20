@@ -6,7 +6,8 @@
 #include <GL/glu.h>
 #include "Debug.h"
 
-class GrassEntity {
+class GrassEntity : public Entity
+{
     private:
         Texture mTexture;
         GLuint mDisplayListIndex;

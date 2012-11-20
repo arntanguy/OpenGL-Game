@@ -1,4 +1,5 @@
 #include "TerrainPage.h"
+#include <GL/glut.h>
 
 TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, float maxHeight, float scaleFactor)
 {
@@ -27,6 +28,12 @@ TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, flo
 
     mTexShader.loadVertexShader("assets/shaders/vertex/blend_mixmap_vertex.glsl");
     mTexShader.loadFragmentShader("assets/shaders/fragment/blend_textures_from_mixmap.glsl");
+
+
+    Texture grassText("assets/quick_grass.png");
+    grass = new GrassEntity(grassText);
+    grass->generate();
+    mNode.attachEntity(grass);
 }
 
 TerrainPage::~TerrainPage()
@@ -87,9 +94,9 @@ void TerrainPage::generateVertices()
         int x = i%mWidth;
         int z = mDepth-i/mWidth;
         Vertex v;
-        v.position[0] = x*mScaleFactor;
+        v.position[0] = (x-mWidth/2)*mScaleFactor;
         v.position[1] = getHeight(x,z);
-        v.position[2] = z*mScaleFactor;
+        v.position[2] = (z-mWidth/2)*mScaleFactor;
         texCoords = getTextureCoordinates(x, z);
         v.texcoords[0] = texCoords.x;
         v.texcoords[1] = texCoords.y;
@@ -138,6 +145,7 @@ void TerrainPage::generateVerticesDisplayList()
     mTexShader.setFloat("mixmapWidth", mMixmap->getSize().x*mScaleFactor);
     mTexShader.setFloat("mixmapHeight", mMixmap->getSize().y*mScaleFactor);
     mTexShader.setFloat("fogFactor", 0.);
+    //mTexShader.setFloat("time", Tick::getTick());
     Vertex v;
     int j=0;
 
@@ -149,8 +157,14 @@ void TerrainPage::generateVerticesDisplayList()
         glVertex3f(v.position[0], v.position[1], v.position[2]);
     }
     glEnd();
-
     mTexShader.disable();
+
+    //glEnable(GL_TEXTURE_2D);
+    //    //glTranslatef(0,65, 100);
+    //    glutSolidSphere(100,100,100);
+    //    //glScalef(20,20,20);
+    //    mNode.render();
+    //glDisable(GL_TEXTURE_2D);
     glEndList();
 }
 

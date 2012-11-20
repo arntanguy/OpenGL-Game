@@ -34,7 +34,11 @@ Viewer::Viewer()
     m_scale = 1;
     m_wireFrame = false;
 
-    mCamera = new Camera("Camera", sf::Vector3f(50, 30, 200), sf::Vector3f(0, 0, -1000), sf::Vector3i(0, 1, 0));
+    mCamera = new Camera("Camera", sf::Vector3f(600, 30, 600), sf::Vector3f(0, 0, 0), sf::Vector3i(0, 1, 0));
+
+    axisEntity = new AxisEntity(100);
+    axisNode = new Node("test", 0, 0, 0);
+    axisNode->attachEntity(axisEntity);
 }
 
 Viewer::~Viewer()
@@ -133,6 +137,8 @@ bool Viewer::onInit() {
 
 void Viewer::loadTerrain()
 {
+    mTerrain = new Terrain(500, 2, 1, 2);
+
     mTerrainPage = new TerrainPage("./assets/terrain/heightmap.bmp", 500, 500, 60, 2);
     sf::Image *mixmap = mTerrainPage->getMixmap();
     for(int x = 0; x < mixmap->getSize().x; x++) {
@@ -261,7 +267,7 @@ void Viewer::onRender()
     // set the projection transformation
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(45.0f, (GLdouble)m_width / (GLdouble)m_height, m_scale * 5.0, m_scale * 1000.0);
+    gluPerspective(45.0f, (GLdouble)m_width / (GLdouble)m_height, m_scale * 5.0, m_scale * 10000.0);
 
     // set the model transformation
     glMatrixMode(GL_MODELVIEW);
@@ -273,9 +279,12 @@ void Viewer::onRender()
     gluLookAt(pos.x, pos.y, pos.z, view.x, view.y, view.z, up.x, up.y, up.z);
 
     // light attributes
-    const GLfloat light_ambient[]  = { 0.9f, mCamera->getPosition().z/m_height, 0.9f, 1.0f };
-    const GLfloat light_diffuse[]  = { 0.9f, 0.1f, 0.f, 1.0f };
-    const GLfloat light_specular[] = { 0.9f, mCamera->getPosition().x/m_width, 0.1f, 1.0f };
+    //const GLfloat light_ambient[]  = { 0.9f, mCamera->getPosition().z/m_height, 0.9f, 1.0f };
+    //const GLfloat light_diffuse[]  = { 0.9f, 0.1f, 0.f, 1.0f };
+    //const GLfloat light_specular[] = { 0.9f, mCamera->getPosition().x/m_width, 0.1f, 1.0f };
+    const GLfloat light_ambient[]  = { 0.9f, 0.9f, 0.9f, 1.0f };
+    const GLfloat light_diffuse[]  = { 0.5f, 0.5f, 0.5f, 1.0f };
+    const GLfloat light_specular[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 
     GLfloat emerald_ambient[] =
     {0.215, 0.215, 0.215}, emerald_diffuse[] =
@@ -289,7 +298,7 @@ void Viewer::onRender()
     glEnable(GL_LIGHT0);
 
     // set the light position
-    GLfloat lightPosition[] = { -1.0f, -1.0f, -1.0f, 0.0f };
+    GLfloat lightPosition[] = { -1.0f, 1.0f, -1.0f, 0.0f };
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 
 
@@ -301,7 +310,13 @@ void Viewer::onRender()
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
     glPushMatrix();
-    mTerrainPage->render();
+        axisNode->render();
+        mTerrainPage->render();
+        //glTranslatef(1000,0,0);
+        //mTerrainPage->render();
+        //glTranslatef(1000,0,0);
+        //mTerrainPage->render();
+
     glPopMatrix();
     //glPushMatrix();
     //      glTranslatef(0, 0, 499);

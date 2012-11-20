@@ -21,7 +21,7 @@ Camera::~Camera()
 
 void Camera::setPosition(sf::Vector3f pos)
 {
-    mPos = pos;
+    mTranslate = pos;
 }
 
 void Camera::setView(sf::Vector3f view)
@@ -31,22 +31,22 @@ void Camera::setView(sf::Vector3f view)
 
 void Camera::moveCamera(float speed)
 {
-    sf::Vector3f vVector = mView-mPos;
+    sf::Vector3f vVector = mView-mTranslate;
     float norm = sqrt(vVector.x*vVector.x + vVector.y*vVector.y + vVector.z*vVector.z);
-    vVector = (mView - mPos)/norm;	// Get the view vector
+    vVector = (mView - mTranslate)/norm;	// Get the view vector
 
     // Get new position, and new viewpoint
-	mPos.x  = mPos.x  + vVector.x * speed;
-	mPos.z  = mPos.z  + vVector.z * speed;
+	mTranslate.x  = mTranslate.x  + vVector.x * speed;
+	mTranslate.z  = mTranslate.z  + vVector.z * speed;
 	mView.x = mView.x + vVector.x * speed;
 	mView.z = mView.z + vVector.z * speed;
 }
 
 void Camera::moveCameraUp(float speed)
 {
-    sf::Vector3f vVector = mView-mPos;
+    sf::Vector3f vVector = mView-mTranslate;
     float norm = sqrt(vVector.x*vVector.x + vVector.y*vVector.y + vVector.z*vVector.z);
-    vVector = (mView - mPos)/norm;	// Get the view vector
+    vVector = (mView - mTranslate)/norm;	// Get the view vector
 
     sf::Vector3f vOrthoVector;              // Orthogonal vector for the view vector
 
@@ -55,8 +55,8 @@ void Camera::moveCameraUp(float speed)
 	vOrthoVector.z = vVector.y;
 
 	// left positive cameraspeed and right negative -cameraspeed.
-	mPos.y  = mPos.y  + vOrthoVector.y * speed;
-	mPos.z  = mPos.z  + vOrthoVector.z * speed;
+	mTranslate.y  = mTranslate.y  + vOrthoVector.y * speed;
+	mTranslate.z  = mTranslate.z  + vOrthoVector.z * speed;
 	mView.y = mView.y + vOrthoVector.y * speed;
 	mView.z = mView.z + vOrthoVector.z * speed;
 }
@@ -64,9 +64,9 @@ void Camera::moveCameraUp(float speed)
 
 void Camera::strafeCamera(float speed)
 {
-    sf::Vector3f vVector = mView-mPos;
+    sf::Vector3f vVector = mView-mTranslate;
     float norm = sqrt(vVector.x*vVector.x + vVector.y*vVector.y + vVector.z*vVector.z);
-    vVector = (mView - mPos)/norm;	// Get the view vector
+    vVector = (mView - mTranslate)/norm;	// Get the view vector
 
     sf::Vector3f vOrthoVector;              // Orthogonal vector for the view vector
 
@@ -74,8 +74,8 @@ void Camera::strafeCamera(float speed)
 	vOrthoVector.z =  vVector.x;
 
 	// left positive cameraspeed and right negative -cameraspeed.
-	mPos.x  = mPos.x  + vOrthoVector.x * speed;
-	mPos.z  = mPos.z  + vOrthoVector.z * speed;
+	mTranslate.x  = mTranslate.x  + vOrthoVector.x * speed;
+	mTranslate.z  = mTranslate.z  + vOrthoVector.z * speed;
 	mView.x = mView.x + vOrthoVector.x * speed;
 	mView.z = mView.z + vOrthoVector.z * speed;
 }
@@ -83,13 +83,13 @@ void Camera::strafeCamera(float speed)
 void Camera::rotateView(float speed)
 {
     std::cout << "mView " << mView.x << " " << mView.y << " " << mView.z << std::endl;
-    sf::Vector3f vVector = mView-mPos;
+    sf::Vector3f vVector = mView-mTranslate;
     //float norm = sqrt(vVector.x*vVector.x + vVector.y*vVector.y + vVector.z*vVector.z);
-    //vVector = (mView - mPos)/norm;	// Get the view vector
+    //vVector = (mView - mTranslate)/norm;	// Get the view vector
     std::cout << "vVector " << vVector.x << " " << vVector.y << " " << vVector.z << std::endl;
 
-	mView.z = (float)(mPos.z + sin(speed)*vVector.x + cos(speed)*vVector.z);
-	mView.x = (float)(mPos.x + cos(speed)*vVector.x - sin(speed)*vVector.z);
+	mView.z = (float)(mTranslate.z + sin(speed)*vVector.x + cos(speed)*vVector.z);
+	mView.x = (float)(mTranslate.x + cos(speed)*vVector.x - sin(speed)*vVector.z);
 }
 
 
@@ -112,8 +112,8 @@ void Camera::mouseMove(const sf::Vector2f& mousePos, const sf::Vector2f& windowS
 //	mView.y += angle_z * 0.5;
 //
 //	// limit the rotation around the x-axis
-//	if((mView.y - mPos.y) > 4)  mView.y = mPos.y + 4;
-//	if((mView.y - mPos.y) <-4)  mView.y = mPos.y - 4;
+//	if((mView.y - mTranslate.y) > 4)  mView.y = mTranslate.y + 4;
+//	if((mView.y - mTranslate.y) <-4)  mView.y = mTranslate.y - 4;
 //
 //	rotateView(-angle_y); // Rotate
 }
