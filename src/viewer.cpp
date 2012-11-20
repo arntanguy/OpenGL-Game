@@ -139,7 +139,7 @@ void Viewer::loadTerrain()
 {
     mTerrain = new Terrain(500, 2, 1, 2);
 
-    mTerrainPage = new TerrainPage("./assets/terrain/heightmap.bmp", 500, 500, 60, 2);
+    mTerrainPage = new TerrainPage("./assets/terrain/heightmap.bmp", 200, 200, 60, 4);
     sf::Image *mixmap = mTerrainPage->getMixmap();
     for(int x = 0; x < mixmap->getSize().x; x++) {
         for(int y = 0; y < mixmap->getSize().y; y++) {

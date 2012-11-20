@@ -7,9 +7,10 @@ TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, flo
     mWidth = width;
     mDepth = depth;
     mScaleFactor = scaleFactor;
-    mHeightmap.loadFromFile(heightmap);
-    mRatioW = mHeightmap.getSize().x/width;
-    mRatioD = mHeightmap.getSize().y/depth;
+    mHeightmap = new sf::Image();
+    mHeightmap->loadFromFile(heightmap);
+    mRatioW = mHeightmap->getSize().x/width;
+    mRatioD = mHeightmap->getSize().y/depth;
     mMaxHeight = maxHeight;
     mDisplayListIndex = TERRAIN_NOT_COMPILED;
 
@@ -26,6 +27,8 @@ TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, flo
     mTexture3.loadTexture("assets/terrain/rock.png");
     // Load temporary texture
     mMixmapTexture.loadTexture(mMixmap, "Mixmap");
+
+    mHeightmapTexture.loadTexture(mHeightmap, "Heightmap");
 
     mTexShader.loadVertexShader("assets/shaders/vertex/blend_mixmap_vertex.glsl");
     mTexShader.loadFragmentShader("assets/shaders/fragment/blend_textures_from_mixmap.glsl");
@@ -56,14 +59,14 @@ sf::Vector2u TerrainPage::getTextureCoordinates(float x, float z)
 float TerrainPage::getHeight(int x, int z)
 {
     // Get the color of the pixel at the (by ratio times grid position) location
-    sf::Color c = mHeightmap.getPixel(x*mRatioW, z*mRatioD);
+    sf::Color c = mHeightmap->getPixel(x*mRatioW, z*mRatioD);
     return mMaxHeight*float(c.r + c.g + c.b)/(3.0f*255.f);
 }
 
 float TerrainPage::getHeightFromHeighmapCoordinates(int x, int y)
 {
     // Get the color of the pixel at the (by ratio times grid position) location
-    sf::Color c = mHeightmap.getPixel(x, y);
+    sf::Color c = mHeightmap->getPixel(x, y);
     return (float)(mMaxHeight*float(c.r + c.g + c.b)/(3.0f*255.f));
 }
 
@@ -95,9 +98,9 @@ void TerrainPage::generateVertices()
         int x = i%mWidth;
         int z = mDepth-i/mWidth;
         Vertex v;
-        v.position[0] = (x-mWidth/2)*mScaleFactor;
+        v.position[0] = x*mScaleFactor;//(x-mWidth/2)*mScaleFactor;
         v.position[1] = getHeight(x,z);
-        v.position[2] = (z-mWidth/2)*mScaleFactor;
+        v.position[2] = z*mScaleFactor;//(z-mWidth/2)*mScaleFactor;
         texCoords = getTextureCoordinates(x, z);
         v.texcoords[0] = texCoords.x;
         v.texcoords[1] = texCoords.y;
@@ -175,11 +178,11 @@ bool TerrainPage::render()
         mTexShader.bindTexture(mTexture2, "Texture2", 2);
         mTexShader.bindTexture(mTexture3, "Texture3", 3);
         mTexShader.bindTexture(mMixmapTexture, "Mixmap", 4);
-        mTexShader.setFloat("mixmapWidth", mMixmap->getSize().x*mScaleFactor);
-        mTexShader.setFloat("mixmapHeight", mMixmap->getSize().y*mScaleFactor);
+        mTexShader.bindTexture(mHeightmapTexture, "Heightmap", 5);
+        mTexShader.setFloat("terrainSize", mWidth*mScaleFactor);
+        mTexShader.setFloat("maxHeight", mMaxHeight);
         mTexShader.setFloat("fogFactor", 0.);
-
-        mTexShader.setFloat("time", sinus);
+        mTexShader.setFloat("waterSinus", sinus);
 
         if(sinus+add >= 1.f ) add = -0.005;
         if(sinus+add <= -1.f) add = 0.005;

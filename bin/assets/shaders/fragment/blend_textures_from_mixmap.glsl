@@ -18,14 +18,9 @@ uniform sampler2D Texture2;
 uniform sampler2D Texture3;
 uniform sampler2D Mixmap;
 
-/**
- * The width and height of the mixmap image, used to generate the correct UV position
- */
-uniform float mixmapWidth;
-uniform float mixmapHeight;
 
+uniform float terrainSize;
 uniform float waterSinus;
-
 
 uniform float fogFactor;
 
@@ -39,7 +34,7 @@ vec4 mixmapTexturing()
    vec4 texel3 = texture2D(Texture3, gl_TexCoord[0].st).rgba;
    // Get texel on mixmap at the right UV coordinates
    // Shift half width in x and z axis because the terrain is built with the z axis in the middle
-   vec4 mixmapTexel = texture2D(Mixmap, vec2((VertexPosition.x-mixmapWidth/2.)/mixmapWidth, (VertexPosition.z-mixmapHeight/2.)/mixmapHeight)).rgba;
+   vec4 mixmapTexel = texture2D(Mixmap, vec2(VertexPosition.x/terrainSize, VertexPosition.z/terrainSize)).rgba;
 
    // Water
    texel0 *= mixmapTexel.r;

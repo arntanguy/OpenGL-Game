@@ -65,7 +65,6 @@ void Node::translate(float x, float y, float z)
 
 bool Node::render()
 {
-    dinf << "Rendering " << mName << std::endl;
     if(mEntity != 0)
         return mEntity->render();
     else

@@ -25,7 +25,7 @@ struct Vertex;
 class TerrainPage
 {
     private:
-        sf::Image mHeightmap;
+        sf::Image *mHeightmap;
         sf::Image *mMixmap;
         // Width and depth of the landscape
         int mWidth, mDepth;
@@ -53,6 +53,7 @@ class TerrainPage
         Texture mTexture2;
         Texture mTexture3;
         Texture mMixmapTexture;
+        Texture mHeightmapTexture;
 
         /**
          * Shader blending the textures according to the mixmap

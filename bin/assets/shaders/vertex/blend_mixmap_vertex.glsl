@@ -1,17 +1,29 @@
 varying vec4 VertexPosition;
 
+uniform sampler2D Heightmap;
+uniform float maxHeight;
+uniform float terrainSize;
+uniform float waterSinus;
+
+// Returns the height of the terrain
+vec4 get_height()
+{
+    vec4 vertexPosition = gl_Vertex;
+
+    //vec4 heightTexel = texture2D(Heightmap, vec2(gl_Vertex.x/terrainSize, gl_Vertex.z/terrainSize)).rgba;
+    //float height = maxHeight*heightTexel.r;
+    vertexPosition.y = gl_Vertex.y*sin(10.*waterSinus);
+    return vertexPosition;
+}
 
 void main() {
 
     gl_TexCoord[0] = gl_MultiTexCoord0;
-    gl_TexCoord[1] = gl_MultiTexCoord1;
-    gl_Position = ftransform();
+    vec4 heightVertex = get_height();
+    gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * heightVertex;
 
     // Pass vertex position to the fragment shader
-    VertexPosition = gl_Vertex;
-
-
-
+    VertexPosition = heightVertex;
 
 
     /**
