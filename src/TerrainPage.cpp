@@ -1,5 +1,6 @@
 #include "TerrainPage.h"
 #include <GL/glut.h>
+#include "tick.h"
 
 TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, float maxHeight, float scaleFactor)
 {
@@ -136,16 +137,6 @@ void TerrainPage::generateVerticesDisplayList()
     glNewList(mDisplayListIndex, GL_COMPILE);
     glFrontFace( GL_CW  ); //   Vertex are added clockwise. Used to calculate normals
 
-    mTexShader.enable();
-    mTexShader.bindTexture(mTexture0, "Texture0", 0);
-    mTexShader.bindTexture(mTexture1, "Texture1", 1);
-    mTexShader.bindTexture(mTexture2, "Texture2", 2);
-    mTexShader.bindTexture(mTexture3, "Texture3", 3);
-    mTexShader.bindTexture(mMixmapTexture, "Mixmap", 4);
-    mTexShader.setFloat("mixmapWidth", mMixmap->getSize().x*mScaleFactor);
-    mTexShader.setFloat("mixmapHeight", mMixmap->getSize().y*mScaleFactor);
-    mTexShader.setFloat("fogFactor", 0.);
-    //mTexShader.setFloat("time", Tick::getTick());
     Vertex v;
     int j=0;
 
@@ -157,7 +148,6 @@ void TerrainPage::generateVerticesDisplayList()
         glVertex3f(v.position[0], v.position[1], v.position[2]);
     }
     glEnd();
-    mTexShader.disable();
 
     //glEnable(GL_TEXTURE_2D);
     //    //glTranslatef(0,65, 100);
@@ -171,12 +161,34 @@ void TerrainPage::generateVerticesDisplayList()
 
 bool TerrainPage::render()
 {
+    // Used to modulate the water texture coordinates by the shader.
+    static float add = 0.005;
+    static float sinus = -1;
+
     if(mDisplayListIndex == TERRAIN_NOT_COMPILED) {
         std::cerr << "Error: The terrain hasn't been compiled! You need to call the generateVertices() function first!" << std::endl;
         return false;
     } else {
+        mTexShader.enable();
+        mTexShader.bindTexture(mTexture0, "Texture0", 0);
+        mTexShader.bindTexture(mTexture1, "Texture1", 1);
+        mTexShader.bindTexture(mTexture2, "Texture2", 2);
+        mTexShader.bindTexture(mTexture3, "Texture3", 3);
+        mTexShader.bindTexture(mMixmapTexture, "Mixmap", 4);
+        mTexShader.setFloat("mixmapWidth", mMixmap->getSize().x*mScaleFactor);
+        mTexShader.setFloat("mixmapHeight", mMixmap->getSize().y*mScaleFactor);
+        mTexShader.setFloat("fogFactor", 0.);
+
+        mTexShader.setFloat("time", sinus);
+
+        if(sinus+add >= 1.f ) add = -0.005;
+        if(sinus+add <= -1.f) add = 0.005;
+        sinus+=add;
+
         // draw the display list
         glCallList(mDisplayListIndex);
+
+        mTexShader.disable();
         return true;
     }
 }

@@ -24,6 +24,8 @@ uniform sampler2D Mixmap;
 uniform float mixmapWidth;
 uniform float mixmapHeight;
 
+uniform float waterSinus;
+
 
 uniform float fogFactor;
 
@@ -31,7 +33,7 @@ varying vec4 VertexPosition;
 
 vec4 mixmapTexturing()
 {
-   vec4 texel0 = texture2D(Texture0, gl_TexCoord[0].st).rgba;
+   vec4 texel0 = texture2D(Texture0, gl_TexCoord[0].st*sin(waterSinus)).rgba;
    vec4 texel1 = texture2D(Texture1, gl_TexCoord[0].st).rgba;
    vec4 texel2 = texture2D(Texture2, gl_TexCoord[0].st).rgba;
    vec4 texel3 = texture2D(Texture3, gl_TexCoord[0].st).rgba;
@@ -39,9 +41,13 @@ vec4 mixmapTexturing()
    // Shift half width in x and z axis because the terrain is built with the z axis in the middle
    vec4 mixmapTexel = texture2D(Mixmap, vec2((VertexPosition.x-mixmapWidth/2.)/mixmapWidth, (VertexPosition.z-mixmapHeight/2.)/mixmapHeight)).rgba;
 
+   // Water
    texel0 *= mixmapTexel.r;
+   // Sand
    texel1 = mix(texel0,  texel1, mixmapTexel.g);
+   // Grass
    texel2 = mix(texel1, texel2, mixmapTexel.b);
+   // rock
    return mix(texel2, texel3, mixmapTexel.a);
 }
 
