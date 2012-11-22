@@ -1,3 +1,22 @@
+/******************************************************************************
+ *     Copyright (C) 2011-2012  TANGUY Arnaud arn.tanguy@gmail.com             *
+ *                                                                             *
+ * This program is free software; you can redistribute it and/or modify        *
+ * it under the terms of the GNU General Public License as published by        *
+ * the Free Software Foundation; either version 2 of the License, or           *
+ * (at your option) any later version.                                         *
+ *                                                                             *
+ * This program is distributed in the hope that it will be useful,             *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of              *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                *
+ * GNU General Public License for more details.                                *
+ *                                                                             *
+ * You should have received a copy of the GNU General Public License along     *
+ * with this program; if not, write to the Free Software Foundation, Inc.,     *
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                 *
+  ******************************************************************************/
+
+
 varying vec4 VertexPosition;
 
 uniform sampler2D Heightmap;
@@ -5,21 +24,61 @@ uniform float maxHeight;
 uniform float terrainSize;
 uniform float waterSinus;
 
-// Returns the height of the terrain
-vec4 get_height()
-{
-    vec4 vertexPosition = gl_Vertex;
+uniform float waveActivated;
+uniform float waveTime;
 
-    //vec4 heightTexel = texture2D(Heightmap, vec2(gl_Vertex.x/terrainSize, gl_Vertex.z/terrainSize)).rgba;
-    //float height = maxHeight*heightTexel.r;
-    vertexPosition.y = gl_Vertex.y*sin(10.*waterSinus);
-    return vertexPosition;
+// Returns the height of the terrain
+//vec4 get_height()
+//{
+//    vec4 vertexPosition = gl_Vertex;
+//
+//    //vec4 heightTexel = texture2D(Heightmap, vec2(gl_Vertex.x/terrainSize, gl_Vertex.z/terrainSize)).rgba;
+//    //float height = maxHeight*heightTexel.r;
+//    vertexPosition.y = gl_Vertex.y*sin(10.*waterSinus);
+//    return vertexPosition;
+//}
+
+/**
+ * Sinusoidal wave propagating along X and Z direction
+ * @param center
+ *      Position of the center (x, z)
+ * @param currentVertex
+ *      Current vertex
+ * @param rmax
+ *      Maximum radius of the wave
+ * @param maxAmplitude
+ *      Maximum amplitude of the height displacement
+ * @param v
+ *      Velocity of the wave
+ * @param t
+ *      Current time
+ * @param waveLength
+ *      Wavelength of the wave
+ **/
+vec4 progessive_sinusoidal_wave(vec2 center, vec4 currentVertex, float rmax, float maxAmplitude, float v, float t, float waveLength)
+{
+    float r = sqrt(pow(currentVertex.x-center.x, 2.) + pow(currentVertex.z-center.y, 2.));
+    if( r <= rmax ) {
+        float d = rmax-r;
+        float A = maxAmplitude * (rmax-r)/rmax;
+        float newHeight = A * sin(2.*3.14159*(v*t-r/waveLength));
+        currentVertex.y = newHeight;
+    }
+    return currentVertex;
 }
 
 void main() {
 
     gl_TexCoord[0] = gl_MultiTexCoord0;
-    vec4 heightVertex = get_height();
+    vec4 heightVertex = gl_Vertex;
+
+    /**
+     * If the wave is activated, apply it
+     **/
+    if(waveActivated > 0.5) {
+        vec4 height = progessive_sinusoidal_wave(vec2(400.,400), heightVertex, 400., 10., 1., waveTime, 40.);
+        heightVertex.y = height.y;
+    }
     gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * heightVertex;
 
     // Pass vertex position to the fragment shader

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/OpenGL.hpp>
+#include <SFML/System/Clock.hpp>
 #include <list>
 
 #include "RessourcesManager.h"
@@ -65,6 +66,8 @@ class TerrainPage
 
         void loadTexture(const std::string& texturePath);
 
+        sf::Clock mWaveClock;
+        bool mWaveActivated;
 
     public:
         TerrainPage(const std::string& heightmap, int width, int depth, float mMaxHeight, float scaleFactor);
@@ -89,6 +92,7 @@ class TerrainPage
             mMixmap->saveToFile("MixmapInTerrain.jpg");
             mMixmapTexture.loadTexture(mMixmap, "Mixm");
         }
+        void startWave(bool status);
 };
 
 

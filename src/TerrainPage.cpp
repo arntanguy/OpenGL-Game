@@ -21,7 +21,7 @@ TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, flo
     mMixmap = new sf::Image();
     mMixmap->create(width, depth, sf::Color(0,0,0));
 
-    mTexture0.loadTexture("assets/terrain/water.jpg");
+    mTexture0.loadTexture("assets/terrain/water2.png");
     mTexture1.loadTexture("assets/terrain/sand.jpg");
     mTexture2.loadTexture("assets/terrain/grass.bmp");
     mTexture3.loadTexture("assets/terrain/rock.png");
@@ -161,6 +161,11 @@ void TerrainPage::generateVerticesDisplayList()
     glEndList();
 }
 
+void TerrainPage::startWave(bool status)
+{
+    mWaveActivated = status;
+    mWaveClock.restart();
+}
 
 bool TerrainPage::render()
 {
@@ -183,6 +188,13 @@ bool TerrainPage::render()
         mTexShader.setFloat("maxHeight", mMaxHeight);
         mTexShader.setFloat("fogFactor", 0.);
         mTexShader.setFloat("waterSinus", sinus);
+
+        if(mWaveActivated)
+            mTexShader.setFloat("waveActivated", 1.);
+        else
+            mTexShader.setFloat("waveActivated", 0.);
+        sf::Time time = mWaveClock.getElapsedTime();
+        mTexShader.setFloat("waveTime", time.asSeconds()/10);
 
         if(sinus+add >= 1.f ) add = -0.005;
         if(sinus+add <= -1.f) add = 0.005;

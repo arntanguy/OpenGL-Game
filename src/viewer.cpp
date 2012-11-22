@@ -139,7 +139,7 @@ void Viewer::loadTerrain()
 {
     mTerrain = new Terrain(500, 2, 1, 2);
 
-    mTerrainPage = new TerrainPage("./assets/terrain/heightmap.bmp", 200, 200, 60, 4);
+    mTerrainPage = new TerrainPage("./assets/terrain/heightmap.bmp", 400, 400, 60, 2);
     sf::Image *mixmap = mTerrainPage->getMixmap();
     for(int x = 0; x < mixmap->getSize().x; x++) {
         for(int y = 0; y < mixmap->getSize().y; y++) {
@@ -159,6 +159,7 @@ void Viewer::loadTerrain()
     }
     mTerrainPage->setMixmap();
     mTerrainPage->generateVertices();
+    mTerrainPage->startWave(true);
 }
 
 void Viewer::onKey(const sf::Event::KeyEvent& key)
