@@ -21,6 +21,7 @@ uniform sampler2D Mixmap;
 
 uniform float terrainSize;
 uniform float waterSinus;
+uniform float waterHeight;
 
 uniform float fogFactor;
 
@@ -37,13 +38,67 @@ vec4 mixmapTexturing()
    vec4 mixmapTexel = texture2D(Mixmap, vec2(VertexPosition.x/terrainSize, VertexPosition.z/terrainSize)).rgba;
 
    // Water
-   texel0 *= mixmapTexel.r;
+   if(VertexPosition.y < waterHeight)
+       texel0 *= mixmapTexel.r;
+    else
+       texel0 = texel1;
    // Sand
    texel1 = mix(texel0,  texel1, mixmapTexel.g);
    // Grass
    texel2 = mix(texel1, texel2, mixmapTexel.b);
    // rock
    return mix(texel2, texel3, mixmapTexel.a);
+}
+
+/**
+ * Do the same kind of texturing as done with the mixmap,
+ * But apply textture according to vertex height not mixmap color.
+ * The texture will effectivly stay the same at each height
+ * XXX: Not used
+ */
+vec4 fragmentTexturing()
+{
+   vec4 texel0 = texture2D(Texture0, gl_TexCoord[0].st*sin(waterSinus)).rgba;
+   vec4 texel1 = texture2D(Texture1, gl_TexCoord[0].st).rgba;
+   vec4 texel2 = texture2D(Texture2, gl_TexCoord[0].st).rgba;
+   vec4 texel3 = texture2D(Texture3, gl_TexCoord[0].st).rgba;
+
+   vec3 color;
+   float water, sand, grass, rock;
+   if(VertexPosition.y < 5.) {
+      water=1.;
+      sand=0.;
+      grass=0.;
+      rock=0.;
+   } else if(VertexPosition.y < 10.) {
+      water=0.5;
+      sand=0.5;
+      grass=0.;
+      rock=0.;
+   } else if(VertexPosition.y < 20.) {
+      water=0.0;
+      sand=0.5;
+      grass=0.5;
+      rock=0.;
+   } else if(VertexPosition.y < 30.) {
+      water=0.0;
+      sand=0.0;
+      grass=0.5;
+      rock=0.196;
+   } else {
+      water=0.0;
+      sand=0.0;
+      grass=0.0;
+      rock=1.;
+   }
+   // Water
+   texel0 *= water;
+   // Sand
+   texel1 = mix(texel0,  texel1, sand);
+   // Grass
+   texel2 = mix(texel1, texel2, grass);
+   // rock
+   return mix(texel2, texel3, rock);
 }
 
 vec4 applyLights(vec4 tx)
@@ -57,6 +112,7 @@ vec4 applyLights(vec4 tx)
 void main()
 {
    vec4 texturedTexel = mixmapTexturing();
+//   vec4 texturedTexel = fragmentTexturing();
    vec4 tx = applyLights(texturedTexel);
 
    gl_FragColor = tx;

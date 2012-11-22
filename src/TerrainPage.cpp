@@ -188,6 +188,7 @@ bool TerrainPage::render()
         mTexShader.setFloat("maxHeight", mMaxHeight);
         mTexShader.setFloat("fogFactor", 0.);
         mTexShader.setFloat("waterSinus", sinus);
+        mTexShader.setFloat("waterHeight", 5);
 
         if(mWaveActivated)
             mTexShader.setFloat("waveActivated", 1.);

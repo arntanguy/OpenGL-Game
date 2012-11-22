@@ -77,7 +77,7 @@ void main() {
      **/
     if(waveActivated > 0.5) {
         vec4 height = progessive_sinusoidal_wave(vec2(400.,400), heightVertex, 400., 10., 1., waveTime, 40.);
-        heightVertex.y = height.y;
+        heightVertex.y += height.y;
     }
     gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * heightVertex;
 
