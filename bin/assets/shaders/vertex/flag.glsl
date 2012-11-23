@@ -70,14 +70,24 @@ float progressive_sinusoidal_wave_value(vec2 center, vec4 currentVertex, float m
     return 0.;
 }
 
+
+// XXX: Only applies to x and z wind direction
 vec4 applyWave(vec4 vertexPosition)
 {
+    // Calculate wavelength so that it is located on vertical vertices of the flag
     float waveLength = 2.*width/nbSquares;
-    float waveDisplacement = progressive_sinusoidal_wave_value(origin.xz, vertexPosition, 10., 1., waveTime, 8.);
+    float waveDisplacement = progressive_sinusoidal_wave_value(origin.xz, vertexPosition, 10., 5., waveTime, 8.);
 
-    //vec3 n = normal(cross(windDirection, vec3(0,1,0)));
-    vertexPosition.z-= waveDisplacement;
-    return vertexPosition;
+    vec2 v = vertexPosition.xz - origin.xz;
+    float norm = sqrt(pow(v.x,2) + pow(v.y,2));
+
+
+    vec3 newPos = origin+norm*windDirection;
+    newPos.y = vertexPosition.y;
+
+    vec3 n = normalize(cross(windDirection, vec3(0,1,0)));
+    newPos = newPos+waveDisplacement*n;
+    return vec4(newPos, 1.);
 }
 
 void main() {
