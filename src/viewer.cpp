@@ -160,7 +160,7 @@ bool Viewer::onInit() {
 
 void Viewer::loadEnvironmentSettings()
 {
-    EnvironmentSettings::getInstance().setWindDirection(sf::Vector3f(1,0,-0.5));
+    EnvironmentSettings::getInstance().setWindDirection(sf::Vector3f(1,1,-0.5));
 }
 
 void Viewer::loadTerrain()

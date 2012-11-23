@@ -64,28 +64,35 @@ float progressive_sinusoidal_wave_value(vec2 center, vec4 currentVertex, float m
 {
     float r = sqrt(pow(currentVertex.x-center.x, 2.) + pow(currentVertex.z-center.y, 2.));
     if(currentVertex.x != center.x) {
-        float A = maxAmplitude; //* r;
-        return A * sin(2.*3.14159*(v*t-r/waveLength));
+        return maxAmplitude * sin(2.*3.14159*(v*t-r/waveLength));
     }
     return 0.;
 }
 
 
-// XXX: Only applies to x and z wind direction
+// XXX: not mathematically correct in y direction, but still quite ok
+// XXX: Change way to calculate the normal to allow tilting
 vec4 applyWave(vec4 vertexPosition)
 {
     // Calculate wavelength so that it is located on vertical vertices of the flag
     float waveLength = 2.*width/nbSquares;
     float waveDisplacement = progressive_sinusoidal_wave_value(origin.xz, vertexPosition, 10., 5., waveTime, 8.);
 
-    vec2 v = vertexPosition.xz - origin.xz;
-    float norm = sqrt(pow(v.x,2) + pow(v.y,2));
+    /**
+     * Calculate the norm of vector from vertex to origin
+     * and apply it to get the vector colinear to wind direction
+     **/
+    vec3 v = vertexPosition.xyz - origin.xyz;
+    float norm = sqrt(pow(v.x,2) + pow(v.z,2));
+    // Make the vertex collinear to wind direction
+    vec3 newOrigin = origin;
+    newOrigin.y = vertexPosition.y;
+    vec3 newPos = newOrigin+norm*windDirection;
+    //newPos.y = vertexPosition.y;
 
-
-    vec3 newPos = origin+norm*windDirection;
-    newPos.y = vertexPosition.y;
-
+    // Normal to the flag
     vec3 n = normalize(cross(windDirection, vec3(0,1,0)));
+    // Apply the wave along the normal direction
     newPos = newPos+waveDisplacement*n;
     return vec4(newPos, 1.);
 }
