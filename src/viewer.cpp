@@ -145,6 +145,11 @@ void Viewer::loadTestEntity()
     mTestTexture->loadTexture("assets/textures/bzh_flag.gif");
     mTestEntity = new FlagEntity(mTestTexture, mTestTexture->getImage()->getSize().x, mTestTexture->getImage()->getSize().y, 8);
     mTestEntity->generate();
+
+    //mTestTexture2 = new Texture();
+    //mTestTexture2->loadTexture("assets/crate.jpg");
+    //mTestEntity2 = new FlagEntity(mTestTexture, mTestTexture->getImage()->getSize().x, mTestTexture->getImage()->getSize().y, 8);
+    //mTestEntity->generate();
 }
 void Viewer::loadTestShader()
 {
@@ -344,6 +349,14 @@ void Viewer::onRender()
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, emerald_shininess);
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+    glShadeModel( GL_SMOOTH );
+
+    glPushMatrix();
+        //axisNode->render();
+        mTerrainPage->render();
+        //mTerrainPage->render();
+    glPopMatrix();
 
     glPushMatrix();
         axisNode->render();
@@ -355,27 +368,14 @@ void Viewer::onRender()
         mTestShader.setVec3("origin", sf::Vector3f(0,0,0));
         mTestShader.setFloat("nbSquares", dynamic_cast<FlagEntity*>(mTestEntity)->getNbSquares());
         mTestShader.setFloat("width", dynamic_cast<FlagEntity*>(mTestEntity)->getWidth());
+        mTestShader.bindTexture(*mTestTexture, "tex", 0);
         mTestEntity->render();
         mTestShader.disable();
     glPopMatrix();
 
-    glEnable(GL_LIGHTING);
-    glPushMatrix();
-        //axisNode->render();
-        //mTerrainPage->render();
-        //glTranslatef(1000,0,0);
-        //mTerrainPage->render();
-        //glTranslatef(1000,0,0);
-        //mTerrainPage->render();
-
-    glPopMatrix();
-    //glPushMatrix();
-    //      glTranslatef(0, 0, 499);
-    //    mTerrainPage->render();
-    //glPopMatrix();
-
     glDisable(GL_LIGHTING);
     glDisable(GL_DEPTH_TEST);
+
     // render the cursor
     glPushMatrix();
         renderCursor();

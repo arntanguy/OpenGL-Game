@@ -254,6 +254,7 @@ void Shader::bindTexture(Texture& texture, const std::string &uniformLocation, i
 {
     glActiveTexture(GL_TEXTURE0 + i);
     texture.bind();
+    glActiveTexture(GL_TEXTURE0 + i);
     glUniform1i(getVariableId(uniformLocation), i);
 }
 

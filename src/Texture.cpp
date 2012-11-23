@@ -47,9 +47,9 @@ bool Texture::loadTexture(sf::Image* img, const std::string& name)
  */
 void Texture::bind()
 {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mImage->getSize().x, mImage->getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, mImage->getPixelsPtr());
-	glBindTexture(GL_TEXTURE_2D, mTextureId);	//we activate this id to tell opengl we are going to use this texture
     glActiveTexture(mTextureId);
+	glBindTexture(GL_TEXTURE_2D, mTextureId);	//we activate this id to tell opengl we are going to use this texture
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mImage->getSize().x, mImage->getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, mImage->getPixelsPtr());
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 }

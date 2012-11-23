@@ -178,8 +178,8 @@ bool TerrainPage::render()
         return false;
     } else {
         mTexShader.enable();
-        mTexShader.bindTexture(mTexture0, "Texture0", 0);
-        mTexShader.bindTexture(mTexture1, "Texture1", 1);
+        mTexShader.bindTexture(mTexture0, "Texture0", 1);
+        mTexShader.bindTexture(mTexture1, "Texture1", 0);
         mTexShader.bindTexture(mTexture2, "Texture2", 2);
         mTexShader.bindTexture(mTexture3, "Texture3", 3);
         mTexShader.bindTexture(mMixmapTexture, "Mixmap", 4);
