@@ -83,6 +83,7 @@ float progressive_sinusoidal_wave_value(vec2 center, vec4 currentVertex, float m
 
 // XXX: not mathematically correct in y direction, but still quite ok
 // XXX: Change way to calculate the normal to allow tilting
+// XXX: Fails when wind is not 1
 vec4 applyWave(vec4 vertexPosition)
 {
     /**
@@ -119,6 +120,7 @@ vec4 applyWave(vec4 vertexPosition)
     vec3 n = normalize(cross(newWindDirection, vec3(0,1,0)));
     // Apply the wave along the normal direction
     newPos = newPos+waveDisplacement*n;
+
     return vec4(newPos, 1.);
 }
 
