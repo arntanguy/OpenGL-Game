@@ -368,7 +368,7 @@ void Viewer::onRender()
         mTestShader.setVec3("origin", sf::Vector3f(0,0,0));
         mTestShader.setFloat("nbSquares", dynamic_cast<FlagEntity*>(mTestEntity)->getNbSquares());
         mTestShader.setFloat("width", dynamic_cast<FlagEntity*>(mTestEntity)->getWidth());
-        mTestShader.bindTexture(*mTestTexture, "tex", 0);
+        mTestShader.bindTexture(*mTestTexture, "tex");
         mTestEntity->render();
         mTestShader.disable();
     glPopMatrix();

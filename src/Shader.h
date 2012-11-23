@@ -10,6 +10,7 @@
 #include <iostream>
 #include "Texture.h"
 #include <SFML/Graphics.hpp>
+#include "Debug.h"
 
 /**
  * @brief Provides an easy way to load, enable and disable shaders
@@ -18,6 +19,7 @@
 class Shader
 {
     private:
+        short mTextureUnit;
         GLenum shader_type;
         GLhandleARB mVertexHandle;
         GLhandleARB mFragmentHandle;
@@ -41,7 +43,7 @@ class Shader
         void enable();
         void disable();
 
-        void bindTexture(Texture& texture, const std::string &uniformLocation, int i);
+        void bindTexture(Texture& texture, const std::string &uniformLocation);
 
         void setFloat(const std::string &uniformVarName, float value);
         void setVec2(const std::string &uniformVarName, const sf::Vector2f& vector);

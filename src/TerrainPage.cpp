@@ -178,12 +178,12 @@ bool TerrainPage::render()
         return false;
     } else {
         mTexShader.enable();
-        mTexShader.bindTexture(mTexture0, "Texture0", 1);
-        mTexShader.bindTexture(mTexture1, "Texture1", 0);
-        mTexShader.bindTexture(mTexture2, "Texture2", 2);
-        mTexShader.bindTexture(mTexture3, "Texture3", 3);
-        mTexShader.bindTexture(mMixmapTexture, "Mixmap", 4);
-        mTexShader.bindTexture(mHeightmapTexture, "Heightmap", 5);
+        mTexShader.bindTexture(mTexture0, "Texture0");
+        mTexShader.bindTexture(mTexture1, "Texture1");
+        mTexShader.bindTexture(mTexture2, "Texture2");
+        mTexShader.bindTexture(mTexture3, "Texture3");
+        mTexShader.bindTexture(mMixmapTexture, "Mixmap");
+        mTexShader.bindTexture(mHeightmapTexture, "Heightmap");
         mTexShader.setFloat("terrainSize", mWidth*mScaleFactor);
         mTexShader.setFloat("maxHeight", mMaxHeight);
         mTexShader.setFloat("fogFactor", 0.);

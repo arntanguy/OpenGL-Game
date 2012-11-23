@@ -30,6 +30,7 @@ void Shader::init()
         mProgramHandle = glCreateProgramObjectARB();
         mVertexHandle = 0;
         mFragmentHandle = 0;
+        mTextureUnit = 1;
     } else {
         throw std::runtime_error("Error: GL Shaders not supported!");
     }
@@ -211,6 +212,7 @@ void Shader::linkShader(GLhandleARB shaderHandle)
 void Shader::enable()
 {
     glUseProgramObjectARB(mProgramHandle);
+    mTextureUnit = 0;
 }
 
 /**
@@ -250,12 +252,13 @@ void Shader::setVec3(const std::string &uniformVarName, const sf::Vector3f& vect
     glUniform3f(getVariableId(uniformVarName), vector.x, vector.y, vector.z);
 }
 
-void Shader::bindTexture(Texture& texture, const std::string &uniformLocation, int i)
+void Shader::bindTexture(Texture& texture, const std::string &uniformLocation)
 {
-    glActiveTexture(GL_TEXTURE0 + i);
+    glActiveTexture(GL_TEXTURE0 + mTextureUnit);
     texture.bind();
-    glActiveTexture(GL_TEXTURE0 + i);
-    glUniform1i(getVariableId(uniformLocation), i);
+    // Binds to the shader
+    glUniform1i(getVariableId(uniformLocation), mTextureUnit);
+    mTextureUnit++;
 }
 
 GLhandleARB Shader::getProgramHandle() const
