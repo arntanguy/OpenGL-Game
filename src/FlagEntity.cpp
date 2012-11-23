@@ -6,9 +6,17 @@ FlagEntity::FlagEntity(float width, float height, float nbSquares) : Entity()
     mHeight = height;
     mNbSquares = nbSquares;
     mDisplayListIndex = OBJECT_NOT_COMPILED;
-    //mTexture = texture;
+    mTexture = 0;
 }
 
+FlagEntity::FlagEntity(Texture* texture, float width, float height, float nbSquares) : Entity()
+{
+    mWidth = width;
+    mHeight = height;
+    mNbSquares = nbSquares;
+    mDisplayListIndex = OBJECT_NOT_COMPILED;
+    mTexture = texture;
+}
 FlagEntity::~FlagEntity()
 {
     dinf << "GrassEntiy::~FlagEntity()" << std::endl;
@@ -24,8 +32,10 @@ bool FlagEntity::generate()
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        //glEnable(GL_TEXTURE_2D);
-        //mTexture.bind();
+        if(mTexture != 0) {
+            glEnable(GL_TEXTURE_2D);
+            mTexture->bind();
+        }
 
 
 
@@ -36,30 +46,31 @@ bool FlagEntity::generate()
             for(float i=0; i<mNbSquares; i++) {
                 // First triangle
                 //Bottom right
-                glTexCoord2d(0,(i+1)/mNbSquares);
+                glTexCoord2d((i+1)/mNbSquares,1);
                 glVertex3f((i+1)*widthSquare, 0.0, 0.0);
                 // Top left
-                glTexCoord2d(i/mNbSquares,1);
+                glTexCoord2d(i/mNbSquares,0);
                 glVertex3f(i*widthSquare, mHeightSquare, 0.0);
                 // Bottom left
-                glTexCoord2d(i/mNbSquares,i/mNbSquares);
+                glTexCoord2d(i/mNbSquares,1);
                 glVertex3f(i*widthSquare, 0.0, 0.0);
 
 
                 // Second triangle
                 // Bottom right
-                glTexCoord2d(0,(i+1)/mNbSquares);
+                glTexCoord2d((i+1)/mNbSquares,1);
                 glVertex3f((i+1)*widthSquare, 0.0, 0.0);
                 //Top right
-                glTexCoord2d((i+1)/mNbSquares,1);
+                glTexCoord2d((i+1)/mNbSquares,0);
                 glVertex3f((i+1)*widthSquare, mHeightSquare, 0.0);
                 // Top left
-                glTexCoord2d(i/mNbSquares,1);
+                glTexCoord2d(i/mNbSquares,0);
                 glVertex3f(i*widthSquare, mHeightSquare, 0.0);
             }
         glEnd();
 
-//        glDisable(GL_TEXTURE_2D);
+        if(mTexture != 0)
+        glDisable(GL_TEXTURE_2D);
     glEndList();
 }
 

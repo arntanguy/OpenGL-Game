@@ -63,6 +63,7 @@ protected:
   Shader mTestShader;
   void loadTestShader();
   Entity *mTestEntity;
+  Texture*mTestTexture;
   void loadTestEntity();
   sf::Clock mTestClock;
   /**

@@ -141,13 +141,15 @@ void Viewer::onIdle()
 
 void Viewer::loadTestEntity()
 {
-    mTestEntity = new FlagEntity(80, 20, 4);
+    mTestTexture = new Texture();
+    mTestTexture->loadTexture("assets/l3d.jpg");
+    mTestEntity = new FlagEntity(mTestTexture, 80, 20, 4);
     mTestEntity->generate();
 }
 void Viewer::loadTestShader()
 {
     mTestShader.loadVertexShader("assets/shaders/vertex/flag.glsl");
-    mTestShader.loadFragmentShader("assets/shaders/fragment/render_color.glsl");
+    mTestShader.loadFragmentShader("assets/shaders/fragment/render_one_texture.glsl");
 }
 
 bool Viewer::onInit() {

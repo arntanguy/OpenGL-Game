@@ -10,13 +10,14 @@
 class FlagEntity : public Entity
 {
     private:
-//        Texture mTexture;
+        Texture *mTexture;
         GLuint mDisplayListIndex;
         float mNbSquares = 20;
         float mWidth=80;
         float mHeight=10;
 
     public:
+        FlagEntity(Texture *texture, float width, float height, float nbSquares);
         FlagEntity(float width, float height, float nbSquares);
         ~FlagEntity();
         virtual bool generate();
