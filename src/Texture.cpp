@@ -58,3 +58,8 @@ GLuint Texture::getTextureId() const
 {
     return mTextureId;
 }
+
+sf::Image * Texture::getImage() const
+{
+    return mImage;
+}

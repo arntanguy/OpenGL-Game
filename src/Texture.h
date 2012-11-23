@@ -31,6 +31,7 @@ class Texture
         bool loadTexture(sf::Image *img, const std::string& name);
         void bind();
         GLuint getTextureId() const;
+        sf::Image *getImage() const;
 };
 
 

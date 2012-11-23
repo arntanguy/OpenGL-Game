@@ -142,8 +142,8 @@ void Viewer::onIdle()
 void Viewer::loadTestEntity()
 {
     mTestTexture = new Texture();
-    mTestTexture->loadTexture("assets/l3d.jpg");
-    mTestEntity = new FlagEntity(mTestTexture, 80, 20, 4);
+    mTestTexture->loadTexture("assets/textures/bzh_flag.gif");
+    mTestEntity = new FlagEntity(mTestTexture, mTestTexture->getImage()->getSize().x, mTestTexture->getImage()->getSize().y, 8);
     mTestEntity->generate();
 }
 void Viewer::loadTestShader()
@@ -162,7 +162,7 @@ bool Viewer::onInit() {
 
 void Viewer::loadEnvironmentSettings()
 {
-    EnvironmentSettings::getInstance().setWindDirection(sf::Vector3f(1,0,1));
+    EnvironmentSettings::getInstance().setWindDirection(sf::Vector3f(1,0,0));
     EnvironmentSettings::getInstance().setWindStrength(1);
 }
 
@@ -227,6 +227,10 @@ void Viewer::onKey(const sf::Event::KeyEvent& key)
             }
             m_wireFrame = !m_wireFrame;
             break;
+        case sf::Keyboard::B:
+            static float i=0;
+            EnvironmentSettings::getInstance().setWindDirection(sf::Vector3f(1,0,i+=0.1));
+
     }
 }
 

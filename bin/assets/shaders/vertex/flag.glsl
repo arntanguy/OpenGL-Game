@@ -75,7 +75,7 @@ float progressive_sinusoidal_wave_value(vec2 center, vec4 currentVertex, float m
 {
     float r = sqrt(pow(currentVertex.x-center.x, 2.) + pow(currentVertex.z-center.y, 2.));
     if(currentVertex.x != center.x) {
-        return maxAmplitude * sin(2.*3.14159*(v*t-r/waveLength));
+        return r/maxAmplitude * sin(2.*3.14159*(v*t-r/waveLength));
     }
     return 0.;
 }
