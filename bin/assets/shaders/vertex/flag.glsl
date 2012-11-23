@@ -24,6 +24,17 @@
 
 uniform float waveTime;
 uniform vec3 windDirection;
+/**
+ * Windstrength represent the wind strength between 0 and 1
+ * When 0, the flag will drop
+ * When 1, the flag will be fully up and flowing
+ */
+uniform float windStrength;
+/**
+ * Maximum amplitude of osciallation.
+ * It will be modulated according to windStrength
+ **/
+uniform float maxAmplitude;
 // Attach point of the flag
 uniform vec3 origin;
 // Used to calculate wavelength
@@ -74,24 +85,38 @@ float progressive_sinusoidal_wave_value(vec2 center, vec4 currentVertex, float m
 // XXX: Change way to calculate the normal to allow tilting
 vec4 applyWave(vec4 vertexPosition)
 {
-    // Calculate wavelength so that it is located on vertical vertices of the flag
-    float waveLength = 2.*width/nbSquares;
-    float waveDisplacement = progressive_sinusoidal_wave_value(origin.xz, vertexPosition, 10., 5., waveTime, 8.);
-
     /**
      * Calculate the norm of vector from vertex to origin
      * and apply it to get the vector colinear to wind direction
      **/
     vec3 v = vertexPosition.xyz - origin.xyz;
     float norm = sqrt(pow(v.x,2) + pow(v.z,2));
+
+    float weight = norm/width*(3.14-3.14*windStrength);
+    // Rotates downwards or upwards
+    mat3 rotationMatrix = mat3(
+       cos(weight), -sin(weight), 0.,
+       sin(weight), cos(weight) , 0., // column 2
+       0., 0., 1.  // column 3
+    );
+
+    // Calculate wavelength so that it is located on vertical vertices of the flag
+    float waveLength = 2.*width/nbSquares;
+    float waveDisplacement = progressive_sinusoidal_wave_value(origin.xz, vertexPosition, windStrength*maxAmplitude, 5., waveTime, 8.);
+
+    vec3 newWindDirection = normalize(windDirection);
+
     // Make the vertex collinear to wind direction
     vec3 newOrigin = origin;
+    // Math cheat for the y value
     newOrigin.y = vertexPosition.y;
-    vec3 newPos = newOrigin+norm*windDirection;
-    //newPos.y = vertexPosition.y;
+    // Computes new position according to wind direction
+    vec3 newPos = newOrigin+norm*newWindDirection;
+    // Account for wind strength to make the flag fall a bit
+    newPos = rotationMatrix * newPos;
 
     // Normal to the flag
-    vec3 n = normalize(cross(windDirection, vec3(0,1,0)));
+    vec3 n = normalize(cross(newWindDirection, vec3(0,1,0)));
     // Apply the wave along the normal direction
     newPos = newPos+waveDisplacement*n;
     return vec4(newPos, 1.);

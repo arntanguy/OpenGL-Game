@@ -14,6 +14,7 @@ class EnvironmentSettings {
         inline EnvironmentSettings& operator=(EnvironmentSettings const&) { return *this; }
 
         sf::Vector3f mWindDirection;
+        float mWindStrength;
 
     public:
         inline static EnvironmentSettings& getInstance() {
@@ -23,6 +24,9 @@ class EnvironmentSettings {
 
         void setWindDirection(const sf::Vector3f& windDirection);
         sf::Vector3f getWindDirection();
+
+        void setWindStrength(float windStrength);
+        float getWindStrength() const;
 };
 
 #endif

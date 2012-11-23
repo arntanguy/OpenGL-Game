@@ -160,7 +160,8 @@ bool Viewer::onInit() {
 
 void Viewer::loadEnvironmentSettings()
 {
-    EnvironmentSettings::getInstance().setWindDirection(sf::Vector3f(1,1,-0.5));
+    EnvironmentSettings::getInstance().setWindDirection(sf::Vector3f(1,1,0.4));
+    EnvironmentSettings::getInstance().setWindStrength(0.5);
 }
 
 void Viewer::loadTerrain()
@@ -343,6 +344,8 @@ void Viewer::onRender()
         mTestShader.enable();
         mTestShader.setFloat("waveTime", mTestClock.getElapsedTime().asSeconds()/10);
         mTestShader.setVec3("windDirection", EnvironmentSettings::getInstance().getWindDirection());
+        mTestShader.setFloat("windStrength", EnvironmentSettings::getInstance().getWindStrength());
+        mTestShader.setFloat("maxAmplitude", 10);
         mTestShader.setVec3("origin", sf::Vector3f(0,0,0));
         mTestShader.setFloat("nbSquares", dynamic_cast<FlagEntity*>(mTestEntity)->getNbSquares());
         mTestShader.setFloat("width", dynamic_cast<FlagEntity*>(mTestEntity)->getWidth());
