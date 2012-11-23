@@ -241,12 +241,20 @@ void Shader::setFloat(const std::string &uniformVarName, float value)
     glUniform1f(my_sampler_uniform_location, value);
 }
 
+void Shader::setVec2(const std::string &uniformVarName, const sf::Vector2f& vector)
+{
+    glUniform2f(getVariableId(uniformVarName), vector.x, vector.y);
+}
+void Shader::setVec3(const std::string &uniformVarName, const sf::Vector3f& vector)
+{
+    glUniform3f(getVariableId(uniformVarName), vector.x, vector.y, vector.z);
+}
+
 void Shader::bindTexture(Texture& texture, const std::string &uniformLocation, int i)
 {
     glActiveTexture(GL_TEXTURE0 + i);
     texture.bind();
-    int my_sampler_uniform_location = getVariableId(uniformLocation);
-    glUniform1i(my_sampler_uniform_location, i);
+    glUniform1i(getVariableId(uniformLocation), i);
 }
 
 GLhandleARB Shader::getProgramHandle() const

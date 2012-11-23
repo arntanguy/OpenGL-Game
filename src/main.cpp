@@ -9,8 +9,6 @@
 #include <GL/glut.h>
 #include <iostream>
 
-Viewer theViewer = Viewer::getInstance();
-
 void reshapeFunc(int width, int height)
 {
   // set the new width/height values
@@ -19,13 +17,6 @@ void reshapeFunc(int width, int height)
 
 int main(int argc, char *argv[])
 {
-    // create our view instance
-    if(!theViewer.onCreate(argc, argv))
-    {
-        std::cerr << "Creation of the viewer failed." << std::endl;
-        return -1;
-    }
-
     sf::Window window;
     /**
      * Init Glew. Used for shaders mostly
@@ -36,6 +27,14 @@ int main(int argc, char *argv[])
     {
         std::cerr << "Error: " << glewGetErrorString(err) << std::endl;
     }
+    Viewer theViewer = Viewer::getInstance();
+    // create our view instance
+    if(!theViewer.onCreate(argc, argv))
+    {
+        std::cerr << "Creation of the viewer failed." << std::endl;
+        return -1;
+    }
+
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     if(theViewer.getFullscreen()) {
         window.create(sf::VideoMode(desktop.width, desktop.height, desktop.bitsPerPixel), theViewer.getCaption(), sf::Style::Fullscreen);

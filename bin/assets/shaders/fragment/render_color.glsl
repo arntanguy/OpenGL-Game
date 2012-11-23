@@ -17,14 +17,14 @@
   ******************************************************************************/
 
 /**
- * Description : Renders one texture from uv corrdinates passed in gl_TexCoord[0]
- * @param uniform sampler2D tex : texture used to render
+ * Description : Renders the color of current vertex
+ * You need to have something like gl_FrontColor = gl_Color in the vertex shader if you just
+ * want to transmit colors defined by glColor in the opengl program.
  */
 
-uniform sampler2D tex;
 
 void main()
 {
 
-	gl_FragColor =  texture2D(tex,gl_TexCoord[0].st);
+	gl_FragColor = gl_Color;
 }

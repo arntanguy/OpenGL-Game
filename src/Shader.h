@@ -9,6 +9,7 @@
 #include <vector>
 #include <iostream>
 #include "Texture.h"
+#include <SFML/Graphics.hpp>
 
 /**
  * @brief Provides an easy way to load, enable and disable shaders
@@ -43,6 +44,8 @@ class Shader
         void bindTexture(Texture& texture, const std::string &uniformLocation, int i);
 
         void setFloat(const std::string &uniformVarName, float value);
+        void setVec2(const std::string &uniformVarName, const sf::Vector2f& vector);
+        void setVec3(const std::string &uniformVarName, const sf::Vector3f& vector);
 
         bool hasShaderSupport();
 

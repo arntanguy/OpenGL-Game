@@ -20,6 +20,9 @@
 #include "Node.h"
 #include "Terrain.h"
 
+#include "FlagEntity.h"
+#include "EnvironmentSettings.h"
+
 
 class TerrainPage;
 
@@ -50,6 +53,23 @@ protected:
 
   AxisEntity *axisEntity;
   Node *axisNode;
+
+  /**
+   * =========================================
+   * Test objects only...
+   * XXX: Remove them when no test is needed anymore
+   * Shader used for tested purposes only
+   */
+  Shader mTestShader;
+  void loadTestShader();
+  Entity *mTestEntity;
+  void loadTestEntity();
+  sf::Clock mTestClock;
+  /**
+   * END OF TESTS
+   * =============================================
+   */
+
 
 private:
    // Private constructor to create a singleton
@@ -83,6 +103,7 @@ public:
   void setDimension(int width, int height);
 
   void loadTerrain();
+  void loadEnvironmentSettings();
 
 protected:
   void renderCursor();

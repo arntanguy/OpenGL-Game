@@ -16,6 +16,7 @@
 * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                 *
  ******************************************************************************/
 
+#include <GL/glew.h>
 #include "viewer.h"
 #include "tick.h"
 #include <string.h>
@@ -138,9 +139,28 @@ void Viewer::onIdle()
     // update the screen
 }
 
+void Viewer::loadTestEntity()
+{
+    mTestEntity = new FlagEntity(80, 20, 4);
+    mTestEntity->generate();
+}
+void Viewer::loadTestShader()
+{
+    mTestShader.loadVertexShader("assets/shaders/vertex/flag.glsl");
+    mTestShader.loadFragmentShader("assets/shaders/fragment/render_color.glsl");
+}
+
 bool Viewer::onInit() {
+    loadEnvironmentSettings();
     loadTerrain();
+    loadTestEntity();
+    loadTestShader();
     return true;
+}
+
+void Viewer::loadEnvironmentSettings()
+{
+    EnvironmentSettings::getInstance().setWindDirection(sf::Vector3f(1,0,1));
 }
 
 void Viewer::loadTerrain()
@@ -317,10 +337,23 @@ void Viewer::onRender()
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, emerald_shininess);
 
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_LIGHTING);
+
     glPushMatrix();
         axisNode->render();
-        mTerrainPage->render();
+        mTestShader.enable();
+        mTestShader.setFloat("waveTime", mTestClock.getElapsedTime().asSeconds()/10);
+        mTestShader.setVec3("windDirection", EnvironmentSettings::getInstance().getWindDirection());
+        mTestShader.setVec3("origin", sf::Vector3f(0,0,0));
+        mTestShader.setFloat("nbSquares", dynamic_cast<FlagEntity*>(mTestEntity)->getNbSquares());
+        mTestShader.setFloat("width", dynamic_cast<FlagEntity*>(mTestEntity)->getWidth());
+        mTestEntity->render();
+        mTestShader.disable();
+    glPopMatrix();
+
+    glEnable(GL_LIGHTING);
+    glPushMatrix();
+        //axisNode->render();
+        //mTerrainPage->render();
         //glTranslatef(1000,0,0);
         //mTerrainPage->render();
         //glTranslatef(1000,0,0);
