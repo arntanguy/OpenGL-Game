@@ -141,8 +141,7 @@ void Viewer::onIdle()
 
 void Viewer::loadTestEntity()
 {
-    mTestTexture = new Texture();
-    mTestTexture->loadTexture("assets/textures/bzh_flag.gif");
+    mTestTexture = RessourcesManager::getInstance().loadTexture("assets/textures/bzh_flag.gif");
     mTestEntity = new FlagEntity(mTestTexture, mTestTexture->getImage()->getSize().x, mTestTexture->getImage()->getSize().y, 8);
     mTestEntity->generate();
 
@@ -368,7 +367,7 @@ void Viewer::onRender()
         mTestShader.setVec3("origin", sf::Vector3f(0,0,0));
         mTestShader.setFloat("nbSquares", dynamic_cast<FlagEntity*>(mTestEntity)->getNbSquares());
         mTestShader.setFloat("width", dynamic_cast<FlagEntity*>(mTestEntity)->getWidth());
-        mTestShader.bindTexture(*mTestTexture, "tex");
+        mTestShader.bindTexture(mTestTexture, "tex");
         mTestEntity->render();
         mTestShader.disable();
     glPopMatrix();

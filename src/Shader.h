@@ -43,7 +43,7 @@ class Shader
         void enable();
         void disable();
 
-        void bindTexture(Texture& texture, const std::string &uniformLocation);
+        void bindTexture(Texture* texture, const std::string &uniformLocation);
 
         void setFloat(const std::string &uniformVarName, float value);
         void setVec2(const std::string &uniformVarName, const sf::Vector2f& vector);

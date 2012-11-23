@@ -1,6 +1,7 @@
 #include "TerrainPage.h"
 #include <GL/glut.h>
 #include "tick.h"
+#include "RessourcesManager.h"
 
 TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, float maxHeight, float scaleFactor)
 {
@@ -21,20 +22,23 @@ TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, flo
     mMixmap = new sf::Image();
     mMixmap->create(width, depth, sf::Color(0,0,0));
 
-    mTexture0.loadTexture("assets/terrain/water2.png");
-    mTexture1.loadTexture("assets/terrain/sand.jpg");
-    mTexture2.loadTexture("assets/terrain/grass.bmp");
-    mTexture3.loadTexture("assets/terrain/rock.png");
+    mTexture0 = RessourcesManager::getInstance().loadTexture("assets/terrain/water2.png");
+    mTexture1 = RessourcesManager::getInstance().loadTexture("assets/terrain/sand.jpg");
+    mTexture2 = RessourcesManager::getInstance().loadTexture("assets/terrain/grass.bmp");
+    mTexture3 = RessourcesManager::getInstance().loadTexture("assets/terrain/rock.png");
     // Load temporary texture
-    mMixmapTexture.loadTexture(mMixmap, "Mixmap");
-
-    mHeightmapTexture.loadTexture(mHeightmap, "Heightmap");
+    mMixmapTexture = new Texture();
+    mMixmapTexture->loadTexture(mMixmap, "Mixmap");
+    RessourcesManager::getInstance().addTexture(mMixmapTexture, "Mixmap");
+    mHeightmapTexture = new Texture();
+    mHeightmapTexture->loadTexture(mHeightmap, "Heightmap");
+    RessourcesManager::getInstance().addTexture(mHeightmapTexture, "Heightmap");
 
     mTexShader.loadVertexShader("assets/shaders/vertex/blend_mixmap_vertex.glsl");
     mTexShader.loadFragmentShader("assets/shaders/fragment/blend_textures_from_mixmap.glsl");
 
 
-    Texture grassText("assets/quick_grass.png");
+    Texture *grassText = RessourcesManager::getInstance().loadTexture("assets/quick_grass.png");
     grass = new GrassEntity(grassText);
     grass->generate();
     mNode.attachEntity(grass);

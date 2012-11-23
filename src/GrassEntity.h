@@ -9,10 +9,10 @@
 class GrassEntity : public Entity
 {
     private:
-        Texture mTexture;
+        Texture *mTexture;
         GLuint mDisplayListIndex;
     public:
-        GrassEntity(const Texture &texture);
+        GrassEntity(Texture *texture);
         virtual ~GrassEntity();
         bool generate();
         bool render();

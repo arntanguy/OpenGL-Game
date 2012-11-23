@@ -19,6 +19,13 @@ RessourcesManager::~RessourcesManager()
         dinf << "Deleting image " << it->first << std::endl;
         delete it->second;
     }
+
+    dinf << "Deleting all textures" << std::endl;
+    std::map<std::string, Texture*>::const_iterator texIt;
+    for(texIt = mTextures.begin(); texIt != mTextures.end(); texIt++) {
+        dinf << "Deleting image " << texIt->first << std::endl;
+        delete texIt->second;
+    }
 }
 
 /**
@@ -52,6 +59,37 @@ void RessourcesManager::addImage(sf::Image *img, const std::string& id)
 {
     dinf << "RessourcesManager: Image " << id << " added." << std::endl;
     mImages[id] = img;
+}
+
+Texture * RessourcesManager::loadTexture(const std::string &path)
+{
+    if ( mTextures.find( path ) != mTextures.end() ) {
+        dinf << "Texture " << path << " already loaded" << std::endl;
+        return mTextures[path];
+    }
+    Texture *texture = new Texture();
+    if(texture->loadTexture(path)) {
+        dinf << "Texture " << path << " loaded" << std::endl;
+        mTextures[path] = texture;
+        return texture;
+    }
+    return 0;
+}
+
+bool RessourcesManager::addTexture(Texture *texture, const std::string &path)
+{
+    if ( mTextures.find( path ) != mTextures.end() ) {
+        dinf << "Texture " << path << " already loaded" << std::endl;
+        return false;
+    } else {
+        if(texture != 0) {
+            return false;
+        } else {
+            mTextures[path] = texture;
+            return true;
+        }
+    }
+
 }
 
 /**

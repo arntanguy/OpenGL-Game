@@ -8,7 +8,6 @@
 #include <SFML/System/Clock.hpp>
 #include <list>
 
-#include "RessourcesManager.h"
 #include "Texture.h"
 #include "Node.h"
 #include "GrassEntity.h"
@@ -49,12 +48,12 @@ class TerrainPage
         /**
          * 4 textures to be merged according to mixmap
          */
-        Texture mTexture0;
-        Texture mTexture1;
-        Texture mTexture2;
-        Texture mTexture3;
-        Texture mMixmapTexture;
-        Texture mHeightmapTexture;
+        Texture *mTexture0;
+        Texture *mTexture1;
+        Texture *mTexture2;
+        Texture *mTexture3;
+        Texture *mMixmapTexture;
+        Texture *mHeightmapTexture;
 
         /**
          * Shader blending the textures according to the mixmap
@@ -90,7 +89,7 @@ class TerrainPage
         {
             // XXX: debug only
             mMixmap->saveToFile("MixmapInTerrain.jpg");
-            mMixmapTexture.loadTexture(mMixmap, "Mixm");
+            mMixmapTexture->loadTexture(mMixmap, "Mixm");
         }
         void startWave(bool status);
 };

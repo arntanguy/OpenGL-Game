@@ -1,6 +1,6 @@
 #include "GrassEntity.h"
 
-GrassEntity::GrassEntity(const Texture& texture) : Entity()
+GrassEntity::GrassEntity(Texture* texture) : Entity()
 {
     mDisplayListIndex = OBJECT_NOT_COMPILED;
     mTexture = texture;
@@ -22,7 +22,7 @@ bool GrassEntity::generate()
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_TEXTURE_2D);
-        mTexture.bind();
+        mTexture->bind();
 
 
 

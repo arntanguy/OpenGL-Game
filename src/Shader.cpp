@@ -252,10 +252,10 @@ void Shader::setVec3(const std::string &uniformVarName, const sf::Vector3f& vect
     glUniform3f(getVariableId(uniformVarName), vector.x, vector.y, vector.z);
 }
 
-void Shader::bindTexture(Texture& texture, const std::string &uniformLocation)
+void Shader::bindTexture(Texture* texture, const std::string &uniformLocation)
 {
     glActiveTexture(GL_TEXTURE0 + mTextureUnit);
-    texture.bind();
+    texture->bind();
     // Binds to the shader
     glUniform1i(getVariableId(uniformLocation), mTextureUnit);
     mTextureUnit++;
