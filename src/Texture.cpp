@@ -31,8 +31,7 @@ bool Texture::loadTexture(sf::Image* img, const std::string& name)
 {
 
     if(img->getSize().x%2 != 0 || img->getSize().y % 2 != 0) {
-        std::cerr << "Warning: image size is not a multiple of 2, texture " << name << " will not be loaded!";
-        return false;
+        dwarn << "Warning: image size is not a multiple of 2, texture " << name << " might cause troubles!" << std::endl;
     }
 
 	glGenTextures(1, &mTextureId); //we need to create an unique ID for the texture
@@ -47,11 +46,10 @@ bool Texture::loadTexture(sf::Image* img, const std::string& name)
  */
 void Texture::bind()
 {
-    //glActiveTexture(mTextureId);
-	glBindTexture(GL_TEXTURE_2D, mTextureId);	//we activate this id to tell opengl we are going to use this texture
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mImage->getSize().x, mImage->getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, mImage->getPixelsPtr());
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, mTextureId);	//we activate this id to tell opengl we are going to use this texture
 }
 
 GLuint Texture::getTextureId() const

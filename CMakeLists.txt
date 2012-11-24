@@ -17,8 +17,8 @@ cmake_minimum_required(VERSION 2.6)
 
 find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
-find_package(CAL3D REQUIRED)
 find_package(SFML COMPONENTS system window network audio graphics REQUIRED)
+find_package(ASSIMP REQUIRED)
 
 
 # Set all debug and info messages on
@@ -40,17 +40,19 @@ ${SRC_DIR}/Camera.cpp
 ${SRC_DIR}/GrassEntity.cpp
 ${SRC_DIR}/AxisEntity.cpp
 ${SRC_DIR}/FlagEntity.cpp
+${SRC_DIR}/AssimpMeshEntity.cpp
 ${SRC_DIR}/EnvironmentSettings.cpp
+${SRC_DIR}/math_3d.cpp
 )
 
-include_directories (${SRC_DIR} ${OPENGL_INCLUDE_DIR} ${CAL3D_INCLUDE_DIR} ${INCLUDE_DIR})
+include_directories (${SRC_DIR} ${OPENGL_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS} ${CAL3D_INCLUDE_DIR} ${INCLUDE_DIR})
 
 #### CREATE EXECUTABLE
 add_executable (
    ${BIN_DIR}/${PROJECT_NAME} ${SOURCES}
 )
 
-target_link_libraries(${BIN_DIR}/${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} ${CAL3D_LIBRARY} ${SFML_LIBRARIES})
+target_link_libraries(${BIN_DIR}/${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} ${CAL3D_LIBRARY} ${SFML_LIBRARIES} ${ASSIMP_LIBRARIES})
 
 
 
