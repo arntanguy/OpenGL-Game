@@ -27,6 +27,9 @@ uniform float waterSinus;
 uniform float waveActivated;
 uniform float waveTime;
 
+// For lighting
+varying vec3 normal, lightDir, eyeVec;
+
 // Returns the height of the terrain
 //vec4 get_height()
 //{
@@ -67,7 +70,25 @@ vec4 progessive_sinusoidal_wave(vec2 center, vec4 currentVertex, float rmax, flo
     return currentVertex;
 }
 
+void setupLightingVarying()
+{
+	/* first transform the normal into eye space and normalize the result */
+	normal = normalize(gl_NormalMatrix * gl_Normal);
+
+	/* now normalize the light's direction. Note that according to the
+	OpenGL specification, the light is stored in eye space. Also since
+	we're talking about a directional light, the position field is actually
+	direction */
+	lightDir = normalize(vec3(gl_LightSource[0].position));
+
+    // Only true for directional light
+    eyeVec = lightDir;
+
+}
+
 void main() {
+
+    setupLightingVarying();
 
     gl_TexCoord[0] = gl_MultiTexCoord0;
     vec4 heightVertex = gl_Vertex;

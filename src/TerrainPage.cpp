@@ -39,9 +39,10 @@ TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, flo
 
 
     Texture *grassText = RessourcesManager::getInstance().loadTexture("assets/quick_grass.png");
-    grass = new GrassEntity(grassText);
+    grass = new GrassEntity(grassText, "assets/shaders/vertex/default_vertex_renderer.glsl", "assets/shaders/fragment/render_one_texture.glsl");
     grass->generate();
-    mNode.attachEntity(grass);
+    mNode = new Node("GrassField");
+    mNode->attachEntity(grass);
 }
 
 TerrainPage::~TerrainPage()
@@ -77,6 +78,7 @@ float TerrainPage::getHeightFromHeighmapCoordinates(int x, int y)
 /**
  * Calculates all the vertices positions
  * Maps texture coordinates
+ * XXX: Needs to compute normals too!!!!
  **/
 void TerrainPage::generateVertices()
 {
@@ -156,12 +158,6 @@ void TerrainPage::generateVerticesDisplayList()
     }
     glEnd();
 
-    //glEnable(GL_TEXTURE_2D);
-    //    //glTranslatef(0,65, 100);
-    //    glutSolidSphere(100,100,100);
-    //    //glScalef(20,20,20);
-    //    mNode.render();
-    //glDisable(GL_TEXTURE_2D);
     glEndList();
 }
 
@@ -207,6 +203,14 @@ bool TerrainPage::render()
 
         // draw the display list
         glCallList(mDisplayListIndex);
+
+    glEnable(GL_TEXTURE_2D);
+        glTranslatef(0,0, 100);
+        glPushMatrix();
+        glScalef(60,60,60);
+        //mNode->render();
+        glPopMatrix();
+    glDisable(GL_TEXTURE_2D);
 
         mTexShader.disable();
         return true;

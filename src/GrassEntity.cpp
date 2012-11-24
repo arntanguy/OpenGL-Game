@@ -1,9 +1,12 @@
 #include "GrassEntity.h"
 
-GrassEntity::GrassEntity(Texture* texture) : Entity()
+GrassEntity::GrassEntity(Texture* texture, const std::string& vertexShader, const std::string& fragmentShader) : Entity()
 {
     mDisplayListIndex = OBJECT_NOT_COMPILED;
     mTexture = texture;
+    dinf << "loading vertex shader for grass: " << fragmentShader << std::endl;
+    mGrassShader.loadVertexShader(vertexShader);
+    mGrassShader.loadFragmentShader(fragmentShader);
 }
 
 GrassEntity::~GrassEntity()
@@ -18,13 +21,6 @@ bool GrassEntity::generate()
 
     // compile the display list, store a triangle in it
     glNewList(mDisplayListIndex, GL_COMPILE);
-
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glEnable(GL_TEXTURE_2D);
-        mTexture->bind();
-
-
 
         glBegin(GL_TRIANGLES);
             glTexCoord2d(0,1);
@@ -71,8 +67,6 @@ bool GrassEntity::generate()
             glTexCoord2d(1,0);
             glVertex3f(-2.5, 10.0, 4.3);
         glEnd();
-
-        glDisable(GL_TEXTURE_2D);
     glEndList();
 }
 
@@ -83,7 +77,14 @@ bool GrassEntity::render()
         return false;
     } else {
         // draw the display list
+       mGrassShader.enable();
+       mGrassShader.bindTexture(mTexture, "tex");
+       //glEnable(GL_TEXTURE_2D);
+       //mTexture->bind();
+
         glCallList(mDisplayListIndex);
+        //glDisable(GL_TEXTURE_2D);
+        mGrassShader.disable();
         return true;
     }
 

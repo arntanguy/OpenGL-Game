@@ -20,6 +20,7 @@ class Shader
 {
     private:
         short mTextureUnit;
+        std::string mShaderName;
         GLenum shader_type;
         GLhandleARB mVertexHandle;
         GLhandleARB mFragmentHandle;

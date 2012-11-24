@@ -27,6 +27,49 @@ uniform float fogFactor;
 
 varying vec4 VertexPosition;
 
+varying vec3 normal, lightDir, eyeVec;
+
+/**
+ * Phong lighting
+ */
+vec4 applyLighting(vec4 textureColor)
+{
+	vec4 final_color =
+	(gl_FrontLightModelProduct.sceneColor * gl_FrontMaterial.ambient) +
+	(gl_LightSource[0].ambient * gl_FrontMaterial.ambient);
+
+	vec3 N = normalize(normal);
+	vec3 L = normalize(lightDir);
+
+	///* compute the cos of the angle between the normal and lights direction.
+	//The light is directional so the direction is constant for every vertex.
+	//Since these two are normalized the cosine is the dot product. We also
+	//need to clamp the result to the [0,1] range. */
+	//NdotL = max(dot(normal, lightDir), 0.0);
+	float lambertTerm = dot(N,L);
+
+	if(lambertTerm > 0.0)
+	{
+	    /* Compute the diffuse term */
+		final_color += gl_LightSource[0].diffuse *
+		               gl_FrontMaterial.diffuse *
+					   lambertTerm;
+
+		vec3 E = normalize(eyeVec);
+		vec3 R = reflect(-L, N);
+		float specular = pow( max(dot(R, E), 0.0),
+		                 gl_FrontMaterial.shininess );
+		final_color += gl_LightSource[0].specular *
+		               gl_FrontMaterial.specular *
+					   specular;
+	}
+
+    // Merging with the texture
+    vec4 color = final_color*2.0;
+    color *= textureColor;
+	return clamp(color,0.0,1.0);
+}
+
 vec4 mixmapTexturing()
 {
    vec4 texel0 = texture2D(Texture0, gl_TexCoord[0].st*sin(waterSinus)).rgba;
@@ -101,19 +144,11 @@ vec4 fragmentTexturing()
    return mix(texel2, texel3, rock);
 }
 
-vec4 applyLights(vec4 tx)
-{
-
-    vec4 color = gl_Color*2.0;
-    color *= tx;
-	return clamp(color,0.0,1.0);
-}
-
 void main()
 {
    vec4 texturedTexel = mixmapTexturing();
 //   vec4 texturedTexel = fragmentTexturing();
-   vec4 tx = applyLights(texturedTexel);
+   vec4 tx = applyLighting(texturedTexel);
 
    gl_FragColor = tx;
 }

@@ -60,7 +60,7 @@ class TerrainPage
          */
         Shader mTexShader;
 
-        Node mNode;
+        Node *mNode;
         Entity *grass;
 
         void loadTexture(const std::string& texturePath);

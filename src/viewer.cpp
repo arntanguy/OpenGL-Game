@@ -194,7 +194,40 @@ void Viewer::loadTerrain()
     }
     mTerrainPage->setMixmap();
     mTerrainPage->generateVertices();
-    mTerrainPage->startWave(true);
+    mTerrainPage->startWave(false);
+
+
+    /**
+     * Define directional or positional light
+     * */
+    float Al[4] = {1.f, 0.8f, 0.8f, 1.0f };
+    glLightfv( GL_LIGHT0, GL_AMBIENT, Al );
+
+    float Dl[4] = {1.0f, 1.0f, 1.0f, 1.0f };
+    glLightfv( GL_LIGHT0, GL_DIFFUSE, Dl );
+
+    float Sl[4] = {1.0f, 0.0f, 0.0f, 1.0f };
+    glLightfv( GL_LIGHT0, GL_SPECULAR, Sl );
+
+    float Am[4] = {0.3f, 0.3f, 0.3f, 1.0f };
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, Am );
+
+    float Dm[4] = {0.5f, 0.5f, 0.5f, 1.0f };
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, Dm );
+
+    float Sm[4] = {0.6f, 0.6f, 0.6f, 1.0f };
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, Sm );
+
+    float f = 60.0f;
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, f );
+
+    // DIRECTIONAL LIGHT with direction (-1, 0, 1)
+    // Projected with all parallels rays from infinity (and beyond)
+    GLfloat directional_light_position[] = { -1 , -1 , -1, 0 };
+    // POSITIONAL LIGHT
+    // Light emitted from position (-1,0,1), emitting in all directions
+    GLfloat positional_light_position[] = {-1 , 0 , 1, 1.0};
+	glLightfv(GL_LIGHT0, GL_POSITION, directional_light_position);
 }
 
 void Viewer::onKey(const sf::Event::KeyEvent& key)
@@ -318,38 +351,14 @@ void Viewer::onRender()
     sf::Vector3<int> up = mCamera->getUp();
     gluLookAt(pos.x, pos.y, pos.z, view.x, view.y, view.z, up.x, up.y, up.z);
 
-    // light attributes
-    //const GLfloat light_ambient[]  = { 0.9f, mCamera->getPosition().z/m_height, 0.9f, 1.0f };
-    //const GLfloat light_diffuse[]  = { 0.9f, 0.1f, 0.f, 1.0f };
-    //const GLfloat light_specular[] = { 0.9f, mCamera->getPosition().x/m_width, 0.1f, 1.0f };
-    const GLfloat light_ambient[]  = { 0.9f, 0.9f, 0.9f, 1.0f };
-    const GLfloat light_diffuse[]  = { 0.5f, 0.5f, 0.5f, 1.0f };
-    const GLfloat light_specular[] = { 0.1f, 0.1f, 0.1f, 1.0f };
-
-    GLfloat emerald_ambient[] =
-    {0.215, 0.215, 0.215}, emerald_diffuse[] =
-    {0.7568, 0.7568, 0.7568}, emerald_specular[] =
-    {0.727811, 0.727811, 0.727811}, emerald_shininess = 76.8;
-
-    // setup the light attributes
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-    glEnable(GL_LIGHT0);
-
-    // set the light position
-    GLfloat lightPosition[] = { -1.0f, 1.0f, -1.0f, 0.0f };
-    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-
-
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, emerald_ambient);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, emerald_diffuse);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, emerald_specular);
-    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, emerald_shininess);
-
+    // XXX: Need of Z-Depth sorting to get alpha blending right!!
     glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_NICEST);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
     glEnable(GL_LIGHTING);
-    glShadeModel( GL_SMOOTH );
+    glEnable(GL_LIGHT0); // Sun
+    //glShadeModel( GL_SMOOTH );
 
     glPushMatrix();
         //axisNode->render();

@@ -32,7 +32,7 @@ void Shader::init()
         mFragmentHandle = 0;
         mTextureUnit = 1;
     } else {
-        throw std::runtime_error("Error: GL Shaders not supported!");
+        throw std::runtime_error("Error: GL Shaders not supported or Glew not initialized properly!");
     }
 }
 
@@ -84,7 +84,10 @@ std::string Shader::loadFile(const std::string &str)
         buffer << dataFile.rdbuf();
         //Now, buffer contains the vertex shader's data
         data = buffer.str();
+    } else {
+        throw std::runtime_error("Error: Unable to load shader file "+str);
     }
+    if(mShaderName.length() == 0) mShaderName = str;
     return data;
 }
 
@@ -163,7 +166,7 @@ GLhandleARB Shader::createSharedObjects(const std::string shader, GLenum shaderT
     if (!result)
     {
         //We failed to compile.
-        std::cout<<"Vertex shader failed compilation." << shader <<"\n";
+        std::cout<<"Vertex shader " + mShaderName + " failed compilation." << shader <<"\n";
         //Attempt to get the length of our error log.
         int length;
         glGetObjectParameterivARB(vertexHandle, GL_OBJECT_INFO_LOG_LENGTH_ARB, &length);
