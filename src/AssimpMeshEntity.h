@@ -2,31 +2,34 @@
 #define MESH_H
 
 #include <GL/glut.h>
-//#include <GL\glfw.h> //Use GLFW to open a window cross-platform and render with OpenGL
-
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
-//#include <IL/il.h>
 #include <map>
 #include <iostream>
 #include "Debug.h"
+#include "Entity.h"
 
 class Texture;
 
-class Mesh
+class AssimpMeshEntity : public Entity
 {
 	public:
-		Mesh();
-		Mesh(std::string modelName);
-		~Mesh(void);
-		void Init(std::string modelName);
-		void Render(float scale);
-		void ApplyMaterial(const aiMaterial* mat);
+		AssimpMeshEntity();
+		AssimpMeshEntity(std::string modelName);
+		~AssimpMeshEntity(void);
+		void init(std::string modelName);
+		bool render(float scale);
+        // Virtual
+        virtual bool render();
+        virtual bool generate();
+
+		void applyMaterial(const aiMaterial* mat);
 		int LoadGLTextures();
+
 	private:
 		void Color4f(const aiColor4D* color);
-		void Render(const aiNode* node, float scale);
+		bool render(const aiNode* node, float scale);
 		bool configured;
 		const aiScene *scene;
 		std::map<std::string, Texture*> textureMap;

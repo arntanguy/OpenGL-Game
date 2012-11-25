@@ -25,7 +25,7 @@
 
 
 class TerrainPage;
-class Mesh;
+class AssimpMeshEntity;
 
 class Viewer
 {
@@ -69,7 +69,7 @@ protected:
   Texture*mTestTexture2;
   void loadTestEntity();
   sf::Clock mTestClock;
-  Mesh *mesh;
+  AssimpMeshEntity *mesh;
   /**
    * END OF TESTS
    * =============================================

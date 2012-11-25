@@ -41,7 +41,7 @@ ${SRC_DIR}/GrassEntity.cpp
 ${SRC_DIR}/AxisEntity.cpp
 ${SRC_DIR}/FlagEntity.cpp
 ${SRC_DIR}/EnvironmentSettings.cpp
-${SRC_DIR}/Mesh.cpp
+${SRC_DIR}/AssimpMeshEntity.cpp
 )
 
 include_directories (${SRC_DIR} ${OPENGL_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS} ${CAL3D_INCLUDE_DIR} ${INCLUDE_DIR})
