@@ -25,6 +25,7 @@
 
 
 class TerrainPage;
+class Mesh;
 
 class Viewer
 {
@@ -68,6 +69,7 @@ protected:
   Texture*mTestTexture2;
   void loadTestEntity();
   sf::Clock mTestClock;
+  Mesh *mesh;
   /**
    * END OF TESTS
    * =============================================

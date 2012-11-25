@@ -22,6 +22,7 @@ class Texture
     private:
         GLuint mTextureId;
         sf::Image *mImage;
+        std::string mName;
     public:
         Texture();
         Texture(const std::string& path);
@@ -32,6 +33,10 @@ class Texture
         void bind();
         GLuint getTextureId() const;
         sf::Image *getImage() const;
+
+        std::string getName() {
+            return mName;
+        }
 };
 
 

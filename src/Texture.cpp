@@ -16,6 +16,7 @@ Texture::~Texture()
 
 bool Texture::loadTexture(const std::string &path)
 {
+    mName = path;
     try {
         RessourcesManager::getInstance().loadImage(path);
     } catch(std::runtime_error &e) {
@@ -29,7 +30,7 @@ bool Texture::loadTexture(const std::string &path)
 
 bool Texture::loadTexture(sf::Image* img, const std::string& name)
 {
-
+    mName = name;
     if(img->getSize().x%2 != 0 || img->getSize().y % 2 != 0) {
         dwarn << "Warning: image size is not a multiple of 2, texture " << name << " might cause troubles!" << std::endl;
     }

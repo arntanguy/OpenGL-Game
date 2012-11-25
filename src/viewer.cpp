@@ -22,7 +22,7 @@
 #include <string.h>
 #include "TerrainPage.h"
 #include <GL/glut.h>
-#include "AssimpMeshEntity.h"
+#include "Mesh.h"
 
 #define WALK_SPEED 10
 
@@ -151,9 +151,12 @@ void Viewer::loadTestEntity()
     //mTestEntity2 = new FlagEntity(mTestTexture, mTestTexture->getImage()->getSize().x, mTestTexture->getImage()->getSize().y, 8);
     //mTestEntity->generate();
 
-    AssimpMeshEntity *mesh = new AssimpMeshEntity();
-    mesh->LoadMesh("assets/teddy/teddy.3ds");
-    mTestEntity = mesh;
+    //AssimpMeshEntity *mesh = new AssimpMeshEntity();
+    //mesh->LoadMesh("assets/teddy/teddy.3ds");
+    //mTestEntity = mesh;
+
+
+    mesh = new Mesh("teddy/teddy.3ds");
 }
 void Viewer::loadTestShader()
 {
@@ -382,7 +385,9 @@ void Viewer::onRender()
        // mTestShader.setFloat("nbSquares", dynamic_cast<FlagEntity*>(mTestEntity)->getNbSquares());
        // mTestShader.setFloat("width", dynamic_cast<FlagEntity*>(mTestEntity)->getWidth());
        // mTestShader.bindTexture(mTestTexture, "tex");
-        mTestEntity->render();
+        glEnable(GL_TEXTURE_2D);
+        mesh->Render(1);
+        glDisable(GL_TEXTURE_2D);
        // mTestShader.disable();
     glPopMatrix();
 

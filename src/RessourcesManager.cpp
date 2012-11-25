@@ -49,10 +49,15 @@ bool RessourcesManager::loadImage(const std::string& path)
     }
     else {
         sf::Image * img = new sf::Image();
-        if(!img->loadFromFile(path))
+        dinf << "Here" << std::endl;
+        try{
+            img->loadFromFile(path);
+        } catch (...)
+        {
+            return false;
             throw new std::runtime_error("Error: Image "+path+" loading failed!");
-        else
-            mImages[path] = img;
+        }
+        mImages[path] = img;
     }
 }
 void RessourcesManager::addImage(sf::Image *img, const std::string& id)
