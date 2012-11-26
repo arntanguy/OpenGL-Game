@@ -8,17 +8,18 @@
 class Terrain {
     private:
         std::vector<TerrainPage *> mTerrainPages;
-        int mNbTiles;
-        int mLodFalloff;
         int mTileSize;
         int mScale;
 
+        void load();
+
     public:
-        Terrain(int tileSize, int scale, int nbTiles, int lodFalloff);
+        Terrain(int tileSize, int scale);
         virtual ~Terrain();
 
         sf::Vector2i getCurrentTile(sf::Vector3f worldPos);
-        void loadTile(const sf::Vector2i& tile);
+
+        bool render();
 };
 
 #endif

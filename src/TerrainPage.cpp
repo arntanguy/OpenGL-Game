@@ -14,6 +14,7 @@ TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, flo
     mRatioD = mHeightmap->getSize().y/depth;
     mMaxHeight = maxHeight;
     mDisplayListIndex = TERRAIN_NOT_COMPILED;
+    mWaveActivated = false;
 
     // *width-1 to account for the diagonals
     mVertices = new Vertex[(mWidth*mDepth)+(mWidth-1)*(mDepth-1)];
@@ -153,7 +154,6 @@ void TerrainPage::generateVerticesDisplayList()
     for(int i = 0; i<(2*mWidth)*(mDepth-1); i++) {
         v = mVertices[i];
         glMultiTexCoord2fARB(GL_TEXTURE0_ARB, v.texcoords[0], v.texcoords[1]);
-        glMultiTexCoord3fARB(GL_TEXTURE1_ARB, 1, 0, 0);
         glVertex3f(v.position[0], v.position[1], v.position[2]);
     }
     glEnd();
@@ -177,25 +177,27 @@ bool TerrainPage::render()
         std::cerr << "Error: The terrain hasn't been compiled! You need to call the generateVertices() function first!" << std::endl;
         return false;
     } else {
-        mTexShader.enable();
-        mTexShader.bindTexture(mTexture0, "Texture0");
-        mTexShader.bindTexture(mTexture1, "Texture1");
-        mTexShader.bindTexture(mTexture2, "Texture2");
-        mTexShader.bindTexture(mTexture3, "Texture3");
-        mTexShader.bindTexture(mMixmapTexture, "Mixmap");
-        mTexShader.bindTexture(mHeightmapTexture, "Heightmap");
-        mTexShader.setFloat("terrainSize", mWidth*mScaleFactor);
-        mTexShader.setFloat("maxHeight", mMaxHeight);
-        mTexShader.setFloat("fogFactor", 0.);
-        mTexShader.setFloat("waterSinus", sinus);
-        mTexShader.setFloat("waterHeight", 5);
+       mTexShader.enable();
+       mTexShader.bindTexture(mTexture0, "Texture0");
+       mTexShader.bindTexture(mTexture1, "Texture1");
+       mTexShader.bindTexture(mTexture2, "Texture2");
+       mTexShader.bindTexture(mTexture3, "Texture3");
+       mTexShader.bindTexture(mMixmapTexture, "Mixmap");
+       mMixmapTexture->getImage()->saveToFile("Mixmap.jpg");
+       mTexShader.bindTexture(mHeightmapTexture, "Heightmap");
+       mHeightmapTexture->getImage()->saveToFile("Heightmap.jpg");
+       mTexShader.setFloat("terrainSize", mWidth*mScaleFactor);
+       mTexShader.setFloat("maxHeight", mMaxHeight);
+       mTexShader.setFloat("fogFactor", 0.);
+       mTexShader.setFloat("waterSinus", sinus);
+       mTexShader.setFloat("waterHeight", 5);
 
-        if(mWaveActivated)
-            mTexShader.setFloat("waveActivated", 1.);
-        else
-            mTexShader.setFloat("waveActivated", 0.);
-        sf::Time time = mWaveClock.getElapsedTime();
-        mTexShader.setFloat("waveTime", time.asSeconds()/10);
+       if(mWaveActivated)
+           mTexShader.setFloat("waveActivated", 1.);
+       else
+           mTexShader.setFloat("waveActivated", 0.);
+       sf::Time time = mWaveClock.getElapsedTime();
+       mTexShader.setFloat("waveTime", time.asSeconds()/10);
 
         if(sinus+add >= 1.f ) add = -0.005;
         if(sinus+add <= -1.f) add = 0.005;
@@ -204,13 +206,13 @@ bool TerrainPage::render()
         // draw the display list
         glCallList(mDisplayListIndex);
 
-    glEnable(GL_TEXTURE_2D);
-        glTranslatef(0,0, 100);
-        glPushMatrix();
-        glScalef(60,60,60);
-        //mNode->render();
-        glPopMatrix();
-    glDisable(GL_TEXTURE_2D);
+    //glEnable(GL_TEXTURE_2D);
+    //    glTranslatef(0,0, 100);
+    //    glPushMatrix();
+    //    glScalef(60,60,60);
+    //    //mNode->render();
+    //    glPopMatrix();
+    //glDisable(GL_TEXTURE_2D);
 
         mTexShader.disable();
         return true;

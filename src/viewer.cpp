@@ -180,7 +180,7 @@ void Viewer::loadEnvironmentSettings()
 
 void Viewer::loadTerrain()
 {
-    mTerrain = new Terrain(500, 2, 1, 2);
+    mTerrain = new Terrain(512, 1);
 
     mTerrainPage = new TerrainPage("./assets/terrain/heightmap.bmp", 400, 400, 60, 2);
     sf::Image *mixmap = mTerrainPage->getMixmap();
@@ -200,7 +200,7 @@ void Viewer::loadTerrain()
 
         }
     }
-    mTerrainPage->setMixmap();
+    mTerrainPage->setMixmap("MixmapInTerrain.jpg");
     mTerrainPage->generateVertices();
     mTerrainPage->startWave(false);
 
@@ -369,24 +369,26 @@ void Viewer::onRender()
     //glShadeModel( GL_SMOOTH );
 
     glPushMatrix();
-        mTerrainPage->render();
+        mTerrain->render();
+        //glTranslatef(-400,0,-400);
+      // mTerrainPage->render();
     glPopMatrix();
 
     glPushMatrix();
         axisNode->render();
-       // mTestShader.enable();
-       // mTestShader.setFloat("waveTime", mTestClock.getElapsedTime().asSeconds()/10);
-       // mTestShader.setVec3("windDirection", EnvironmentSettings::getInstance().getWindDirection());
-       // mTestShader.setFloat("windStrength", EnvironmentSettings::getInstance().getWindStrength());
-       // mTestShader.setFloat("maxAmplitude", 10);
-       // mTestShader.setVec3("origin", sf::Vector3f(0,0,0));
-       // mTestShader.setFloat("nbSquares", dynamic_cast<FlagEntity*>(mTestEntity)->getNbSquares());
-       // mTestShader.setFloat("width", dynamic_cast<FlagEntity*>(mTestEntity)->getWidth());
-       // mTestShader.bindTexture(mTestTexture, "tex");
-        glEnable(GL_TEXTURE_2D);
-        mesh->render(1);
-        glDisable(GL_TEXTURE_2D);
-       // mTestShader.disable();
+        //mTestShader.enable();
+        //mTestShader.setFloat("waveTime", mTestClock.getElapsedTime().asSeconds()/10);
+        //mTestShader.setVec3("windDirection", EnvironmentSettings::getInstance().getWindDirection());
+        //mTestShader.setFloat("windStrength", EnvironmentSettings::getInstance().getWindStrength());
+        //mTestShader.setFloat("maxAmplitude", 10);
+        //mTestShader.setVec3("origin", sf::Vector3f(0,0,0));
+        //mTestShader.setFloat("nbSquares", dynamic_cast<FlagEntity*>(mTestEntity)->getNbSquares());
+        //mTestShader.setFloat("width", dynamic_cast<FlagEntity*>(mTestEntity)->getWidth());
+        //mTestShader.bindTexture(mTestTexture, "tex");
+        //glEnable(GL_TEXTURE_2D);
+        ////mesh->render(1);
+        //glDisable(GL_TEXTURE_2D);
+        //mTestShader.disable();
     glPopMatrix();
 
     glDisable(GL_LIGHTING);

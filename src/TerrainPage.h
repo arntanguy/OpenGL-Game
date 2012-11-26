@@ -85,11 +85,11 @@ class TerrainPage
         {
             return mMixmap;
         }
-        void setMixmap()
+        void setMixmap(std::string name)
         {
             // XXX: debug only
-            mMixmap->saveToFile("MixmapInTerrain.jpg");
-            mMixmapTexture->loadTexture(mMixmap, "Mixm");
+            mMixmap->saveToFile(name);
+            mMixmapTexture->loadTexture(mMixmap, name);
         }
         void startWave(bool status);
 };

@@ -214,8 +214,8 @@ void Shader::linkShader(GLhandleARB shaderHandle)
  */
 void Shader::enable()
 {
+    mTextureUnit = 1;
     glUseProgramObjectARB(mProgramHandle);
-    mTextureUnit = 0;
 }
 
 /**
@@ -257,6 +257,7 @@ void Shader::setVec3(const std::string &uniformVarName, const sf::Vector3f& vect
 
 void Shader::bindTexture(Texture* texture, const std::string &uniformLocation)
 {
+    dinf << "Bind texture unit " << mTextureUnit << std::endl;
     glActiveTexture(GL_TEXTURE0 + mTextureUnit);
     texture->bind();
     // Binds to the shader

@@ -90,7 +90,8 @@ vec4 mixmapTexturing()
    // Grass
    texel2 = mix(texel1, texel2, mixmapTexel.b);
    // rock
-   return mix(texel2, texel3, mixmapTexel.a);
+   //return mix(texel2, texel3, mixmapTexel.a);
+   return mix(mixmapTexel, vec4(1,1,1,1), 0.5);
 }
 
 /**
