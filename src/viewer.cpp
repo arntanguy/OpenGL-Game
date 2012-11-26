@@ -156,7 +156,7 @@ void Viewer::loadTestEntity()
     //mTestEntity = mesh;
 
 
-    mesh = new AssimpMeshEntity("gingerbread.3ds");
+    mesh = new AssimpMeshEntity("aircraft/base.3ds");
 }
 void Viewer::loadTestShader()
 {

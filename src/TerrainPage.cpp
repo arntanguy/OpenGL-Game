@@ -23,9 +23,9 @@ TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, flo
     mMixmap->create(width, depth, sf::Color(0,0,0));
 
     mTexture0 = RessourcesManager::getInstance().loadTexture("assets/terrain/water2.png");
-    mTexture1 = RessourcesManager::getInstance().loadTexture("assets/terrain/sand.jpg");
-    mTexture2 = RessourcesManager::getInstance().loadTexture("assets/terrain/grass.bmp");
-    mTexture3 = RessourcesManager::getInstance().loadTexture("assets/terrain/rock.png");
+    mTexture1 = RessourcesManager::getInstance().loadTexture("assets/terrain/seamless_beach_sand_texture_by_hhh316-d4hr45u.jpg");
+    mTexture2 = RessourcesManager::getInstance().loadTexture("assets/terrain/Seamless_grass_texture_by_hhh316.jpg");
+    mTexture3 = RessourcesManager::getInstance().loadTexture("assets/terrain/seamless_rock.jpg");
     // Load temporary texture
     mMixmapTexture = new Texture();
     mMixmapTexture->loadTexture(mMixmap, "Mixmap");

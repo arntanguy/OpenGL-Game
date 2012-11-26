@@ -47,6 +47,9 @@ bool AssimpMeshEntity::render(float scale)
 
 bool AssimpMeshEntity::render(const aiNode* node, float scale)
 {
+    // XXX: Do not push all of them!
+    // Save all the states, so that it can be restored later.
+    glPushAttrib(GL_ALL_ATTRIB_BITS);
 	unsigned int i = 0,
 				 t = 0,
 				 n = 0;
@@ -134,6 +137,7 @@ bool AssimpMeshEntity::render(const aiNode* node, float scale)
 	}
 
 	glPopMatrix();
+    glPopAttrib();
     return true;
 }
 
@@ -264,25 +268,6 @@ void AssimpMeshEntity::applyMaterial(const aiMaterial* mat)
 int AssimpMeshEntity::LoadGLTextures()
 {
     dinf << "AssimpMeshEntity::LoadGLTextures" << std::endl;
-//	ILboolean success;
-//
-//	if(ilGetInteger(IL_VERSION_NUM) < IL_VERSION)
-//	{
-//		ILint test = ilGetInteger(IL_VERSION_NUM);
-//		//wrong DevIL version
-//		std::string error = "Wrong DevIL version";
-//		char* cError = (char*) error.c_str();
-//		//glfwCloseWindow();
-//		return -1;
-//	}
-//
-//	ilInit();
-//
-	if(scene->HasTextures())
-	{
-        dinf << "Scene has textures" << std::endl;
-		//glfwCloseWindow();
-	}
 	for(unsigned int i = 0; i < scene->mNumMaterials; ++i)
 	{
 		int texIndex = 0;
@@ -297,92 +282,6 @@ int AssimpMeshEntity::LoadGLTextures()
 			texIndex++;
 		}
     }
-//
-//	for(unsigned int i = 0; i < scene->mNumMaterials; ++i)
-//	{
-//		int texIndex = 0;
-//		aiReturn texFound = AI_SUCCESS;
-//		aiString path; //filename
-//
-//		while(texFound == AI_SUCCESS)
-//		{
-//			texFound = scene->mMaterials[i]->GetTexture(aiTextureType_DIFFUSE, texIndex, &path);
-//			textureIdMap[path.data] = NULL;
-//			texIndex++;
-//		}
-//	}
-//
-//	int numTextures = textureIdMap.size();
-//
-//	ILuint* imageIds = NULL;
-//	imageIds = new ILuint[numTextures];
-//
-//	/* generate DevIL Image IDs */
-//	ilGenImages(numTextures, imageIds); /* Generation of numTextures image names */
-//
-//	/* create and fill array with GL texture ids */
-//	textureIds = new GLuint[numTextures];
-//	glGenTextures(numTextures, textureIds); /* Texture name generation */
-//
-//	/* define texture path */
-//	//std::string texturepath = "../../../test/models/Obj/";
-//
-//	/* get iterator */
-//	std::map<std::string, GLuint*>::iterator itr = textureIdMap.begin();
-//
-//	for (int i=0; i<numTextures; i++)
-//	{
-//
-//		//save IL image ID
-//		std::string filename = (*itr).first;  // get filename
-//		(*itr).second =  &textureIds[i];	  // save texture id for filename in map
-//		itr++;								  // next texture
-//
-//
-//		ilBindImage(imageIds[i]); /* Binding of DevIL image name */
-//		std::string fileloc = basePath + filename;	/* Loading of image */
-//		success = ilLoadImage(fileloc.c_str());
-//
-//		if (success) /* If no error occured: */
-//		{
-//			success = ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE); /* Convert every colour component into
-//			unsigned byte. If your image contains alpha channel you can replace IL_RGB with IL_RGBA */
-//			if (!success)
-//			{
-//				/* Error occured */
-//				std::cout << "Couldn't convert image." << std::endl;
-//				//glfwCloseWindow();
-//				return -1;
-//			}
-//			//glGenTextures(numTextures, &textureIds[i]); /* Texture name generation */
-//			glBindTexture(GL_TEXTURE_2D, textureIds[i]); /* Binding of texture name */
-//			//redefine standard texture values
-//			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); /* We will use linear
-//			interpolation for magnification filter */
-//			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); /* We will use linear
-//			interpolation for minifying filter */
-//			glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_BPP), ilGetInteger(IL_IMAGE_WIDTH),
-//				ilGetInteger(IL_IMAGE_HEIGHT), 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE,
-//				ilGetData()); /* Texture specification */
-//		}
-//		else
-//		{
-//			/* Error occured */
-//			std::cout << "Couldn't load image:" << fileloc << std::endl;
-//			//MessageBox(NULL, ("Couldn't load Image: " + fileloc).c_str() , "ERROR", MB_OK | MB_ICONEXCLAMATION);
-//		}
-//
-//
-//	}
-//
-//	ilDeleteImages(numTextures, imageIds); /* Because we have already copied image data into texture data
-//	we can release memory used by image. */
-//
-//	//Cleanup
-//	delete [] imageIds;
-//	imageIds = NULL;
-//
-//	//return success;
 	return true;
 }
 
