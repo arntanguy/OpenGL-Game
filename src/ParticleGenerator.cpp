@@ -29,10 +29,6 @@ void ParticleGenerator::initParticles()
         mParticles[i].yi = myRand(-1.0,1.0);
         mParticles[i].zi = myRand(1.0,2.0);
 
-        mParticles[i].xg = 0.0;       // Gravité dirigée selon l'axe -Z
-        mParticles[i].yg = 0.0;
-        mParticles[i].zg = -1.0;
-
         mParticles[i].size = 0.1;
     }
 }
@@ -117,9 +113,12 @@ void ParticleGenerator::render()
                 mParticles[i].z += mParticles[i].zi;
 
                 /* Gravity */
-                mParticles[i].x += mParticles[i].xg;
-                mParticles[i].y += mParticles[i].yg;
-                mParticles[i].z += mParticles[i].zg;
+                std::vector<sf::Vector3f>::const_iterator it;
+                for(it = mForces.begin(); it != mForces.end(); it++) {
+                    mParticles[i].x += (*it).x;
+                    mParticles[i].y += (*it).y;
+                    mParticles[i].z += (*it).z;
+                }
 
                 //std::cerr << "m "<< x << "\t" << y << "\t" << z << std::endl;
 
@@ -155,12 +154,7 @@ void ParticleGenerator::changeSize(double size) {
     }
 }
 
-
-void ParticleGenerator::setGravity(float x, float y, float z) {
-    for(int i=0; i<mMaxParticles; i++) {
-        mParticles[i].xg = x;
-        mParticles[i].yg = y;
-        mParticles[i].zg = z;
-    }
+void ParticleGenerator::addForce(sf::Vector3f f)
+{
+    mForces.push_back(f);
 }
-

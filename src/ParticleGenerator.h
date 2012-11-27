@@ -18,9 +18,9 @@ typedef struct
     double r, g, b; // RGB values for colour
     double x, y, z; // Location
     double xi, yi, zi; // Motion Vector
-    double xg, yg, zg; // Gravity
     double size; // Size of the particle, usually very small (0.1)
 } Particle;
+
 
 class ParticleGenerator
 {
@@ -29,6 +29,8 @@ class ParticleGenerator
         int mMaxParticles;
         sf::Vector3f mCameraLocation;
 
+        std::vector<sf::Vector3f> mForces;
+
         void initParticles();
 
     public:
@@ -36,7 +38,8 @@ class ParticleGenerator
         ~ParticleGenerator();
         void render();
         void changeSize(double size);
-        void setGravity(float x, float y, float z);
+
+        void addForce(sf::Vector3f f);
 };
 
 

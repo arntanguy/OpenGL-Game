@@ -155,6 +155,8 @@ void Viewer::loadTestEntity()
 
     //mesh = new AssimpMeshEntity("aircraft/base.3ds");
     particle = new ParticleGenerator(1000);
+    particle->addForce(sf::Vector3f(0,-1,0));
+    particle->addForce(sf::Vector3f(10,-1,0));
 }
 void Viewer::loadTestShader()
 {
