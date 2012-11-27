@@ -142,21 +142,18 @@ void Viewer::onIdle()
 
 void Viewer::loadTestEntity()
 {
-    //mTestTexture = RessourcesManager::getInstance().loadTexture("assets/textures/bzh_flag.gif");
-    //mTestEntity = new FlagEntity(mTestTexture, mTestTexture->getImage()->getSize().x, mTestTexture->getImage()->getSize().y, 8);
-    //mTestEntity->generate();
+    mTestTexture = RessourcesManager::getInstance().loadTexture("assets/textures/bzh_flag.gif");
+    mTestEntity = new FlagEntity(mTestTexture, mTestTexture->getImage()->getSize().x, mTestTexture->getImage()->getSize().y, 8);
+    mTestEntity->generate();
 
     //mTestTexture2 = new Texture();
     //mTestTexture2->loadTexture("assets/crate.jpg");
     //mTestEntity2 = new FlagEntity(mTestTexture, mTestTexture->getImage()->getSize().x, mTestTexture->getImage()->getSize().y, 8);
     //mTestEntity->generate();
 
-    //AssimpMeshEntity *mesh = new AssimpMeshEntity();
-    //mesh->LoadMesh("assets/teddy/teddy.3ds");
-    //mTestEntity = mesh;
 
 
-    mesh = new AssimpMeshEntity("aircraft/base.3ds");
+    //mesh = new AssimpMeshEntity("aircraft/base.3ds");
 }
 void Viewer::loadTestShader()
 {
@@ -275,6 +272,14 @@ void Viewer::onKey(const sf::Event::KeyEvent& key)
         case sf::Keyboard::B:
             static float i=0;
             EnvironmentSettings::getInstance().setWindDirection(sf::Vector3f(1,0,i+=0.1));
+            break;
+        case sf::Keyboard::N:
+            static float j=0;
+            EnvironmentSettings::getInstance().setWindDirection(sf::Vector3f(1,0,j-=0.1));
+        case sf::Keyboard::M:
+            static bool wavestate=false;
+            wavestate=!wavestate;
+            mTerrainPage->startWave(wavestate);
 
     }
 }
@@ -369,26 +374,26 @@ void Viewer::onRender()
     //glShadeModel( GL_SMOOTH );
 
     glPushMatrix();
-        mTerrain->render();
+        //mTerrain->render();
         //glTranslatef(-400,0,-400);
-      // mTerrainPage->render();
+       mTerrainPage->render();
     glPopMatrix();
 
     glPushMatrix();
         axisNode->render();
-        //mTestShader.enable();
-        //mTestShader.setFloat("waveTime", mTestClock.getElapsedTime().asSeconds()/10);
-        //mTestShader.setVec3("windDirection", EnvironmentSettings::getInstance().getWindDirection());
-        //mTestShader.setFloat("windStrength", EnvironmentSettings::getInstance().getWindStrength());
-        //mTestShader.setFloat("maxAmplitude", 10);
-        //mTestShader.setVec3("origin", sf::Vector3f(0,0,0));
-        //mTestShader.setFloat("nbSquares", dynamic_cast<FlagEntity*>(mTestEntity)->getNbSquares());
-        //mTestShader.setFloat("width", dynamic_cast<FlagEntity*>(mTestEntity)->getWidth());
-        //mTestShader.bindTexture(mTestTexture, "tex");
-        //glEnable(GL_TEXTURE_2D);
-        ////mesh->render(1);
-        //glDisable(GL_TEXTURE_2D);
-        //mTestShader.disable();
+        mTestShader.enable();
+        mTestShader.setFloat("waveTime", mTestClock.getElapsedTime().asSeconds()/10);
+        mTestShader.setVec3("windDirection", EnvironmentSettings::getInstance().getWindDirection());
+        mTestShader.setFloat("windStrength", EnvironmentSettings::getInstance().getWindStrength());
+        mTestShader.setFloat("maxAmplitude", 10);
+        mTestShader.setVec3("origin", sf::Vector3f(0,0,0));
+        mTestShader.setFloat("nbSquares", dynamic_cast<FlagEntity*>(mTestEntity)->getNbSquares());
+        mTestShader.setFloat("width", dynamic_cast<FlagEntity*>(mTestEntity)->getWidth());
+        mTestShader.bindTexture(mTestTexture, "tex");
+        glEnable(GL_TEXTURE_2D);
+        mTestEntity->render();
+        glDisable(GL_TEXTURE_2D);
+        mTestShader.disable();
     glPopMatrix();
 
     glDisable(GL_LIGHTING);
