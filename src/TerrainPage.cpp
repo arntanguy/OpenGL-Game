@@ -206,13 +206,11 @@ bool TerrainPage::render()
         // draw the display list
         glCallList(mDisplayListIndex);
 
-    //glEnable(GL_TEXTURE_2D);
-    //    glTranslatef(0,0, 100);
-    //    glPushMatrix();
-    //    glScalef(60,60,60);
-    //    //mNode->render();
-    //    glPopMatrix();
-    //glDisable(GL_TEXTURE_2D);
+    glEnable(GL_TEXTURE_2D);
+        mNode->translate(300, getHeight(300,300), 300);
+        mNode->scale(1);
+        mNode->render();
+    glDisable(GL_TEXTURE_2D);
 
         mTexShader.disable();
         return true;

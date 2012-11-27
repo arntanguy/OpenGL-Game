@@ -42,6 +42,7 @@ ${SRC_DIR}/AxisEntity.cpp
 ${SRC_DIR}/FlagEntity.cpp
 ${SRC_DIR}/EnvironmentSettings.cpp
 ${SRC_DIR}/AssimpMeshEntity.cpp
+${SRC_DIR}/ParticleGenerator.cpp
 )
 
 include_directories (${SRC_DIR} ${OPENGL_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS} ${CAL3D_INCLUDE_DIR} ${INCLUDE_DIR})

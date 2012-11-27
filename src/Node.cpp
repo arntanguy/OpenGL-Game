@@ -63,10 +63,33 @@ void Node::translate(float x, float y, float z)
     mTranslate.z = z;
 }
 
+void Node::scale(float scale)
+{
+    mScale.x = scale;
+    mScale.y = scale;
+    mScale.z = scale;
+}
+
+void Node::scale(float x, float y, float z)
+{
+    mScale.x = x;
+    mScale.y = y;
+    mScale.z = z;
+}
+
 bool Node::render()
 {
-    if(mEntity != 0)
-        return mEntity->render();
+    if(mEntity != 0) {
+        // Save matrix current matrix
+        glPushMatrix();
+            // Apply translation to current node, and all child nodes
+            glTranslatef(mTranslate.x, mTranslate.y, mTranslate.z);
+            glPushMatrix();
+                glScalef(mScale.x, mScale.y, mScale.z);
+                return mEntity->render();
+            glPopMatrix();
+        glPopMatrix();
+    }
     else
         return false;
 }
@@ -111,6 +134,9 @@ bool Node::renderAllChildren()
                 (it->second)->renderAllChildren();
             glPopMatrix();
         }
-        render();
+        glPushMatrix();
+            glScalef(mScale.x, mScale.y, mScale.z);
+            render();
+        glPopMatrix();
     glPopMatrix();
 }

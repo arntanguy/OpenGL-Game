@@ -22,6 +22,7 @@ class Node
     protected:
         sf::Vector3f mTranslate;
         sf::Vector3f mRotation;
+        sf::Vector3f mScale;
         std::string mName;
         Entity *mEntity;
         std::unordered_map<std::string, Node *> mChildNodes;
@@ -45,6 +46,8 @@ class Node
 
         void rotate(float x, float y, float z);
         void translate(float x, float y, float z);
+        void scale(float scale);
+        void scale(float x, float y, float z);
 
         void attachEntity(Entity *entity);
         void addChild(Node *parent);

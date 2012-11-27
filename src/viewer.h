@@ -22,6 +22,7 @@
 
 #include "FlagEntity.h"
 #include "EnvironmentSettings.h"
+#include "ParticleGenerator.h"
 
 
 class TerrainPage;
@@ -70,6 +71,7 @@ protected:
   void loadTestEntity();
   sf::Clock mTestClock;
   AssimpMeshEntity *mesh;
+  ParticleGenerator *particle;
   /**
    * END OF TESTS
    * =============================================

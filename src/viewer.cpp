@@ -154,6 +154,7 @@ void Viewer::loadTestEntity()
 
 
     //mesh = new AssimpMeshEntity("aircraft/base.3ds");
+    particle = new ParticleGenerator(1000);
 }
 void Viewer::loadTestShader()
 {
@@ -399,6 +400,7 @@ void Viewer::onRender()
     glDisable(GL_LIGHTING);
     glDisable(GL_DEPTH_TEST);
 
+    particle->render();
     // render the cursor
     glPushMatrix();
         renderCursor();
