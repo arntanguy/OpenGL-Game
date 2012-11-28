@@ -5,10 +5,16 @@ double myRand(double min, double max)
     return (double) (min + ((float) rand() / RAND_MAX * (max - min + 1.0)));
 }
 
-ParticleGenerator::ParticleGenerator(int maxParticles) {
+ParticleGenerator::ParticleGenerator(int maxParticles, std::string vertexShader, std::string fragmentShader) {
     mMaxParticles = maxParticles;
-    mParticles = new Particle[maxParticles]; initParticles();
+    mParticles = new Particle[maxParticles];
+
+    mShader.loadVertexShader(vertexShader);
+    mShader.loadFragmentShader(fragmentShader);
+
+    initParticles();
 }
+
 ParticleGenerator::~ParticleGenerator() {
     delete mParticles;
 }
@@ -85,6 +91,16 @@ void ParticleGenerator::render()
     // Right and up direction of camera
     float r[3], u[3];
 	camera_directions(r,u,NULL);
+    static int iteration = 0;
+    mShader.enable();
+    mShader.setFloat("nbActiveModifier", mColorModifiers.size());
+    mShader.setFloatArray("modifiersDistance", mModifiersDistance);
+    mShader.setVec3Array("colorModiers", mColorModifiers);
+
+    mShader.setFloat("nbActiveForces", mForces.size());
+    mShader.setVec3Array("forces", mForces);
+    mShader.setFloat("iteration", iteration++);
+
     glPushMatrix();
 
         int a = 0;
@@ -112,7 +128,7 @@ void ParticleGenerator::render()
                 mParticles[i].y += mParticles[i].yi;
                 mParticles[i].z += mParticles[i].zi;
 
-                /* Gravity */
+                /* Apply forces */
                 std::vector<sf::Vector3f>::const_iterator it;
                 for(it = mForces.begin(); it != mForces.end(); it++) {
                     mParticles[i].x += (*it).x;
@@ -138,14 +154,15 @@ void ParticleGenerator::render()
                     mParticles[i].yi = myRand(-10.0,10.0);
                     mParticles[i].zi = myRand(10.0,20.0);
 
-                    mParticles[i].r=myRand(0.0,1.0);  // Quantité aléatoire de Rouge
-                    mParticles[i].g=myRand(0.0,1.0);  // Quantité aléatoire de Vert
-                    mParticles[i].b=myRand(0.0,1.0);  // Quantité aléatoire de Bleu
+                    mParticles[i].r=myRand(0.0,1.0);
+                    mParticles[i].g=myRand(0.0,1.0);
+                    mParticles[i].b=myRand(0.0,1.0);
                 }
             }
         }
         //std::cerr << std::endl;
     glPopMatrix();
+    mShader.disable();
 }
 
 void ParticleGenerator::changeSize(double size) {
@@ -157,4 +174,15 @@ void ParticleGenerator::changeSize(double size) {
 void ParticleGenerator::addForce(sf::Vector3f f)
 {
     mForces.push_back(f);
+}
+
+
+bool ParticleGenerator::addColorModifier(float distance, const sf::Vector3f color)
+{
+    if(mModifiersDistance.size() < MAX_MODIFIERS) {
+        mModifiersDistance.push_back(distance);
+        mColorModifiers.push_back(color);
+        return true;
+    }
+    return false;
 }

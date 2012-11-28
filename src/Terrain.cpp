@@ -15,7 +15,7 @@ Terrain::~Terrain()
 void Terrain::load()
 {
     std::string basePath = "assets/terrain/test_heightmap/heightmap-";
-    for(int i=0; i<3; i++) {
+    for(int i=0; i<4; i++) {
         std::stringstream ss;
         ss << basePath << i << ".jpg";
         std::string path = ss.str();
@@ -66,11 +66,19 @@ bool Terrain::render()
             glTranslatef(mTileSize*mScale, 0, 0);
             mTerrainPages[1]->render();
         glPopMatrix();
+        glPushMatrix();
+            glTranslatef(mTileSize*mScale, 0, mTileSize*mScale);
+            mTerrainPages[3]->render();
+        glPopMatrix();
+        glPushMatrix();
+            glTranslatef(0, 0, mTileSize*mScale);
+            mTerrainPages[2]->render();
+        glPopMatrix();
     glPopMatrix();
-//    for(; it != mTerrainPages.end(); it++) {
-//        glPushMatrix();
-//            (*it)->render();
-//        glPopMatrix();
-//        i++;
-//    }
+    //for(; it != mTerrainPages.end(); it++) {
+    //    glPushMatrix();
+    //        (*it)->render();
+    //    glPopMatrix();
+    //    i++;
+    //}
 }

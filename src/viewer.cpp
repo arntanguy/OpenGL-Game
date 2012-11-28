@@ -154,9 +154,11 @@ void Viewer::loadTestEntity()
 
 
     //mesh = new AssimpMeshEntity("aircraft/base.3ds");
-    particle = new ParticleGenerator(1000);
+    particle = new ParticleGenerator(1000, "assets/shaders/vertex/particles.glsl", "assets/shaders/fragment/particles.glsl");
     particle->addForce(sf::Vector3f(0,-1,0));
     particle->addForce(sf::Vector3f(10,-1,0));
+    particle->addColorModifier(0, sf::Vector3f(0,1,0));
+    particle->addColorModifier(5, sf::Vector3f(1,0,0));
 }
 void Viewer::loadTestShader()
 {
@@ -377,9 +379,9 @@ void Viewer::onRender()
     //glShadeModel( GL_SMOOTH );
 
     glPushMatrix();
-        //mTerrain->render();
+        mTerrain->render();
         //glTranslatef(-400,0,-400);
-       mTerrainPage->render();
+       //mTerrainPage->render();
     glPopMatrix();
 
     glPushMatrix();

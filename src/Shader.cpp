@@ -246,6 +246,11 @@ void Shader::setFloat(const std::string &uniformVarName, float value)
     glUniform1f(my_sampler_uniform_location, value);
 }
 
+void Shader::setInt(const std::string &uniformVarName, int value)
+{
+    glUniform1i(getVariableId(uniformVarName), value);
+}
+
 void Shader::setVec2(const std::string &uniformVarName, const sf::Vector2f& vector)
 {
     glUniform2f(getVariableId(uniformVarName), vector.x, vector.y);
@@ -255,9 +260,33 @@ void Shader::setVec3(const std::string &uniformVarName, const sf::Vector3f& vect
     glUniform3f(getVariableId(uniformVarName), vector.x, vector.y, vector.z);
 }
 
+void Shader::setFloatArray(const std::string &uniformVarName, const std::vector<float>& f)
+{
+    float *farray;
+    farray=new float[f.size()];
+    int i=0;
+    for(int i=0; i<f.size(); i++) {
+        farray[i] = f[i];
+    }
+    glUniform1fv(getVariableId(uniformVarName), f.size(), farray);
+}
+
+void Shader::setVec3Array(const std::string &uniformVarName, const std::vector<sf::Vector3f>& f)
+{
+    GLfloat *farray;
+    farray=new float[f.size()*3];
+    int glIndex=0;
+    for(int i=0; i<f.size(); i++) {
+        farray[glIndex++] = f[i].x;
+        farray[glIndex++] = f[i].y;
+        farray[glIndex++] = f[i].z;
+    }
+    glUniform3fv(getVariableId(uniformVarName), 1, farray);
+}
+
 void Shader::bindTexture(Texture* texture, const std::string &uniformLocation)
 {
-    dinf << "Bind texture unit " << mTextureUnit << std::endl;
+    //dinf << "Bind texture unit " << mTextureUnit << std::endl;
     glActiveTexture(GL_TEXTURE0 + mTextureUnit);
     texture->bind();
     // Binds to the shader

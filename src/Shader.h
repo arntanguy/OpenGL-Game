@@ -47,8 +47,12 @@ class Shader
         void bindTexture(Texture* texture, const std::string &uniformLocation);
 
         void setFloat(const std::string &uniformVarName, float value);
+        void setInt(const std::string &uniformVarName, int value);
         void setVec2(const std::string &uniformVarName, const sf::Vector2f& vector);
         void setVec3(const std::string &uniformVarName, const sf::Vector3f& vector);
+
+        void setFloatArray(const std::string &uniformVarName, const std::vector<float>& f);
+        void setVec3Array(const std::string &uniformVarName, const std::vector<sf::Vector3f>& f);
 
         bool hasShaderSupport();
 
