@@ -23,6 +23,8 @@
 #include "TerrainPage.h"
 #include <GL/glut.h>
 #include "AssimpMeshEntity.h"
+#include "DirectionalLight.h"
+#include "SpotLight.h"
 
 #define WALK_SPEED 10
 
@@ -210,14 +212,19 @@ void Viewer::loadTerrain()
     /**
      * Define directional or positional light
      * */
-    float Al[4] = {1.f, 0.8f, 0.8f, 1.0f };
-    glLightfv( GL_LIGHT0, GL_AMBIENT, Al );
+    //DirectionalLight directionalLight(GL_LIGHT0);
+    //directionalLight.setAmbiant(sf::Vector3f(1.f, 0.f, 0.8f));
+    //directionalLight.setDiffuse(sf::Vector3f(1.f, 1.f, 1.f));
+    //directionalLight.setSpecular(sf::Vector3f(1.f, 0.f, 0.f));
+    //directionalLight.setDirection(sf::Vector3f(-1, 0, 1));
+    SpotLight spotLight(GL_LIGHT0);
+    spotLight.setAmbiant(sf::Vector3f(1.f, 0.f, 0.8f));
+    spotLight.setDiffuse(sf::Vector3f(1.f, 1.f, 1.f));
+    spotLight.setSpecular(sf::Vector3f(1.f, 0.f, 0.f));
+    spotLight.setPosition(sf::Vector3f(0, 60, 0));
+    spotLight.setDirection(sf::Vector3f(0, 0, -1));
+    spotLight.setCutoff(43);
 
-    float Dl[4] = {1.0f, 1.0f, 1.0f, 1.0f };
-    glLightfv( GL_LIGHT0, GL_DIFFUSE, Dl );
-
-    float Sl[4] = {1.0f, 0.0f, 0.0f, 1.0f };
-    glLightfv( GL_LIGHT0, GL_SPECULAR, Sl );
 
     float Am[4] = {0.3f, 0.3f, 0.3f, 1.0f };
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, Am );
@@ -230,14 +237,6 @@ void Viewer::loadTerrain()
 
     float f = 60.0f;
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, f );
-
-    // DIRECTIONAL LIGHT with direction (-1, 0, 1)
-    // Projected with all parallels rays from infinity (and beyond)
-    GLfloat directional_light_position[] = { -1 , -1 , -1, 0 };
-    // POSITIONAL LIGHT
-    // Light emitted from position (-1,0,1), emitting in all directions
-    GLfloat positional_light_position[] = {-1 , 0 , 1, 1.0};
-	glLightfv(GL_LIGHT0, GL_POSITION, directional_light_position);
 }
 
 void Viewer::onKey(const sf::Event::KeyEvent& key)
