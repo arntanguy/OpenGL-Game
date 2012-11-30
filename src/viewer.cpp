@@ -225,6 +225,15 @@ void Viewer::loadTerrain()
     spotLight.setDirection(sf::Vector3f(0, 0, -1));
     spotLight.setCutoff(43);
 
+    SpotLight spotLight2(GL_LIGHT1);
+    spotLight2.setAmbiant(sf::Vector3f(0.f, 0.f, 1.f));
+    spotLight2.setDiffuse(sf::Vector3f(0.f, 0.f, 1.f));
+    spotLight2.setSpecular(sf::Vector3f(0.f, 0.f, 1.f));
+    spotLight2.setPosition(sf::Vector3f(0, 60, 0));
+    spotLight2.setDirection(sf::Vector3f(0, 0, -1));
+    spotLight2.setExponent(2);
+    spotLight2.setCutoff(20);
+
 
     float Am[4] = {0.3f, 0.3f, 0.3f, 1.0f };
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, Am );

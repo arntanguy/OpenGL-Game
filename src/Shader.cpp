@@ -145,7 +145,6 @@ GLhandleARB Shader::createSharedObjects(const std::string shader, GLenum shaderT
         //We have failed creating the vertex shader object.
         std::cout<<"Failed creating vertex shader object";
     }
-
     //Now, compile the shader source.
     //Note that glShaderSource takes an array of chars. This is so that one can load multiple vertex shader files at once.
     //This is similar in function to linking multiple C++ files together. Note also that there can only be one "void main" definition
