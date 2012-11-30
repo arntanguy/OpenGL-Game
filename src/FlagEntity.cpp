@@ -30,13 +30,10 @@ bool FlagEntity::generate()
     // compile the display list, store a triangle in it
     glNewList(mDisplayListIndex, GL_COMPILE);
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         if(mTexture != 0) {
             glEnable(GL_TEXTURE_2D);
             mTexture->bind();
         }
-
 
 
         glBegin(GL_TRIANGLES);
@@ -76,6 +73,7 @@ bool FlagEntity::generate()
 
 bool FlagEntity::render()
 {
+    glPushAttrib(GL_ALL_ATTRIB_BITS);
     if(mDisplayListIndex == OBJECT_NOT_COMPILED) {
         derr << "Error: You must first call the generate function to compile the opengl command list" << std::endl;
         return false;
@@ -84,6 +82,7 @@ bool FlagEntity::render()
         glCallList(mDisplayListIndex);
         return true;
     }
+    glPopAttrib();
 }
 
 float FlagEntity::getNbSquares() const

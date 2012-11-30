@@ -259,7 +259,6 @@ vec4 mixLightingAndTexture(vec4 textureColor, vec4 lightingColor)
 void main()
 {
    vec4 texturedTexel = mixmapTexturing();
-   //vec4 texturedTexel = fragmentTexturing();
    vec4 lighting;
    for (int i=0; i<nbLights; i++) {
        lighting += applySpotlightLighting(i);

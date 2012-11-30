@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 #include <GL/glew.h>
-#include "viewer.h"
+#include "Viewer.h"
 #include "tick.h"
 #include <string.h>
 #include "TerrainPage.h"
@@ -388,8 +388,7 @@ void Viewer::onRender()
 
     glPushMatrix();
         mTerrain->render();
-        //glTranslatef(-400,0,-400);
-       //mTerrainPage->render();
+        //mTerrainPage->render();
     glPopMatrix();
 
     glPushMatrix();
