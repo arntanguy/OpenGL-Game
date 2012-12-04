@@ -114,6 +114,7 @@ public:
   void setDimension(int width, int height);
 
   void loadTerrain();
+  void loadSky();
   void loadEnvironmentSettings();
 
 protected:

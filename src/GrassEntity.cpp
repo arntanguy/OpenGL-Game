@@ -1,9 +1,9 @@
 #include "GrassEntity.h"
 
-GrassEntity::GrassEntity(Texture* texture, const std::string& vertexShader, const std::string& fragmentShader) : Entity()
+GrassEntity::GrassEntity(const std::string& texture, const std::string& vertexShader, const std::string& fragmentShader) : Entity()
 {
     mDisplayListIndex = OBJECT_NOT_COMPILED;
-    mTexture = texture;
+    mTexture = RessourcesManager::getInstance().loadTexture(texture);
     dinf << "loading vertex shader for grass: " << fragmentShader << std::endl;
     mGrassShader.loadVertexShader(vertexShader);
     mGrassShader.loadFragmentShader(fragmentShader);

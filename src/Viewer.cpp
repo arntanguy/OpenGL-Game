@@ -173,6 +173,7 @@ void Viewer::loadTestShader()
 
 bool Viewer::onInit() {
     loadEnvironmentSettings();
+    loadSky();
     loadTerrain();
     loadTestEntity();
     loadTestShader();
@@ -185,32 +186,36 @@ void Viewer::loadEnvironmentSettings()
     EnvironmentSettings::getInstance().setWindStrength(1);
 }
 
+void Viewer::loadSky()
+{
+    mSkybox = new SkyboxEntity("assets/terrain/skybox_texture_keithlantz_net.jpg", 100);
+}
+
 void Viewer::loadTerrain()
 {
-    mSkybox = new SkyboxEntity("assets/terrain/skybox_texture_keithlantz_net.jpg", 300);
-    mTerrain = new Terrain(200, 4, 60);
+    //mTerrain = new Terrain(200, 4, 60);
 
-    //mTerrainPage = new TerrainPage("./assets/terrain/untitled.png", 200, 100, 2);
-    //sf::Image *mixmap = mTerrainPage->getMixmap();
-    //for(int x = 0; x < mixmap->getSize().x; x++) {
-        //for(int y = 0; y < mixmap->getSize().y; y++) {
-            //float height = mTerrainPage->getHeight(x, y);
-            //if(height < 5)
-                //mixmap->setPixel(x, y, sf::Color(255, 0, 0, 0));
-            //else if (height < 10)
-                //mixmap->setPixel(x, y, sf::Color(50, 200, 0, 0));
-            //else if (height < 20)
-                //mixmap->setPixel(x, y, sf::Color(0, 150, 150, 0));
-            //else if (height < 30)
-                //mixmap->setPixel(x, y, sf::Color(0, 0, 150, 50));
-            //else
-                //mixmap->setPixel(x, y, sf::Color(0, 0, 0, 255));
+    mTerrainPage = new TerrainPage("./assets/terrain/untitled.png", 200, 100, 2);
+    sf::Image *mixmap = mTerrainPage->getMixmap();
+    for(int x = 0; x < mixmap->getSize().x; x++) {
+        for(int y = 0; y < mixmap->getSize().y; y++) {
+            float height = mTerrainPage->getHeight(x, y);
+            if(height < 5)
+                mixmap->setPixel(x, y, sf::Color(255, 0, 0, 0));
+            else if (height < 10)
+                mixmap->setPixel(x, y, sf::Color(50, 200, 0, 0));
+            else if (height < 20)
+                mixmap->setPixel(x, y, sf::Color(0, 150, 150, 0));
+            else if (height < 30)
+                mixmap->setPixel(x, y, sf::Color(0, 0, 150, 50));
+            else
+                mixmap->setPixel(x, y, sf::Color(0, 0, 0, 255));
 
-        //}
-    //}
-    //mTerrainPage->setMixmap("MixmapInTerrain.jpg");
-    //mTerrainPage->generateVertices();
-    //mTerrainPage->startWave(false);
+        }
+    }
+    mTerrainPage->setMixmap("MixmapInTerrain.jpg");
+    mTerrainPage->generateVertices();
+    mTerrainPage->startWave(false);
 
 
     /**
@@ -381,24 +386,29 @@ void Viewer::onRender()
     sf::Vector3<int> up = mCamera->getUp();
     gluLookAt(pos.x, pos.y, pos.z, view.x, view.y, view.z, up.x, up.y, up.z);
 
+    /**
+     * Render the skybox
+     **/
     mSkybox->render();
+
+
     // XXX: Need of Z-Depth sorting to get alpha blending right!!
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_NICEST);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0); // Sun
+    //glDepthFunc(GL_NICEST);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glEnable(GL_BLEND);
+    //glEnable(GL_LIGHTING);
+    //glEnable(GL_LIGHT0); // Sun
     //glShadeModel( GL_SMOOTH );
 
 
-    //glPushMatrix();
+    glPushMatrix();
         //mTerrain->render();
-        ////mTerrainPage->render();
-    //glPopMatrix();
+    //    mTerrainPage->render();
+    glPopMatrix();
 
-    //glPushMatrix();
-        //axisNode->render();
+    glPushMatrix();
+        axisNode->render();
         //mTestShader.enable();
         //mTestShader.setFloat("waveTime", mTestClock.getElapsedTime().asSeconds()/10);
         //mTestShader.setVec3("windDirection", EnvironmentSettings::getInstance().getWindDirection());
@@ -410,12 +420,13 @@ void Viewer::onRender()
         //mTestShader.bindTexture(mTestTexture, "tex");
         //mTestEntity->render();
         //mTestShader.disable();
-    //glPopMatrix();
+    glPopMatrix();
 
     glDisable(GL_LIGHTING);
     glDisable(GL_DEPTH_TEST);
 
     particle->render();
+
     // render the cursor
     glPushMatrix();
         renderCursor();

@@ -77,6 +77,9 @@ Texture * RessourcesManager::loadTexture(const std::string &path)
         dinf << "Texture " << path << " loaded" << std::endl;
         mTextures[path] = texture;
         return texture;
+    } else {
+        derr << "Error: texture " << path << " not loaded!" << std::endl;
+        exit(0);
     }
     return 0;
 }
@@ -88,10 +91,12 @@ bool RessourcesManager::addTexture(Texture *texture, const std::string &path)
         return false;
     } else {
         if(texture != 0) {
-            return false;
-        } else {
+            dinf << "Texture " << path << " added." << std::endl;
             mTextures[path] = texture;
             return true;
+        } else {
+            derr << "Error: Unable to add texture: " << path << "! Null texture" << std::endl;
+            return false;
         }
     }
 

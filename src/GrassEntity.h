@@ -15,7 +15,7 @@ class GrassEntity : public Entity
         GLuint mDisplayListIndex;
         Shader mGrassShader;
     public:
-        GrassEntity(Texture *texture, const std::string& vertexShader, const std::string &fragmentShader);
+        GrassEntity(const std::string &texture, const std::string& vertexShader, const std::string &fragmentShader);
         virtual ~GrassEntity();
         bool generate();
         bool render();

@@ -2,15 +2,17 @@
 
 Node::Node()
 {
+    init();
 }
 
 Node::Node(std::string name) : mName(name)
 {
-
+    init();
 }
 
 Node::Node(std::string name, float x, float y, float z)
 {
+    init();
     mName = name;
     mTranslate.x = x;
     mTranslate.y = y;
@@ -19,6 +21,7 @@ Node::Node(std::string name, float x, float y, float z)
 
 Node::Node(std::string name, sf::Vector3f pos)
 {
+    init();
     mName = name;
     mTranslate = pos;
 }
@@ -26,6 +29,9 @@ Node::Node(std::string name, sf::Vector3f pos)
 void Node::init()
 {
     mEntity = 0;
+    mScale.x= 1;
+    mScale.y= 1;
+    mScale.z= 1;
 }
 
 Node::~Node()
@@ -86,9 +92,10 @@ bool Node::render()
             glTranslatef(mTranslate.x, mTranslate.y, mTranslate.z);
             glPushMatrix();
                 glScalef(mScale.x, mScale.y, mScale.z);
-                return mEntity->render();
+                mEntity->render();
             glPopMatrix();
         glPopMatrix();
+        return true;
     }
     else
         return false;

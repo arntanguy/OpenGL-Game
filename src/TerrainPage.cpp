@@ -38,8 +38,7 @@ TerrainPage::TerrainPage(const std::string& heightmap,  int size, float maxHeigh
     mTexShader.loadFragmentShader("assets/shaders/fragment/blend_textures_from_mixmap.glsl");
 
 
-    Texture *grassText = RessourcesManager::getInstance().loadTexture("assets/quick_grass.png");
-    grass = new GrassEntity(grassText, "assets/shaders/vertex/default_vertex_renderer.glsl", "assets/shaders/fragment/render_one_texture.glsl");
+    grass = new GrassEntity("assets/quick_grass.png", "assets/shaders/vertex/default_vertex_renderer.glsl", "assets/shaders/fragment/render_one_texture.glsl");
     grass->generate();
     mNode = new Node("GrassField");
     mNode->attachEntity(grass);
@@ -48,11 +47,6 @@ TerrainPage::TerrainPage(const std::string& heightmap,  int size, float maxHeigh
 TerrainPage::~TerrainPage()
 {
     delete mVertices;
-}
-
-void TerrainPage::loadTexture(const std::string& texturePath)
-{
-//    mTexture.loadTexture(texturePath);
 }
 
 sf::Vector2u TerrainPage::getTextureCoordinates(float x, float z)
@@ -214,12 +208,10 @@ bool TerrainPage::render()
         // draw the display list
         glCallList(mDisplayListIndex);
 
-         mTexShader.disable();
-        glEnable(GL_TEXTURE_2D);
-            //mNode->translate(300, getHeight(300,300), 300);
-            mNode->scale(1);
-            mNode->render();
-        glDisable(GL_TEXTURE_2D);
+        mTexShader.disable();
+
+        mNode->scale(1);
+        mNode->render();
 
         glPopAttrib();
         return true;

@@ -63,8 +63,6 @@ class TerrainPage
         Node *mNode;
         Entity *grass;
 
-        void loadTexture(const std::string& texturePath);
-
         sf::Clock mWaveClock;
         bool mWaveActivated;
 
