@@ -27,8 +27,7 @@ add_definitions(-DDEBUG=1 -DINFO=1)
 ### DEFINE NEEDED SOURCES
 SET(SOURCES
 ${SRC_DIR}/main.cpp
-${SRC_DIR}/viewer.cpp
-${SRC_DIR}/tick.cpp
+${SRC_DIR}/Viewer.cpp
 ${SRC_DIR}/TerrainPage.cpp
 ${SRC_DIR}/Terrain.cpp
 ${SRC_DIR}/RessourcesManager.cpp
@@ -46,6 +45,7 @@ ${SRC_DIR}/ParticleGenerator.cpp
 ${SRC_DIR}/Light.cpp
 ${SRC_DIR}/DirectionalLight.cpp
 ${SRC_DIR}/SpotLight.cpp
+${SRC_DIR}/SkyboxEntity.cpp
 )
 
 include_directories (${SRC_DIR} ${OPENGL_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS} ${CAL3D_INCLUDE_DIR} ${INCLUDE_DIR})

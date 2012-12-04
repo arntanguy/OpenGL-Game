@@ -18,13 +18,13 @@
 
 #include <GL/glew.h>
 #include "Viewer.h"
-#include "tick.h"
 #include <string.h>
 #include "TerrainPage.h"
 #include <GL/glut.h>
 #include "AssimpMeshEntity.h"
 #include "DirectionalLight.h"
 #include "SpotLight.h"
+#include "SkyboxEntity.h"
 
 #define WALK_SPEED 10
 
@@ -124,7 +124,10 @@ void Viewer::onIdle()
 {
     // get the current tick value
     unsigned int tick;
-    tick = Tick::getTick();
+    sf::Clock clock;
+    sf::Time time = clock.getElapsedTime();
+    tick = time.asMilliseconds();
+
 
     // calculate the amount of elapsed seconds
     float elapsedSeconds;
@@ -144,9 +147,9 @@ void Viewer::onIdle()
 
 void Viewer::loadTestEntity()
 {
-    mTestTexture = RessourcesManager::getInstance().loadTexture("assets/textures/bzh_flag.gif");
-    mTestEntity = new FlagEntity(mTestTexture, mTestTexture->getImage()->getSize().x, mTestTexture->getImage()->getSize().y, 8);
-    mTestEntity->generate();
+    //mTestTexture = RessourcesManager::getInstance().loadTexture("assets/textures/bzh_flag.gif");
+    //mTestEntity = new FlagEntity(mTestTexture, mTestTexture->getImage()->getSize().x, mTestTexture->getImage()->getSize().y, 8);
+    //mTestEntity->generate();
 
     //mTestTexture2 = new Texture();
     //mTestTexture2->loadTexture("assets/crate.jpg");
@@ -184,29 +187,30 @@ void Viewer::loadEnvironmentSettings()
 
 void Viewer::loadTerrain()
 {
-    mTerrain = new Terrain(512, 1);
+    mSkybox = new SkyboxEntity("assets/terrain/skybox_texture_keithlantz_net.jpg", 300);
+    mTerrain = new Terrain(200, 4, 60);
 
-    mTerrainPage = new TerrainPage("./assets/terrain/heightmap.bmp", 400, 400, 60, 2);
-    sf::Image *mixmap = mTerrainPage->getMixmap();
-    for(int x = 0; x < mixmap->getSize().x; x++) {
-        for(int y = 0; y < mixmap->getSize().y; y++) {
-            float height = mTerrainPage->getHeight(x, y);
-            if(height < 5)
-                mixmap->setPixel(x, y, sf::Color(255, 0, 0, 0));
-            else if (height < 10)
-                mixmap->setPixel(x, y, sf::Color(50, 200, 0, 0));
-            else if (height < 20)
-                mixmap->setPixel(x, y, sf::Color(0, 150, 150, 0));
-            else if (height < 30)
-                mixmap->setPixel(x, y, sf::Color(0, 0, 150, 50));
-            else
-                mixmap->setPixel(x, y, sf::Color(0, 0, 0, 255));
+    //mTerrainPage = new TerrainPage("./assets/terrain/untitled.png", 200, 100, 2);
+    //sf::Image *mixmap = mTerrainPage->getMixmap();
+    //for(int x = 0; x < mixmap->getSize().x; x++) {
+        //for(int y = 0; y < mixmap->getSize().y; y++) {
+            //float height = mTerrainPage->getHeight(x, y);
+            //if(height < 5)
+                //mixmap->setPixel(x, y, sf::Color(255, 0, 0, 0));
+            //else if (height < 10)
+                //mixmap->setPixel(x, y, sf::Color(50, 200, 0, 0));
+            //else if (height < 20)
+                //mixmap->setPixel(x, y, sf::Color(0, 150, 150, 0));
+            //else if (height < 30)
+                //mixmap->setPixel(x, y, sf::Color(0, 0, 150, 50));
+            //else
+                //mixmap->setPixel(x, y, sf::Color(0, 0, 0, 255));
 
-        }
-    }
-    mTerrainPage->setMixmap("MixmapInTerrain.jpg");
-    mTerrainPage->generateVertices();
-    mTerrainPage->startWave(false);
+        //}
+    //}
+    //mTerrainPage->setMixmap("MixmapInTerrain.jpg");
+    //mTerrainPage->generateVertices();
+    //mTerrainPage->startWave(false);
 
 
     /**
@@ -218,9 +222,9 @@ void Viewer::loadTerrain()
     //directionalLight.setSpecular(sf::Vector3f(1.f, 0.f, 0.f));
     //directionalLight.setDirection(sf::Vector3f(-1, 0, 1));
     SpotLight spotLight(GL_LIGHT0);
-    spotLight.setAmbiant(sf::Vector3f(1.f, 0.f, 0.8f));
+    spotLight.setAmbiant(sf::Vector3f(1.f, 1.f, 1.f));
     spotLight.setDiffuse(sf::Vector3f(1.f, 1.f, 1.f));
-    spotLight.setSpecular(sf::Vector3f(1.f, 0.f, 0.f));
+    spotLight.setSpecular(sf::Vector3f(0.4f, 0.4f, 0.4f));
     spotLight.setPosition(sf::Vector3f(0, 60, 0));
     spotLight.setDirection(sf::Vector3f(0, 0, -1));
     spotLight.setCutoff(43);
@@ -377,6 +381,7 @@ void Viewer::onRender()
     sf::Vector3<int> up = mCamera->getUp();
     gluLookAt(pos.x, pos.y, pos.z, view.x, view.y, view.z, up.x, up.y, up.z);
 
+    mSkybox->render();
     // XXX: Need of Z-Depth sorting to get alpha blending right!!
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_NICEST);
@@ -386,27 +391,26 @@ void Viewer::onRender()
     glEnable(GL_LIGHT0); // Sun
     //glShadeModel( GL_SMOOTH );
 
-    glPushMatrix();
-        mTerrain->render();
-        //mTerrainPage->render();
-    glPopMatrix();
 
-    glPushMatrix();
-        axisNode->render();
-        mTestShader.enable();
-        mTestShader.setFloat("waveTime", mTestClock.getElapsedTime().asSeconds()/10);
-        mTestShader.setVec3("windDirection", EnvironmentSettings::getInstance().getWindDirection());
-        mTestShader.setFloat("windStrength", EnvironmentSettings::getInstance().getWindStrength());
-        mTestShader.setFloat("maxAmplitude", 10);
-        mTestShader.setVec3("origin", sf::Vector3f(0,0,0));
-        mTestShader.setFloat("nbSquares", dynamic_cast<FlagEntity*>(mTestEntity)->getNbSquares());
-        mTestShader.setFloat("width", dynamic_cast<FlagEntity*>(mTestEntity)->getWidth());
-        mTestShader.bindTexture(mTestTexture, "tex");
-        glEnable(GL_TEXTURE_2D);
-        mTestEntity->render();
-        glDisable(GL_TEXTURE_2D);
-        mTestShader.disable();
-    glPopMatrix();
+    //glPushMatrix();
+        //mTerrain->render();
+        ////mTerrainPage->render();
+    //glPopMatrix();
+
+    //glPushMatrix();
+        //axisNode->render();
+        //mTestShader.enable();
+        //mTestShader.setFloat("waveTime", mTestClock.getElapsedTime().asSeconds()/10);
+        //mTestShader.setVec3("windDirection", EnvironmentSettings::getInstance().getWindDirection());
+        //mTestShader.setFloat("windStrength", EnvironmentSettings::getInstance().getWindStrength());
+        //mTestShader.setFloat("maxAmplitude", 10);
+        //mTestShader.setVec3("origin", sf::Vector3f(0,0,0));
+        //mTestShader.setFloat("nbSquares", dynamic_cast<FlagEntity*>(mTestEntity)->getNbSquares());
+        //mTestShader.setFloat("width", dynamic_cast<FlagEntity*>(mTestEntity)->getWidth());
+        //mTestShader.bindTexture(mTestTexture, "tex");
+        //mTestEntity->render();
+        //mTestShader.disable();
+    //glPopMatrix();
 
     glDisable(GL_LIGHTING);
     glDisable(GL_DEPTH_TEST);

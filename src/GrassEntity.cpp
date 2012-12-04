@@ -72,6 +72,7 @@ bool GrassEntity::generate()
 
 bool GrassEntity::render()
 {
+    glPushAttrib(GL_ALL_ATTRIB_BITS);
     if(mDisplayListIndex == OBJECT_NOT_COMPILED) {
         derr << "Error: You must first call the generate function to compile the opengl command list" << std::endl;
         return false;
@@ -87,5 +88,5 @@ bool GrassEntity::render()
         mGrassShader.disable();
         return true;
     }
-
+    glPopAttrib();
 }

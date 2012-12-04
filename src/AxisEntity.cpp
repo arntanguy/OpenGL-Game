@@ -17,14 +17,15 @@ bool AxisEntity::generate()
 
 bool AxisEntity::render()
 {
-  /* Axis */
-  glBegin(GL_LINES);
-  //X axis
-  glColor3f(mScale, 0, 0); glVertex3f(-mScale, -mScale, -mScale); glVertex3f( mScale, -mScale, -mScale);
-  //Y axis
-  glColor3f(0, mScale, 0); glVertex3f(-mScale, -mScale, -mScale); glVertex3f(-mScale,  mScale, -mScale);
-  //Z axis
-  glColor3f(0, 0, mScale); glVertex3f(-mScale, -mScale, -mScale); glVertex3f(-mScale, -mScale,  mScale);
-  glEnd();
-
+    glPushAttrib(GL_ALL_ATTRIB_BITS);
+    /* Axis */
+    glBegin(GL_LINES);
+    //X axis
+    glColor3f(mScale, 0, 0); glVertex3f(-mScale, -mScale, -mScale); glVertex3f( mScale, -mScale, -mScale);
+    //Y axis
+    glColor3f(0, mScale, 0); glVertex3f(-mScale, -mScale, -mScale); glVertex3f(-mScale,  mScale, -mScale);
+    //Z axis
+    glColor3f(0, 0, mScale); glVertex3f(-mScale, -mScale, -mScale); glVertex3f(-mScale, -mScale,  mScale);
+    glEnd();
+    glPopAttrib();
 }

@@ -1,27 +1,26 @@
 #include "TerrainPage.h"
 #include <GL/glut.h>
-#include "tick.h"
 #include "RessourcesManager.h"
 
-TerrainPage::TerrainPage(const std::string& heightmap, int width, int depth, float maxHeight, float scaleFactor)
+TerrainPage::TerrainPage(const std::string& heightmap,  int size, float maxHeight, float scaleFactor)
 {
-    mWidth = width;
-    mDepth = depth;
+    mSize = size;
     mScaleFactor = scaleFactor;
     mHeightmap = new sf::Image();
     mHeightmap->loadFromFile(heightmap);
-    mRatioW = mHeightmap->getSize().x/width;
-    mRatioD = mHeightmap->getSize().y/depth;
+    mRatioW = mHeightmap->getSize().x/size;
+    mRatioD = mHeightmap->getSize().y/size;
+    dinf << "Heightmap: " << mHeightmap->getSize().x << "\t" << mHeightmap->getSize().y << std::endl;
     mMaxHeight = maxHeight;
     mDisplayListIndex = TERRAIN_NOT_COMPILED;
     mWaveActivated = false;
 
     // *width-1 to account for the diagonals
-    mVertices = new Vertex[(mWidth*mDepth)+(mWidth-1)*(mDepth-1)];
-    dinf << "TerrainPage: Number of vertices: " <<(mWidth)*(mDepth)+(mWidth-1)*(mDepth-1)<< std::endl;
+    mVertices = new Vertex[(mSize*mSize)+(mSize-1)*(mSize-1)];
+    dinf << "TerrainPage: Number of vertices: " <<(mSize)*(mSize)+(mSize-1)*(mSize-1)<< std::endl;
 
     mMixmap = new sf::Image();
-    mMixmap->create(width, depth, sf::Color(0,0,0));
+    mMixmap->create(size, size, sf::Color(0,0,0));
 
     mTexture0 = RessourcesManager::getInstance().loadTexture("assets/terrain/water2.png");
     mTexture1 = RessourcesManager::getInstance().loadTexture("assets/terrain/seamless_beach_sand_texture_by_hhh316-d4hr45u.jpg");
@@ -64,9 +63,15 @@ sf::Vector2u TerrainPage::getTextureCoordinates(float x, float z)
 // Get the color of the pixel at the (by ratio times grid position) location
 float TerrainPage::getHeight(int x, int z)
 {
+    //dinf << "getHeight("<<x<<","<<z<<")"<<std::endl;
+    //if(z>= mHeightmap->getSize().y) {
+    //    std::cout << "non existing pixel " <<x << "\t" << z << std::endl;
+    //    return 0;
+    // }
     // Get the color of the pixel at the (by ratio times grid position) location
     sf::Color c = mHeightmap->getPixel(x*mRatioW, z*mRatioD);
-    return mMaxHeight*float(c.r + c.g + c.b)/(3.0f*255.f);
+    //std::cout << (int)c.g << std::endl;
+    return mMaxHeight*float((int)c.r + (int)c.g + (int)c.b)/(3.0f*255.f);
 }
 
 float TerrainPage::getHeightFromHeighmapCoordinates(int x, int y)
@@ -89,8 +94,8 @@ void TerrainPage::generateVertices()
     bool add = true;
     int i = 0;
     int loop = 0;
-    int stepByRow = 2*mWidth;
-    int substractVal = mWidth-1;
+    int stepByRow = 2*mSize;
+    int substractVal = mSize-1;
     int j=0;
     int row=0;
 
@@ -101,13 +106,14 @@ void TerrainPage::generateVertices()
      * Loop to generateVertices all the vertices of the grid,
      * with a minimum of vertex!
      **/
-    while(j < (stepByRow)*(mDepth-1)) {
-        int x = i%mWidth;
-        int z = mDepth-i/mWidth;
+    while(j < (stepByRow)*(mSize-1)) {
+        int x = i%mSize;
+        int z = mSize-i/mSize;
         Vertex v;
-        v.position[0] = x*mScaleFactor;//(x-mWidth/2)*mScaleFactor;
+        //std::cout << x << "\t" << z << std::endl;
+        v.position[0] = x*mScaleFactor;//(x-mSize/2)*mScaleFactor;
         v.position[1] = getHeight(x,z);
-        v.position[2] = z*mScaleFactor;//(z-mWidth/2)*mScaleFactor;
+        v.position[2] = z*mScaleFactor;//(z-mSize/2)*mScaleFactor;
         texCoords = getTextureCoordinates(x, z);
         v.texcoords[0] = texCoords.x;
         v.texcoords[1] = texCoords.y;
@@ -119,13 +125,13 @@ void TerrainPage::generateVertices()
         if(loop == stepByRow-1) {
             mVertices[++j] = v;
             loop = 0;
-            if(substractVal == mWidth-1) substractVal = mWidth+1;
-            else substractVal = mWidth-1;
+            if(substractVal == mSize-1) substractVal = mSize+1;
+            else substractVal = mSize-1;
             add = !add;
             row++;
         }
 
-        if(add) i += mWidth;
+        if(add) i += mSize;
         else i -= substractVal;
         add = !add;
         loop++;
@@ -151,7 +157,7 @@ void TerrainPage::generateVerticesDisplayList()
     int j=0;
 
     glBegin(GL_TRIANGLE_STRIP);
-    for(int i = 0; i<(2*mWidth)*(mDepth-1); i++) {
+    for(int i = 0; i<(2*mSize)*(mSize-1); i++) {
         v = mVertices[i];
         glMultiTexCoord2fARB(GL_TEXTURE0_ARB, v.texcoords[0], v.texcoords[1]);
         glVertex3f(v.position[0], v.position[1], v.position[2]);
@@ -169,6 +175,7 @@ void TerrainPage::startWave(bool status)
 
 bool TerrainPage::render()
 {
+    glPushAttrib(GL_ALL_ATTRIB_BITS);
     // Used to modulate the water texture coordinates by the shader.
     static float add = 0.005;
     static float sinus = -1;
@@ -177,28 +184,28 @@ bool TerrainPage::render()
         std::cerr << "Error: The terrain hasn't been compiled! You need to call the generateVertices() function first!" << std::endl;
         return false;
     } else {
-       mTexShader.enable();
-       mTexShader.bindTexture(mTexture0, "Texture0");
-       mTexShader.bindTexture(mTexture1, "Texture1");
-       mTexShader.bindTexture(mTexture2, "Texture2");
-       mTexShader.bindTexture(mTexture3, "Texture3");
-       mTexShader.bindTexture(mMixmapTexture, "Mixmap");
-       mMixmapTexture->getImage()->saveToFile("Mixmap.jpg");
-       mTexShader.bindTexture(mHeightmapTexture, "Heightmap");
-       mHeightmapTexture->getImage()->saveToFile("Heightmap.jpg");
-       mTexShader.setFloat("terrainSize", mWidth*mScaleFactor);
-       mTexShader.setFloat("maxHeight", mMaxHeight);
-       mTexShader.setFloat("fogFactor", 0.);
-       mTexShader.setFloat("waterSinus", sinus);
-       mTexShader.setFloat("waterHeight", 5);
-       mTexShader.setInt("nbLights", 2);
+        mTexShader.enable();
+        mTexShader.bindTexture(mTexture0, "Texture0");
+        mTexShader.bindTexture(mTexture1, "Texture1");
+        mTexShader.bindTexture(mTexture2, "Texture2");
+        mTexShader.bindTexture(mTexture3, "Texture3");
+        mTexShader.bindTexture(mMixmapTexture, "Mixmap");
+        mMixmapTexture->getImage()->saveToFile("Mixmap.jpg");
+        mTexShader.bindTexture(mHeightmapTexture, "Heightmap");
+        mHeightmapTexture->getImage()->saveToFile("Heightmap.jpg");
+        mTexShader.setFloat("terrainSize", mSize*mScaleFactor);
+        mTexShader.setFloat("maxHeight", mMaxHeight);
+        mTexShader.setFloat("fogFactor", 0.);
+        mTexShader.setFloat("waterSinus", sinus);
+        mTexShader.setFloat("waterHeight", 5);
+        mTexShader.setInt("nbLights", 2);
 
-       if(mWaveActivated)
-           mTexShader.setFloat("waveActivated", 1.);
-       else
-           mTexShader.setFloat("waveActivated", 0.);
-       sf::Time time = mWaveClock.getElapsedTime();
-       mTexShader.setFloat("waveTime", time.asSeconds()/10);
+        if(mWaveActivated)
+            mTexShader.setFloat("waveActivated", 1.);
+        else
+            mTexShader.setFloat("waveActivated", 0.);
+        sf::Time time = mWaveClock.getElapsedTime();
+        mTexShader.setFloat("waveTime", time.asSeconds()/10);
 
         if(sinus+add >= 1.f ) add = -0.005;
         if(sinus+add <= -1.f) add = 0.005;
@@ -207,13 +214,14 @@ bool TerrainPage::render()
         // draw the display list
         glCallList(mDisplayListIndex);
 
-    glEnable(GL_TEXTURE_2D);
-        mNode->translate(300, getHeight(300,300), 300);
-        mNode->scale(1);
-        mNode->render();
-    glDisable(GL_TEXTURE_2D);
+         mTexShader.disable();
+        glEnable(GL_TEXTURE_2D);
+            //mNode->translate(300, getHeight(300,300), 300);
+            mNode->scale(1);
+            mNode->render();
+        glDisable(GL_TEXTURE_2D);
 
-        mTexShader.disable();
+        glPopAttrib();
         return true;
     }
 }

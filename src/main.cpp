@@ -3,7 +3,7 @@
  * Author: Arnaud TANGUY
  */
 
-#include "viewer.h"
+#include "Viewer.h"
 #include <SFML/Window.hpp>
 #include <GL/glew.h>
 #include <GL/glut.h>

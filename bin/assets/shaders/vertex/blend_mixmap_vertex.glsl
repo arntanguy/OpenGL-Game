@@ -29,6 +29,7 @@ uniform float waveTime;
 
 // For lighting
 varying vec3 lightDir, eyeVec;
+varying vec3 lightPos;
 
 varying vec4 ecPos;
 varying vec3 normal;
@@ -75,6 +76,7 @@ vec4 progessive_sinusoidal_wave(vec2 center, vec4 currentVertex, float rmax, flo
 
 void setupLightingVarying()
 {
+    lightPos = vec3(0.,0.,0.);
 	/* first transform the normal into eye space and normalize the result */
 	normal = normalize(gl_NormalMatrix * gl_Normal);
 

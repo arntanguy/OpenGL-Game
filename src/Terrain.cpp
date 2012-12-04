@@ -1,10 +1,11 @@
 #include "Terrain.h"
 
 
-Terrain::Terrain(int tileSize, int scale)
+Terrain::Terrain(int tileSize, int scale, int maxHeight)
 {
     mScale = scale;
     mTileSize = tileSize;
+    mMaxHeight = maxHeight;
     load();
 }
 
@@ -22,11 +23,12 @@ void Terrain::load()
 
         dinf << "Loading terrain page " << path << std::endl;
 
-        TerrainPage *terrain = new TerrainPage(path, mTileSize, mTileSize, 60, mScale);
+        TerrainPage *terrain = new TerrainPage(path, mTileSize, mMaxHeight, mScale);
         sf::Image *mixmap = terrain->getMixmap();
         for(int x = 0; x < mixmap->getSize().x; x++) {
             for(int y = 0; y < mixmap->getSize().y; y++) {
-                float height = terrain->getHeight(x, y);
+                //float height = terrain->getHeight(x, y);
+                float height=0;
                 if(height < 5)
                     mixmap->setPixel(x, y, sf::Color(255, 0, 0, 0));
                 else if (height < 10)

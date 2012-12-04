@@ -28,7 +28,7 @@ class TerrainPage
         sf::Image *mHeightmap;
         sf::Image *mMixmap;
         // Width and depth of the landscape
-        int mWidth, mDepth;
+        int mSize;
         float mScaleFactor;
         /*
          * Width and depth ratio.
@@ -69,7 +69,7 @@ class TerrainPage
         bool mWaveActivated;
 
     public:
-        TerrainPage(const std::string& heightmap, int width, int depth, float mMaxHeight, float scaleFactor);
+        TerrainPage(const std::string& heightmap, int size, float mMaxHeight, float scaleFactor);
         virtual ~TerrainPage();
 
         /**

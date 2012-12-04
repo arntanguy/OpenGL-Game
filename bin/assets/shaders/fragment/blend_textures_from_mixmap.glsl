@@ -27,6 +27,7 @@ uniform float fogFactor;
 varying vec4 VertexPosition;
 
 varying vec3 lightDir, eyeVec;
+varying vec3 lightPos;
 
 //varying vec4 diffuse,ambientGlobal, ambient, ecPos;
 varying vec4 ecPos;
@@ -145,7 +146,8 @@ vec4 applySpotlightLighting(int lightId)
     n = normalize(normal);
 
     // Compute the ligt direction
-    vec3 lightDir2 = vec3(gl_LightSource[lightId].position-ecPos);
+    //vec3 lightDir2 = vec3(gl_LightSource[lightId].position-ecPos);
+    vec3 lightDir2 = lightPos-ecPos.xyz;
 
     /* compute the distance to the light source to a varying variable*/
     float dist = length(lightDir2);

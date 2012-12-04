@@ -10,11 +10,12 @@ class Terrain {
         std::vector<TerrainPage *> mTerrainPages;
         int mTileSize;
         int mScale;
+        int mMaxHeight;
 
         void load();
 
     public:
-        Terrain(int tileSize, int scale);
+        Terrain(int tileSize, int scale, int maxHeight);
         virtual ~Terrain();
 
         sf::Vector2i getCurrentTile(sf::Vector3f worldPos);

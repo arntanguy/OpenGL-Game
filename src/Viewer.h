@@ -15,6 +15,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include <SFML/Window/Event.hpp>
+#include <SFML/System/Clock.hpp>
 #include <string>
 #include "AxisEntity.h"
 #include "Node.h"
@@ -23,6 +24,7 @@
 #include "FlagEntity.h"
 #include "EnvironmentSettings.h"
 #include "ParticleGenerator.h"
+#include "SkyboxEntity.h"
 
 
 class TerrainPage;
@@ -55,6 +57,8 @@ protected:
 
   AxisEntity *axisEntity;
   Node *axisNode;
+
+  SkyboxEntity *mSkybox;
 
   /**
    * =========================================

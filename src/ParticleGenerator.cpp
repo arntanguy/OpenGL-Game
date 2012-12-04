@@ -88,18 +88,19 @@ static void camera_directions(
 
 void ParticleGenerator::render()
 {
+    glPushAttrib(GL_ALL_ATTRIB_BITS);
     // Right and up direction of camera
     float r[3], u[3];
 	camera_directions(r,u,NULL);
     static int iteration = 0;
-    mShader.enable();
-    mShader.setFloat("nbActiveModifier", mColorModifiers.size());
-    mShader.setFloatArray("modifiersDistance", mModifiersDistance);
-    mShader.setVec3Array("colorModiers", mColorModifiers);
-
-    mShader.setFloat("nbActiveForces", mForces.size());
-    mShader.setVec3Array("forces", mForces);
-    mShader.setFloat("iteration", iteration++);
+//    mShader.enable();
+//    mShader.setFloat("nbActiveModifier", mColorModifiers.size());
+//    mShader.setFloatArray("modifiersDistance", mModifiersDistance);
+//    mShader.setVec3Array("colorModiers", mColorModifiers);
+//
+//    mShader.setFloat("nbActiveForces", mForces.size());
+//    mShader.setVec3Array("forces", mForces);
+//    mShader.setFloat("iteration", iteration++);
 
     glPushMatrix();
 
@@ -162,7 +163,8 @@ void ParticleGenerator::render()
         }
         //std::cerr << std::endl;
     glPopMatrix();
-    mShader.disable();
+    glPopAttrib();
+//    mShader.disable();
 }
 
 void ParticleGenerator::changeSize(double size) {
