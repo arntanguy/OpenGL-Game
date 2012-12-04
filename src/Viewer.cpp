@@ -147,9 +147,9 @@ void Viewer::onIdle()
 
 void Viewer::loadTestEntity()
 {
-    //mTestTexture = RessourcesManager::getInstance().loadTexture("assets/textures/bzh_flag.gif");
-    //mTestEntity = new FlagEntity(mTestTexture, mTestTexture->getImage()->getSize().x, mTestTexture->getImage()->getSize().y, 8);
-    //mTestEntity->generate();
+    mTestTexture = RessourcesManager::getInstance().loadTexture("assets/textures/bzh_flag.gif");
+    mTestEntity = new FlagEntity(mTestTexture, mTestTexture->getImage()->getSize().x, mTestTexture->getImage()->getSize().y, 8);
+    mTestEntity->generate();
 
     //mTestTexture2 = new Texture();
     //mTestTexture2->loadTexture("assets/crate.jpg");
@@ -394,32 +394,35 @@ void Viewer::onRender()
 
     // XXX: Need of Z-Depth sorting to get alpha blending right!!
     glEnable(GL_DEPTH_TEST);
-    //glDepthFunc(GL_NICEST);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //glEnable(GL_BLEND);
-    //glEnable(GL_LIGHTING);
-    //glEnable(GL_LIGHT0); // Sun
+    glDepthFunc(GL_NICEST);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0); // Sun
     //glShadeModel( GL_SMOOTH );
 
 
     glPushMatrix();
         //mTerrain->render();
-    //    mTerrainPage->render();
+        mTerrainPage->render();
     glPopMatrix();
 
     glPushMatrix();
         axisNode->render();
-        //mTestShader.enable();
-        //mTestShader.setFloat("waveTime", mTestClock.getElapsedTime().asSeconds()/10);
-        //mTestShader.setVec3("windDirection", EnvironmentSettings::getInstance().getWindDirection());
-        //mTestShader.setFloat("windStrength", EnvironmentSettings::getInstance().getWindStrength());
-        //mTestShader.setFloat("maxAmplitude", 10);
-        //mTestShader.setVec3("origin", sf::Vector3f(0,0,0));
-        //mTestShader.setFloat("nbSquares", dynamic_cast<FlagEntity*>(mTestEntity)->getNbSquares());
-        //mTestShader.setFloat("width", dynamic_cast<FlagEntity*>(mTestEntity)->getWidth());
-        //mTestShader.bindTexture(mTestTexture, "tex");
-        //mTestEntity->render();
-        //mTestShader.disable();
+    glPopMatrix();
+
+    glPushMatrix();
+        mTestShader.enable();
+        mTestShader.setFloat("waveTime", mTestClock.getElapsedTime().asSeconds()/10);
+        mTestShader.setVec3("windDirection", EnvironmentSettings::getInstance().getWindDirection());
+        mTestShader.setFloat("windStrength", EnvironmentSettings::getInstance().getWindStrength());
+        mTestShader.setFloat("maxAmplitude", 10);
+        mTestShader.setVec3("origin", sf::Vector3f(0,0,0));
+        mTestShader.setFloat("nbSquares", dynamic_cast<FlagEntity*>(mTestEntity)->getNbSquares());
+        mTestShader.setFloat("width", dynamic_cast<FlagEntity*>(mTestEntity)->getWidth());
+        mTestShader.bindTexture(mTestTexture, "tex");
+        mTestEntity->render();
+        mTestShader.disable();
     glPopMatrix();
 
     glDisable(GL_LIGHTING);
