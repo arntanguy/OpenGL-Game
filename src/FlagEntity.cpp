@@ -33,11 +33,12 @@ bool FlagEntity::generate()
         if(mTexture != 0) {
             glEnable(GL_TEXTURE_2D);
             mTexture->bind();
+        } else {
+            glColor3f(1,0,0);
         }
 
 
         glBegin(GL_TRIANGLES);
-            glColor3f(1,0,0);
             float widthSquare=mWidth/mNbSquares;
             float mHeightSquare=mHeight;
             for(float i=0; i<mNbSquares; i++) {

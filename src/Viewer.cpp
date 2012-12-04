@@ -48,7 +48,7 @@ Viewer::Viewer()
 
     mCamera = new Camera("Camera", sf::Vector3f(600, 30, 600), sf::Vector3f(0, 0, 0), sf::Vector3i(0, 1, 0));
 
-    axisEntity = new AxisEntity(100);
+    axisEntity = new AxisEntity(400);
     axisNode = new Node("test", 0, 0, 0);
     axisNode->attachEntity(axisEntity);
 }
@@ -182,8 +182,8 @@ bool Viewer::onInit() {
 
 void Viewer::loadEnvironmentSettings()
 {
-    EnvironmentSettings::getInstance().setWindDirection(sf::Vector3f(1,0,0));
-    EnvironmentSettings::getInstance().setWindStrength(1);
+    EnvironmentSettings::getInstance().setWindDirection(sf::Vector3f(1.,0.2,0));
+    EnvironmentSettings::getInstance().setWindStrength(0.8);
 }
 
 void Viewer::loadSky()
@@ -193,29 +193,29 @@ void Viewer::loadSky()
 
 void Viewer::loadTerrain()
 {
-    //mTerrain = new Terrain(200, 4, 60);
+    mTerrain = new Terrain(200, 4, 60);
 
-    mTerrainPage = new TerrainPage("./assets/terrain/untitled.png", 200, 100, 2);
-    sf::Image *mixmap = mTerrainPage->getMixmap();
-    for(int x = 0; x < mixmap->getSize().x; x++) {
-        for(int y = 0; y < mixmap->getSize().y; y++) {
-            float height = mTerrainPage->getHeight(x, y);
-            if(height < 5)
-                mixmap->setPixel(x, y, sf::Color(255, 0, 0, 0));
-            else if (height < 10)
-                mixmap->setPixel(x, y, sf::Color(50, 200, 0, 0));
-            else if (height < 20)
-                mixmap->setPixel(x, y, sf::Color(0, 150, 150, 0));
-            else if (height < 30)
-                mixmap->setPixel(x, y, sf::Color(0, 0, 150, 50));
-            else
-                mixmap->setPixel(x, y, sf::Color(0, 0, 0, 255));
+    //mTerrainPage = new TerrainPage("./assets/terrain/untitled.png", 200, 100, 2);
+    //sf::Image *mixmap = mTerrainPage->getMixmap();
+    //for(int x = 0; x < mixmap->getSize().x; x++) {
+        //for(int y = 0; y < mixmap->getSize().y; y++) {
+            //float height = mTerrainPage->getHeight(x, y);
+            //if(height < 5)
+                //mixmap->setPixel(x, y, sf::Color(255, 0, 0, 0));
+            //else if (height < 10)
+                //mixmap->setPixel(x, y, sf::Color(50, 200, 0, 0));
+            //else if (height < 20)
+                //mixmap->setPixel(x, y, sf::Color(0, 150, 150, 0));
+            //else if (height < 30)
+                //mixmap->setPixel(x, y, sf::Color(0, 0, 150, 50));
+            //else
+                //mixmap->setPixel(x, y, sf::Color(0, 0, 0, 255));
 
-        }
-    }
-    mTerrainPage->setMixmap("MixmapInTerrain.jpg");
-    mTerrainPage->generateVertices();
-    mTerrainPage->startWave(false);
+        //}
+    //}
+    //mTerrainPage->setMixmap("MixmapInTerrain.jpg");
+    //mTerrainPage->generateVertices();
+    //mTerrainPage->startWave(false);
 
 
     /**
@@ -403,8 +403,8 @@ void Viewer::onRender()
 
 
     glPushMatrix();
-        //mTerrain->render();
-        mTerrainPage->render();
+        mTerrain->render();
+        //mTerrainPage->render();
     glPopMatrix();
 
     glPushMatrix();

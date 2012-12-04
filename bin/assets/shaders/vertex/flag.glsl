@@ -80,6 +80,9 @@ float progressive_sinusoidal_wave_value(vec2 center, vec4 currentVertex, float m
     return 0.;
 }
 
+float rand(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
 
 // XXX: not mathematically correct in y direction, but still quite ok
 // XXX: Change way to calculate the normal to allow tilting
@@ -93,7 +96,9 @@ vec4 applyWave(vec4 vertexPosition)
     vec3 v = vertexPosition.xyz - origin.xyz;
     float norm = sqrt(pow(v.x,2) + pow(v.z,2));
 
-    float weight = norm/width*(3.14-3.14*windStrength);
+    //float weight = norm/width*(3.14-3.14*windStrength);
+    float weight = norm/width *(1.-windStrength)*3.14159/2.;
+    float schrink = norm/width * (1.-windStrength) * (vertexPosition.y-origin.y);
     // Rotates downwards or upwards
     mat3 rotationMatrix = mat3(
        cos(weight), -sin(weight), 0.,
@@ -111,6 +116,7 @@ vec4 applyWave(vec4 vertexPosition)
     vec3 newOrigin = origin;
     // Math cheat for the y value
     newOrigin.y = vertexPosition.y;
+    newOrigin.y -= schrink;
     // Computes new position according to wind direction
     vec3 newPos = newOrigin+norm*newWindDirection;
     // Account for wind strength to make the flag fall a bit

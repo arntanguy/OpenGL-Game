@@ -18,6 +18,7 @@ bool AxisEntity::generate()
 bool AxisEntity::render()
 {
     glPushAttrib(GL_ALL_ATTRIB_BITS);
+    glDisable(GL_LIGHTING);
     /* Axis */
     glBegin(GL_LINES);
     //X axis
